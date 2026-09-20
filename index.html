@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Orbit</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF" id="themeColor">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Orbit">
+<link rel="icon" href="icons/favicon.png" sizes="64x64">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<script>try{document.documentElement.classList.add("boot")}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ LIGHT (default) ============ */
+  :root{
+    --bg:#FFFFFF;
+    --border:#E6E9EF;
+    --shadow:0 1px 3px rgba(15,23,42,.06);
+
+    --ink:#0F172A;          /* 17.4:1 on card  */
+    --muted:#5B6B82;        /*  5.5:1 on card  */
+    --faint:#6B7A90;        /*  4.4:1 on card  */
+
+    --line:#DDE3EC;
+    --line-hover:#C3CCD9;
+    --surface:#F5F7FA;
+    --btn-bg:#FFFFFF;
+    --track:#E9EEF6;
+    --dot:#C7D0DC;
+
+    --accent:#2563EB;       /* button fill - white text 5.2:1 */
+    --accent-hover:#1D4ED8;
+    --accent-text:#2563EB;  /* accent used as text/marks 5.2:1 */
+    --focus:#3B82F6;
+    --dot-glow:rgba(37,99,235,.15);
+    --btn-shadow:0 2px 10px rgba(37,99,235,.20);
+
+    --head:#2563EB;
+    --arc1:#93C5FD; --arc2:#3B82F6; --arc3:#1D4ED8;
+    --bloom1:#3B82F6; --bloom2:#60A5FA; --bloom3:#93C5FD;
+
+    --brand:#0F172A;
+
+    --ring: clamp(92px, min(46vw, 36vh), 164px);
+  }
+
+  /* ============ DARK ============ */
+  [data-theme="dark"]{
+    --bg:#191919;           /* Notion dark page color */
+    --border:rgba(255,255,255,.10);
+    --shadow:none;
+
+    --ink:#EAF1FA;          /* 14.6:1 on card */
+    --muted:#94A6BD;        /*  7.0:1 on card */
+    --faint:#8494A8;        /*  5.4:1 on card */
+
+    --line:rgba(255,255,255,.15);
+    --line-hover:rgba(255,255,255,.30);
+    --surface:rgba(255,255,255,.07);
+    --btn-bg:rgba(255,255,255,.05);
+    --track:rgba(255,255,255,.13);
+    --dot:rgba(255,255,255,.28);
+
+    --accent:#2563EB;
+    --accent-hover:#3B82F6;
+    --accent-text:#60A5FA;  /* 6.5:1 on card */
+    --focus:#60A5FA;
+    --dot-glow:rgba(96,165,250,.22);
+    --btn-shadow:none;
+
+    --head:#DBEAFE;
+    --brand:#DBEAFE;
+    --arc1:#1E40AF; --arc2:#3B82F6; --arc3:#BFDBFE;
+    --bloom1:#93C5FD; --bloom2:#60A5FA; --bloom3:#1E3A8A;
+  }
+  @media (prefers-color-scheme: dark){
+    [data-theme="auto"]{
+      --bg:#191919;
+      --border:rgba(255,255,255,.10);
+      --shadow:none;
+      --ink:#EAF1FA;
+      --muted:#94A6BD;
+      --faint:#8494A8;
+      --line:rgba(255,255,255,.15);
+      --line-hover:rgba(255,255,255,.30);
+      --surface:rgba(255,255,255,.07);
+      --btn-bg:rgba(255,255,255,.05);
+      --track:rgba(255,255,255,.13);
+      --dot:rgba(255,255,255,.28);
+      --accent:#2563EB;
+      --accent-hover:#3B82F6;
+      --accent-text:#60A5FA;
+      --focus:#60A5FA;
+      --dot-glow:rgba(96,165,250,.22);
+      --btn-shadow:none;
+      --head:#DBEAFE;
+      --brand:#DBEAFE;
+      --arc1:#1E40AF; --arc2:#3B82F6; --arc3:#BFDBFE;
+      --bloom1:#93C5FD; --bloom2:#60A5FA; --bloom3:#1E3A8A;
+    }
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  html{background:var(--bg)}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    display:flex;align-items:center;justify-content:center;
+    padding:10px;overflow:hidden;-webkit-font-smoothing:antialiased;
+    padding-top:calc(10px + env(safe-area-inset-top, 0px));
+    padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+    -webkit-tap-highlight-color:transparent;
+    -webkit-user-select:none;user-select:none;
+    touch-action:manipulation;
+    overscroll-behavior:none;
+  }
+  .sheetbody{-webkit-user-select:text;user-select:text}
+
+  .app{
+    position:relative;
+    display:flex;flex-direction:column;align-items:center;
+    gap:clamp(10px, 2vh, 16px);
+    width:100%;max-width:300px;
+  }
+  html.bare,html.bare body{background:transparent}
+
+  /* ---------- wordmark ---------- */
+  .brand{
+    font-size:13px;font-weight:600;letter-spacing:.06em;
+    color:var(--brand);line-height:1;transition:color .18s ease;
+  }
+
+  /* ---------- modes ---------- */
+  .modes{display:flex;align-items:center;justify-content:center;gap:16px}
+  .mode{
+    background:none;border:0;padding:0;cursor:pointer;color:var(--muted);
+    font:inherit;font-size:12.5px;font-weight:500;
+    display:flex;align-items:center;gap:7px;transition:color .18s ease;
+  }
+  .mode:hover{color:var(--ink)}
+  .mode .dot{
+    width:6px;height:6px;border-radius:1.5px;transform:rotate(45deg);
+    background:var(--dot);transition:background .18s ease,box-shadow .18s ease;
+  }
+  .mode[aria-pressed="true"]{color:var(--ink)}
+  .mode[aria-pressed="true"] .dot{background:var(--accent-text);box-shadow:0 0 0 3px var(--dot-glow)}
+
+  /* ---------- dial ---------- */
+  .dial{position:relative;width:var(--ring);height:var(--ring);flex:none}
+  .dial svg{width:100%;height:100%;display:block;overflow:visible}
+  #arc .a1{stop-color:var(--arc1)}
+  #arc .a2{stop-color:var(--arc2)}
+  #arc .a3{stop-color:var(--arc3)}
+  #bloom .b1{stop-color:var(--bloom1)}
+  #bloom .b2{stop-color:var(--bloom2)}
+  #bloom .b3{stop-color:var(--bloom3)}
+  .track{fill:none;stroke:var(--track);stroke-width:2.5}
+  .progress{
+    fill:none;stroke:url(#arc);stroke-width:3;stroke-linecap:round;
+    transform:rotate(-90deg);transform-origin:100px 100px;
+    transition:stroke-dashoffset .3s linear;
+  }
+  .head{transform-origin:100px 100px;transition:transform .3s linear,opacity .35s ease}
+  .head .core{fill:var(--head)}
+  .head .bloom{fill:url(#bloom);transition:opacity .35s ease}
+  body.idle .head{opacity:.45}
+  body.idle .head .bloom{opacity:.3}
+
+  .readout{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  }
+  .time{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:300;
+    font-size:calc(var(--ring) * .27);line-height:1;
+    font-variant-numeric:tabular-nums;color:var(--ink);
+    transition:color .3s ease;
+  }
+  .phase{
+    font-size:calc(var(--ring) * .073);color:var(--muted);
+    font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  }
+
+  /* ---------- stepper ---------- */
+  .stepper{display:flex;align-items:center;justify-content:center;gap:12px}
+  .step{
+    width:26px;height:26px;flex:none;border-radius:8px;
+    border:1px solid var(--line);background:var(--btn-bg);color:var(--muted);
+    font:inherit;font-size:15px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:color .16s ease,border-color .16s ease;
+  }
+  .step:hover:not(:disabled){color:var(--accent-text);border-color:var(--accent-text)}
+  .step:disabled{opacity:.4;cursor:not-allowed}
+  .len{font-size:12.5px;color:var(--muted);min-width:66px;text-align:center;font-variant-numeric:tabular-nums}
+  .len b{color:var(--ink);font-weight:500;font-size:14.5px}
+
+  /* ---------- controls ---------- */
+  .controls{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap}
+  .btn{
+    font:inherit;font-size:13px;font-weight:500;cursor:pointer;
+    border-radius:9px;padding:9px 14px;border:1px solid var(--line);
+    background:var(--btn-bg);color:var(--muted);
+    transition:color .16s ease,border-color .16s ease,background .16s ease;
+  }
+  .btn:hover{color:var(--ink);border-color:var(--line-hover);background:var(--surface)}
+  .btn.primary{
+    background:var(--accent);border-color:var(--accent);color:#FFFFFF;
+    min-width:114px;box-shadow:var(--btn-shadow);
+  }
+  .btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);color:#FFFFFF}
+
+  .icon{
+    width:30px;height:30px;flex:none;
+    border:0;background:none;cursor:pointer;color:var(--faint);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    transition:color .16s ease,background .16s ease;
+  }
+  .icon:hover{color:var(--ink);background:var(--surface)}
+  .icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+  #sound[aria-pressed="false"]{opacity:.6}
+  #sound .slash{display:none}
+  #sound[aria-pressed="false"] .wave{display:none}
+  #sound[aria-pressed="false"] .slash{display:block}
+
+  #theme .i-auto,#theme .i-light,#theme .i-dark{display:none}
+  [data-theme="auto"] #theme .i-auto{display:block}
+  [data-theme="light"] #theme .i-light{display:block}
+  [data-theme="dark"] #theme .i-dark{display:block}
+
+  :focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:8px}
+
+  /* ---------- stretch break ---------- */
+  .brkbar{display:none;align-items:center;gap:9px;width:100%}
+  .segs{display:flex;gap:4px;flex:1}
+  .seg{height:3px;flex:1;border-radius:2px;background:var(--track);transition:background .25s ease}
+  .seg.on{background:var(--accent-text)}
+  .brkleft{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;flex:none;
+  }
+  .stepinfo{
+    display:none;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;text-align:center;width:100%;min-height:52px;
+  }
+  .stepname{
+    font-size:14.5px;font-weight:600;color:var(--ink);line-height:1.25;
+    max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .stephow{
+    font-size:11.5px;color:var(--muted);line-height:1.4;max-width:268px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .time.reps{
+    font-size:calc(var(--ring) * .125);line-height:1.25;font-weight:400;
+    max-width:72%;text-align:center;
+  }
+
+  /* fixed columns: the row never reflows when Pause hides or a label changes */
+  .controls.brk{display:none;width:100%;grid-template-columns:1fr 76px 30px;gap:7px}
+  .controls.brk .btn{width:100%;min-width:0;padding:9px 6px}
+  .controls.brk .icon{justify-self:center}
+
+  .namerow{display:flex;align-items:center;justify-content:center;gap:6px;max-width:100%}
+  .help{
+    width:17px;height:17px;flex:none;padding:0;border:0;background:none;
+    cursor:pointer;color:var(--faint);transition:color .16s ease;
+  }
+  .help:hover{color:var(--accent-text)}
+  .help svg{
+    width:100%;height:100%;display:block;fill:none;stroke:currentColor;
+    stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  }
+
+  /* ---------- how-to panel ---------- */
+  .sheet{
+    position:absolute;inset:-8px;z-index:5;display:none;flex-direction:column;gap:9px;
+    background:var(--bg);border:1px solid var(--border);border-radius:12px;
+    padding:12px 13px 11px;text-align:left;overflow-y:auto;
+  }
+  .sheethead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex:none}
+  .sheettitle{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;padding-top:3px}
+  .sheethead .icon{width:24px;height:24px;margin:-2px -4px 0 0}
+  .sheethead .icon svg{width:14px;height:14px}
+  .sheetbody{
+    flex:1;font-size:12px;line-height:1.55;color:var(--muted);
+    white-space:pre-line;overflow-y:auto;
+  }
+  .sheetnote{
+    flex:none;font-size:10.5px;line-height:1.45;color:var(--faint);
+    border-top:1px solid var(--line);padding-top:8px;
+  }
+  body.sheet-on .sheet{display:flex}
+
+  .stretchbar{
+    width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+    font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;
+    padding:8px 12px;border-radius:9px;
+    border:1px dashed var(--line);background:none;color:var(--muted);
+    transition:color .16s ease,border-color .16s ease,background .16s ease;
+  }
+  .stretchbar:hover{color:var(--accent-text);border-color:var(--accent-text);background:var(--surface)}
+  .stretchbar svg{
+    width:17px;height:17px;flex:none;fill:none;stroke:currentColor;
+    stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  }
+
+  body.brk .modes,body.brk .stepper,body.brk .controls.main,body.brk .stretchbar{display:none}
+  body.brk .brkbar,body.brk .stepinfo{display:flex}
+  body.brk .controls.brk{display:grid}
+
+  /* ---------- ringing ---------- */
+  @keyframes throb{0%,100%{opacity:1}50%{opacity:.45}}
+  @keyframes halo{0%,100%{r:13;opacity:.5}50%{r:19;opacity:.9}}
+  body.ringing .time{color:var(--accent-text);animation:throb 1.1s ease-in-out infinite}
+  body.ringing .phase{color:var(--accent-text)}
+  body.ringing .head{opacity:1}
+  body.ringing .head .bloom{animation:halo 1.1s ease-in-out infinite}
+  body.ringing .btn.primary{animation:throb 1.1s ease-in-out infinite}
+
+  /* ---------- launch ----------
+     The dial on the splash is not a copy of the timer dial, it IS the timer
+     dial: held large and centred, then handed back to the layout.          */
+  :root.boot body{background:#FFFFFF}
+  :root.boot .app > *:not(.dial){pointer-events:none}
+  :root.boot .brand,
+  :root.boot .modes,
+  :root.boot .brkbar,
+  :root.boot .stepper,
+  :root.boot .stepinfo,
+  :root.boot .controls,
+  :root.boot .stretchbar,
+  :root.boot .readout,
+  :root.boot .track,
+  :root.boot .head{opacity:0}
+  :root.boot .dial{
+    transform:translateY(var(--boot-dy, 0px)) scale(var(--boot-k, 1.4));
+    will-change:transform;
+  }
+
+  :root.boot.go body      {animation:boot-bg 260ms ease forwards}
+  :root.boot.go .track    {animation:boot-fade 320ms ease 120ms forwards}
+  :root.boot.go .head     {animation:boot-orbit 1300ms cubic-bezier(.24,.86,.26,1) 200ms forwards,
+                                     boot-fade 320ms ease 120ms forwards}
+  :root.boot.go .progress {animation:boot-spin 1300ms cubic-bezier(.24,.86,.26,1) 200ms forwards,
+                                     boot-out 420ms ease 1480ms forwards}
+  :root.boot.go .head .bloom{animation:boot-pulse 640ms ease-out 1360ms}
+  :root.boot.go .dial     {animation:boot-settle 700ms cubic-bezier(.2,.8,.24,1) 1500ms forwards}
+  :root.boot.go .readout  {animation:boot-rise 520ms ease 1700ms forwards}
+  :root.boot.go .brand    {animation:boot-rise 460ms ease 1660ms forwards}
+  :root.boot.go .modes    {animation:boot-rise 460ms ease 1760ms forwards}
+  :root.boot.go .stepper  {animation:boot-rise 460ms ease 1840ms forwards}
+  :root.boot.go .controls.main{animation:boot-rise 460ms ease 1900ms forwards}
+  :root.boot.go .stretchbar{animation:boot-rise 460ms ease 1960ms forwards}
+
+  @keyframes boot-bg    {to{background:var(--bg)}}
+  @keyframes boot-fade  {to{opacity:1}}
+  @keyframes boot-out   {to{opacity:0}}
+  @keyframes boot-orbit {from{transform:rotate(0deg)}   to{transform:rotate(540deg)}}
+  @keyframes boot-spin  {from{transform:rotate(-90deg)} to{transform:rotate(450deg)}}
+  @keyframes boot-pulse {0%{r:13;opacity:.9} 45%{r:24;opacity:1} 100%{r:13;opacity:.9}}
+  @keyframes boot-settle{to{transform:translateY(0) scale(1)}}
+  @keyframes boot-rise  {from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none}}
+
+  @media (max-height:280px){
+    .stepper{display:none}
+    body.brk .stepinfo{display:none}
+    :root{--ring:clamp(84px,30vh,120px)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:0s !important;animation:none !important}
+  }
+</style>
+</head>
+<body class="idle">
+<div class="app">
+
+  <div class="brand">Orbit</div>
+
+  <div class="modes" id="modes" role="group" aria-label="Timer mode"></div>
+
+  <div class="brkbar">
+    <div class="segs" id="segs"></div>
+    <span class="brkleft" id="brkLeft">00:00</span>
+  </div>
+
+  <div class="dial" id="dial">
+    <svg viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <linearGradient id="arc" x1="0" y1="0" x2="1" y2="1">
+          <stop class="a1" offset="0"/>
+          <stop class="a2" offset="0.5"/>
+          <stop class="a3" offset="1"/>
+        </linearGradient>
+        <radialGradient id="bloom" cx="0.5" cy="0.5" r="0.5">
+          <stop class="b1" offset="0" stop-opacity="0.55"/>
+          <stop class="b2" offset="0.45" stop-opacity="0.28"/>
+          <stop class="b3" offset="1" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle class="track" cx="100" cy="100" r="88"/>
+      <circle class="progress" id="arcPath" cx="100" cy="100" r="88"/>
+      <g class="head" id="head">
+        <circle class="bloom" cx="100" cy="12" r="13"/>
+        <circle class="core" cx="100" cy="12" r="3.2"/>
+      </g>
+    </svg>
+    <div class="readout">
+      <div class="time" id="time">25:00</div>
+      <div class="phase" id="phase">Focus</div>
+    </div>
+  </div>
+
+  <div class="stepper">
+    <button class="step" id="minus" type="button" aria-label="Decrease by one minute">&minus;</button>
+    <span class="len"><b id="lenVal">25</b> min</span>
+    <button class="step" id="plus" type="button" aria-label="Increase by one minute">+</button>
+  </div>
+
+  <div class="stepinfo" aria-live="polite">
+    <div class="namerow">
+      <span class="stepname" id="stepName"></span>
+      <button class="help" id="help" type="button" aria-label="How to do this step">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M9.5 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.8.7-.8 1.3v.4"/>
+          <circle cx="12" cy="16.7" r="0.7" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+    </div>
+    <div class="stephow" id="stepHow"></div>
+  </div>
+
+  <div class="controls main">
+    <button class="btn primary" id="toggle" type="button">Start</button>
+    <button class="btn" id="reset" type="button">Reset</button>
+    <button class="btn" id="skip" type="button">Skip</button>
+
+    <button class="icon" id="sound" type="button" aria-pressed="true" aria-label="Sound">
+      <svg viewBox="0 0 24 24">
+        <path d="M11 5 6 9H3v6h3l5 4V5Z"/>
+        <path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7"/>
+        <path class="slash" d="m16 9.5 5 5m0-5-5 5"/>
+      </svg>
+    </button>
+
+    <button class="icon" id="theme" type="button" title="Theme: system" aria-label="Theme: system">
+      <svg class="i-auto" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5"/>
+        <path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor" stroke="none"/>
+      </svg>
+      <svg class="i-light" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
+      </svg>
+      <svg class="i-dark" viewBox="0 0 24 24">
+        <path d="M20.5 13.2A8.5 8.5 0 1 1 10.8 3.5a6.7 6.7 0 0 0 9.7 9.7Z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="controls brk">
+    <button class="btn primary" id="bDone" type="button">Done</button>
+    <button class="btn" id="bHold" type="button">Pause</button>
+    <button class="icon" id="bExit" type="button" title="Leave stretches" aria-label="Leave stretches">
+      <svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11m0-11-11 11"/></svg>
+    </button>
+  </div>
+  <button class="stretchbar" id="stretch" type="button">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="3.9" r="2"/>
+      <path d="M12 8v6m0-6L8.4 5m3.6 3 3.6-3m-3.6 6-2.7 5.6M12 14l2.7 5.6"/>
+    </svg>
+    <span>Stretch break</span>
+  </button>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheethead">
+      <span class="sheettitle" id="sheetTitle"></span>
+      <button class="icon" id="sheetClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11m0-11-11 11"/></svg>
+      </button>
+    </div>
+    <div class="sheetbody" id="sheetBody"></div>
+    <div class="sheetnote">Light stretch, never pain. Hold still instead of bouncing, and keep breathing.</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var qs = new URLSearchParams(location.search);
+  function num(key, fallback){
+    var v = parseInt(qs.get(key), 10);
+    return (isFinite(v) && v > 0 && v <= 180) ? v : fallback;
+  }
+
+  var bg = (qs.get("bg") || "").replace("#","").toLowerCase();
+  if(bg === "transparent") document.documentElement.classList.add("bare");
+  else if(/^[0-9a-f]{6}$/.test(bg)) document.documentElement.style.setProperty("--bg", "#" + bg);
+
+  var LABEL = { work:"Focus", short:"Break", long:"Long break" };
+  var NEXT_LABEL = { work:"Start focus", short:"Start break", long:"Start long break" };
+
+  var store = {
+    get:function(k){ try{ return localStorage.getItem("pomo."+k); }catch(e){ return null; } },
+    set:function(k,v){ try{ localStorage.setItem("pomo."+k,v); }catch(e){} }
+  };
+
+  var mins = { work:num("work",25), short:num("short",5), long:num("long",15) };
+  try{
+    var saved = JSON.parse(store.get("dur"));
+    if(saved && saved.work) mins = saved;
+  }catch(e){}
+
+  /* ---------------- the stretch routine ----------------
+     Ordered on purpose: move first so nothing is stretched cold, open the
+     chest before asking the neck to turn, then the parts the keyboard loads,
+     and finish with the eyes on the way back to the screen.
+     s = seconds on the dial, r = a count to work through at your own pace.
+     Add or remove steps freely - the screen follows the list.             */
+  var ROUTINE = [
+    {n:"Walk in place",   h:"Stand all the way up. Easy steps, loose arms.",           s:45,
+     d:"Get out of the chair completely, not half way.\n\nLift your knees to a comfortable height and let your arms swing loose.\n\nThis is not exercise. It is moving blood after 25 still minutes, and loosening the hips and ankles before anything gets stretched."},
+
+    {n:"Shoulder rolls",  h:"Five rolls back, then five forward.",                     r:"10 rolls",
+     d:"Stand tall with your arms hanging loose at your sides.\n\nLift the shoulders towards your ears, take them back, drop them, then bring them forward: one slow full circle. Five circles back, then five forward.\n\nMove the shoulders on their own. The arms stay relaxed and do not help."},
+
+    {n:"Chest opener",    h:"Clasp your hands behind your back and lift your chest.",  s:20,
+     d:"Clasp your hands behind your back and straighten the elbows.\n\nLower the clasped hands and lift your chest up and forward. You should feel the front of the chest and the shoulders open.\n\nIf you cannot clasp, hold a door frame or the edge of a chair behind you and lean away from it.\n\nKeep the neck neutral. Do not drop your head back."},
+
+    {n:"Neck turns",      h:"Turn slowly to each side. Stop where it tightens.",       r:"2 per side",
+     d:"Head level, shoulders down and still.\n\nTurn slowly towards one shoulder until you feel a light stretch. Hold two or three seconds, return to centre, then the other side.\n\nThis is the slowest step in the set. Never push the neck to its end range."},
+
+    {n:"Side bends",      h:"Reach one arm overhead and lean away from it.",           r:"3 per side",
+     d:"Feet about hip width apart.\n\nRaise one arm overhead and lean away from it, as if lengthening a line from your hip to your fingertips.\n\nStay in the side plane: no leaning forward, no twisting. The hips stay level and the other arm hangs loose."},
+
+    {n:"Wrist stretch",   h:"Press each palm back gently, 15 seconds per hand.",       s:30,
+     d:"Reach one arm in front of you, elbow straight, palm forward like a stop sign.\n\nWith the other hand, pull the fingers gently back towards you until you feel the stretch along the underside of the forearm. Fifteen seconds, then swap hands.\n\nTo cover the other side, turn the palm down and press the back of the hand towards you for ten seconds."},
+
+    {n:"Eye rest",        h:"Look at something about 6 metres away and blink softly.", s:20,
+     d:"Look at something roughly 6 metres away: a window, the far wall, a doorway.\n\nBlink softly a few times and let the focusing muscle release instead of holding at screen distance.\n\nDo not spend it on your phone. That is the same distance you are trying to get away from."}
+  ];
+
+  var CYCLES = num("cycles",4);
+  var MAX_RING = 120000;              /* alarm self-stops after 2 minutes */
+
+  var el = {};
+  ["time","phase","arcPath","head","modes","lenVal","minus","plus","toggle","reset","skip","sound","theme",
+   "stretch","segs","brkLeft","stepName","stepHow","bDone","bHold","bExit",
+   "help","sheet","sheetTitle","sheetBody","sheetClose","dial"]
+    .forEach(function(id){ el[id] = document.getElementById(id); });
+
+  var C = 2 * Math.PI * 88;
+  el.arcPath.style.strokeDasharray = C;
+
+  var state = { mode:"work", running:false, ringing:false, endsAt:0, left:mins.work*60000, done:0 };
+
+  /* ---------------- surviving a close ----------------
+     The phone can kill the app at any moment, so the timer is written down
+     whenever it changes and picked up again on the next launch.            */
+  var STALE = 6 * 3600000;
+
+  function save(){
+    store.set("state", JSON.stringify({
+      m:state.mode, r:state.running, e:state.endsAt, l:state.left, d:state.done, t:Date.now()
+    }));
+  }
+
+  (function restore(){
+    var s;
+    try{ s = JSON.parse(store.get("state")); }catch(e){ return; }
+    if(!s || !LABEL[s.m] || (Date.now() - s.t) > STALE) return;
+
+    state.mode = s.m;
+    state.done = s.d || 0;
+
+    if(s.r && s.e > Date.now()){
+      state.running = true;
+      state.endsAt = s.e;
+      state.left = s.e - Date.now();
+      return;
+    }
+    if(s.r){
+      /* it ran out while the app was closed: move on quietly, no late alarm */
+      if(s.m === "work"){
+        state.done++;
+        state.mode = (state.done % CYCLES === 0) ? "long" : "short";
+      }else{
+        state.mode = "work";
+      }
+      state.left = mins[state.mode] * 60000;
+      return;
+    }
+    state.left = (s.l > 0 && s.l <= mins[s.m] * 60000) ? s.l : mins[s.m] * 60000;
+  })();
+
+  ["work","short","long"].forEach(function(m){
+    var b = document.createElement("button");
+    b.className = "mode"; b.type = "button"; b.dataset.mode = m;
+    b.innerHTML = '<span class="dot"></span><span>' + LABEL[m] + '</span>';
+    b.addEventListener("click", function(){ stopAlarm(); setMode(m); });
+    el.modes.appendChild(b);
+  });
+
+  /* ---------------- theme: system -> light -> dark ---------------- */
+  var THEMES = ["auto","light","dark"];
+  var THEME_LABEL = { auto:"system", light:"light", dark:"dark" };
+
+  function applyTheme(v){
+    if(THEMES.indexOf(v) === -1) v = "auto";
+    document.documentElement.setAttribute("data-theme", v);
+    var label = "Theme: " + THEME_LABEL[v];
+    el.theme.title = label;
+    el.theme.setAttribute("aria-label", label);
+    store.set("theme", v);
+
+    var dark = v === "dark" ||
+      (v === "auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    var meta = document.getElementById("themeColor");
+    if(meta) meta.setAttribute("content", dark ? "#191919" : "#FFFFFF");
+  }
+  applyTheme(store.get("theme") || qs.get("theme") || "auto");
+
+  el.theme.addEventListener("click", function(){
+    var now = document.documentElement.getAttribute("data-theme");
+    applyTheme(THEMES[(THEMES.indexOf(now) + 1) % THEMES.length]);
+  });
+
+  /* ---------------- audio ---------------- */
+  var ctx = null, live = [], loop = null, ringStarted = 0;
+  var soundOn = store.get("sound") !== "0" && qs.get("sound") !== "0";
+
+  function unlock(){
+    if(!ctx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(AC) ctx = new AC();
+    }
+    if(ctx && ctx.state === "suspended") ctx.resume();
+  }
+
+  function note(freq, at, dur, peak, type){
+    if(!ctx) return;
+    var osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = type || "sine";
+    osc.frequency.setValueAtTime(freq, at);
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(peak, at + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(at); osc.stop(at + dur + 0.05);
+    live.push(osc, gain);
+  }
+
+  /* end of focus: four rising notes + a warm closing chord - a sense of achievement */
+  function playReward(){
+    if(!ctx) return;
+    var t = ctx.currentTime + 0.05;
+    [523.25, 659.25, 783.99, 1046.50].forEach(function(f, i){
+      note(f, t + i * 0.16, 0.55, 0.16, "sine");
+      note(f * 2, t + i * 0.16, 0.28, 0.045, "triangle");
+    });
+    note(783.99, t + 0.78, 1.5, 0.12, "sine");
+    note(1046.50, t + 0.78, 1.5, 0.09, "sine");
+  }
+
+  /* end of break: repeating double pulses - a clear call back to work */
+  function playCall(){
+    if(!ctx) return;
+    var t = ctx.currentTime + 0.05;
+    for(var i = 0; i < 3; i++){
+      var b = t + i * 0.42;
+      note(880, b, 0.16, 0.15, "sine");
+      note(660, b + 0.17, 0.2, 0.15, "sine");
+    }
+    note(587.33, t + 1.35, 0.7, 0.11, "sine");
+  }
+
+  function startAlarm(reward){
+    ringStarted = Date.now();
+    state.ringing = true;
+    document.body.classList.add("ringing");
+    if(!soundOn) return;
+    unlock();
+    var play = reward ? playReward : playCall;
+    play();
+    loop = setInterval(function(){
+      if(Date.now() - ringStarted > MAX_RING){ stopAlarm(); return; }
+      play();
+    }, reward ? 3400 : 2600);
+  }
+
+  function stopAlarm(){
+    if(loop){ clearInterval(loop); loop = null; }
+    live.forEach(function(n){ try{ n.stop ? n.stop() : n.disconnect(); }catch(e){} });
+    live = [];
+    if(state.ringing){
+      state.ringing = false;
+      document.body.classList.remove("ringing");
+      render();
+    }
+  }
+
+  /* ---------------- stretch break ---------------- */
+  var brk = { on:false, list:[], i:0, left:0, endsAt:0, running:false, finished:false };
+
+  function tone(freq, dur, peak){
+    if(!soundOn) return;
+    unlock();
+    if(ctx) note(freq, ctx.currentTime + 0.02, dur, peak, "sine");
+  }
+
+  function stepLeft(){ return brk.running ? Math.max(0, brk.endsAt - Date.now()) : brk.left; }
+
+  function loadStep(){
+    var st = brk.list[brk.i];
+    if(st && st.s){
+      brk.left = st.s * 1000;
+      brk.endsAt = Date.now() + brk.left;
+      brk.running = true;
+    }else{
+      brk.left = 0;
+      brk.running = false;
+    }
+  }
+
+  function enterBreak(){
+    brk.list = ROUTINE;
+    brk.i = 0;
+    brk.finished = false;
+    brk.on = true;
+
+    el.segs.innerHTML = "";
+    brk.list.forEach(function(){
+      var s = document.createElement("span");
+      s.className = "seg";
+      el.segs.appendChild(s);
+    });
+
+    document.body.classList.add("brk");
+    loadStep();
+    render();
+  }
+
+  function exitBreak(){
+    closeSheet();
+    brk.on = false;
+    brk.running = false;
+    document.body.classList.remove("brk");
+    el.time.classList.remove("reps");
+    render();
+  }
+
+  function nextStep(auto){
+    closeSheet();
+    if(brk.i < brk.list.length - 1){
+      brk.i++;
+      loadStep();
+      if(auto) tone(880, 0.18, 0.10);
+    }else{
+      brk.finished = true;
+      brk.running = false;
+      if(soundOn){ unlock(); playReward(); }
+    }
+    render();
+  }
+
+  function renderBreak(){
+    var st = brk.list[brk.i];
+    var timed = !!(st && st.s);
+    var left = stepLeft();
+
+    Array.prototype.forEach.call(el.segs.children, function(s, idx){
+      s.classList.toggle("on", brk.finished || idx < brk.i || (idx === brk.i && timed && left <= 0));
+    });
+
+    el.brkLeft.textContent = fmt(remaining());
+
+    if(brk.finished){
+      el.time.classList.remove("reps");
+      el.time.textContent = "✓";
+      el.phase.textContent = "All done";
+      el.stepName.textContent = "That is the whole set";
+      el.stepHow.textContent = "Sit back down when the timer calls you.";
+      el.arcPath.style.strokeDashoffset = 0;
+      el.head.style.transform = "rotate(360deg)";
+      el.bDone.textContent = "Back to timer";
+      el.bHold.style.visibility = "hidden";
+      el.help.style.visibility = "hidden";
+      document.body.classList.remove("idle");
+      syncWake();
+      return;
+    }
+
+    var p = 0;
+    if(timed){
+      el.time.classList.remove("reps");
+      el.time.textContent = fmt(left);
+      p = 1 - (left / (st.s * 1000));
+    }else{
+      el.time.classList.add("reps");
+      el.time.textContent = st.r;
+    }
+
+    el.arcPath.style.strokeDashoffset = C * (1 - p);
+    el.head.style.transform = "rotate(" + (p * 360) + "deg)";
+
+    el.phase.textContent = "Step " + (brk.i + 1) + " of " + brk.list.length;
+    el.stepName.textContent = st.n;
+    el.stepHow.textContent = st.h;
+    el.help.style.visibility = "visible";
+
+    el.bDone.textContent = (brk.i === brk.list.length - 1) ? "Finish" : "Done";
+    el.bHold.style.visibility = timed ? "visible" : "hidden";
+    el.bHold.textContent = brk.running ? "Pause" : "Resume";
+
+    document.body.classList.toggle("idle", !brk.running);
+    syncWake();
+  }
+
+  /* the step timer waits while you read */
+  var sheetHeld = false;
+
+  function openSheet(){
+    var st = brk.list[brk.i];
+    if(!brk.on || brk.finished || !st) return;
+    el.sheetTitle.textContent = st.n;
+    el.sheetBody.textContent = st.d || st.h;
+    el.sheetBody.scrollTop = 0;
+    if(brk.running){
+      brk.left = stepLeft();
+      brk.running = false;
+      sheetHeld = true;
+    }
+    document.body.classList.add("sheet-on");
+    el.sheetClose.focus();
+    render();
+  }
+
+  function closeSheet(){
+    if(!document.body.classList.contains("sheet-on")) return;
+    document.body.classList.remove("sheet-on");
+    if(sheetHeld){
+      sheetHeld = false;
+      if(brk.on && !brk.finished){
+        brk.endsAt = Date.now() + brk.left;
+        brk.running = true;
+      }
+    }
+    render();
+  }
+
+  el.help.addEventListener("click", openSheet);
+  el.sheetClose.addEventListener("click", closeSheet);
+
+  el.stretch.addEventListener("click", function(){
+    stopAlarm();
+    if(brk.on) return;
+    /* on an idle break, start its countdown too - start() opens the stretches */
+    if(!state.running && state.mode !== "work") start();
+    else enterBreak();
+  });
+  el.bExit.addEventListener("click", exitBreak);
+  el.bDone.addEventListener("click", function(){
+    if(brk.finished) exitBreak();
+    else nextStep(false);
+  });
+  el.bHold.addEventListener("click", function(){
+    if(brk.running){ brk.left = stepLeft(); brk.running = false; }
+    else { brk.endsAt = Date.now() + brk.left; brk.running = true; }
+    render();
+  });
+
+  /* ---------------- timer ---------------- */
+  function total(){ return mins[state.mode] * 60000; }
+  function remaining(){ return state.running ? Math.max(0, state.endsAt - Date.now()) : state.left; }
+
+  function fmt(ms){
+    var secs = Math.ceil(ms / 1000);
+    var mm = Math.floor(secs / 60), ss = secs % 60;
+    return (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss;
+  }
+
+  function render(){
+    if(booting) return;
+    if(brk.on){ renderBreak(); return; }
+
+    var left = remaining(), tot = total();
+    el.time.classList.remove("reps");
+    el.time.textContent = fmt(left);
+
+    var p = tot ? 1 - (left / tot) : 0;
+    el.arcPath.style.strokeDashoffset = C * (1 - p);
+    el.head.style.transform = "rotate(" + (p * 360) + "deg)";
+
+    el.lenVal.textContent = mins[state.mode];
+
+    if(state.ringing){
+      el.phase.textContent = state.mode === "work" ? "Back to work" : "Session done";
+      el.toggle.textContent = "Stop alarm";
+    }else{
+      el.phase.textContent = LABEL[state.mode];
+      el.toggle.textContent = state.running ? "Pause"
+        : (left < tot ? "Resume" : NEXT_LABEL[state.mode]);
+    }
+
+    el.minus.disabled = el.plus.disabled = state.running || state.ringing;
+    document.body.classList.toggle("idle", !state.running);
+
+    Array.prototype.forEach.call(el.modes.children, function(b){
+      b.setAttribute("aria-pressed", b.dataset.mode === state.mode);
+    });
+
+    syncWake();
+  }
+
+  function setMode(m){
+    state.mode = m;
+    state.left = mins[m] * 60000;
+    state.running = false;
+    save();
+    render();
+  }
+
+  function start(){
+    unlock();
+    var fresh = state.left === total();
+    state.endsAt = Date.now() + state.left;
+    state.running = true;
+    save();
+    /* a break that starts from the top opens the stretches on its own */
+    if(fresh && state.mode !== "work" && (!brk.on || brk.finished)){ enterBreak(); return; }
+    render();
+  }
+
+  function pause(){
+    state.left = remaining();
+    state.running = false;
+    save();
+    render();
+  }
+
+  function complete(){
+    var wasWork = state.mode === "work";
+    state.running = false;
+    if(brk.on) exitBreak();
+    if(wasWork){
+      state.done++;
+      state.mode = (state.done % CYCLES === 0) ? "long" : "short";
+    }else{
+      state.mode = "work";
+    }
+    state.left = total();
+    save();
+    startAlarm(wasWork);
+    render();
+  }
+
+  setInterval(function(){
+    if(brk.on && brk.running && Date.now() >= brk.endsAt) nextStep(true);
+    if(state.running){
+      if(Date.now() >= state.endsAt) complete();
+      else render();
+    }else if(brk.on) render();
+  }, 250);
+
+  /* ---------------- controls ---------------- */
+  el.toggle.addEventListener("click", function(){
+    unlock();
+    if(state.ringing){ stopAlarm(); return; }
+    state.running ? pause() : start();
+  });
+
+  el.reset.addEventListener("click", function(){ stopAlarm(); setMode(state.mode); });
+
+  el.skip.addEventListener("click", function(){
+    stopAlarm();
+    if(state.mode === "work"){
+      state.done++;
+      setMode(state.done % CYCLES === 0 ? "long" : "short");
+    }else setMode("work");
+  });
+
+  function bump(delta){
+    var v = mins[state.mode] + delta;
+    if(v < 1 || v > 180) return;
+    mins[state.mode] = v;
+    store.set("dur", JSON.stringify(mins));
+    state.left = total();
+    save();
+    render();
+  }
+  el.minus.addEventListener("click", function(){ bump(-1); });
+  el.plus.addEventListener("click", function(){ bump(1); });
+
+  el.sound.addEventListener("click", function(){
+    soundOn = !soundOn;
+    el.sound.setAttribute("aria-pressed", soundOn);
+    store.set("sound", soundOn ? "1" : "0");
+    if(!soundOn) stopAlarm();
+    else { unlock(); note(880, ctx ? ctx.currentTime + 0.02 : 0, 0.3, 0.12, "sine"); }
+  });
+  el.sound.setAttribute("aria-pressed", soundOn);
+
+  document.addEventListener("keydown", function(e){
+    var sheetOpen = document.body.classList.contains("sheet-on");
+    if(e.code === "Escape"){
+      if(sheetOpen){ e.preventDefault(); closeSheet(); }
+      return;
+    }
+    if(e.code !== "Space" && e.code !== "Enter") return;
+    e.preventDefault();
+    if(sheetOpen){ closeSheet(); return; }
+    if(!brk.on){ el.toggle.click(); return; }
+    (el.bHold.style.visibility === "hidden" ? el.bDone : el.bHold).click();
+  });
+
+  /* ---------------- keeping the screen on ----------------
+     A countdown is useless if the phone sleeps ten seconds in.             */
+  var wake = null, wantWake = false;
+
+  function askWake(){
+    if(!navigator.wakeLock || wake) return;
+    navigator.wakeLock.request("screen").then(function(w){
+      wake = w;
+      w.addEventListener("release", function(){ wake = null; });
+    }).catch(function(){});
+  }
+
+  function dropWake(){
+    if(!wake) return;
+    var w = wake; wake = null;
+    try{ w.release(); }catch(e){}
+  }
+
+  function syncWake(){
+    var need = state.running || (brk.on && brk.running) || state.ringing;
+    if(need === wantWake) return;
+    wantWake = need;
+    need ? askWake() : dropWake();
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState !== "visible") return;
+    if(wantWake) askWake();   /* the lock is dropped whenever the app is hidden */
+    render();                 /* catch up on time that passed in the background */
+  });
+
+  /* ---------------- install ---------------- */
+  if("serviceWorker" in navigator && window.top === window.self){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+
+  /* home-screen shortcut: ./?go=stretch opens straight into the stretches */
+  if(qs.get("go") === "stretch"){
+    setTimeout(function(){ if(!brk.on) enterBreak(); }, 0);
+  }
+
+  /* ---------------- launch sequence ----------------
+     0.00  white, matching the splash the system just showed
+     0.20  the dot launches and drags the arc round one and a half turns
+     1.36  it lands at the top and the bloom flares
+     1.50  the dial settles into its place in the layout
+     1.66  the rest of the interface rises behind it
+     2.20  handover complete                                               */
+  var BOOT_MS = 2200;
+  var booting = false;
+  var bootTimer = null;
+  var root = document.documentElement;
+
+  function endBoot(){
+    if(bootTimer){ clearTimeout(bootTimer); bootTimer = null; }
+    root.classList.remove("boot", "go");
+    root.style.removeProperty("--boot-dy");
+    root.style.removeProperty("--boot-k");
+    if(!booting) return;
+    booting = false;
+    el.arcPath.style.strokeDasharray = C;   /* back to a full ring */
+    render();
+  }
+
+  function startBoot(){
+    if(!root.classList.contains("boot")) return;
+
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(still){ endBoot(); return; }
+
+    booting = true;
+
+    /* where the dial will end up, and how big it can be without crowding the screen */
+    var box = el.dial.getBoundingClientRect();
+    if(box.width < 1){ endBoot(); return; }   /* no layout, no splash */
+    var span = Math.min(window.innerWidth, window.innerHeight) * 0.56;
+    var k = Math.max(1.05, Math.min(1.75, span / box.width));
+    root.style.setProperty("--boot-dy", Math.round(window.innerHeight / 2 - (box.top + box.height / 2)) + "px");
+    root.style.setProperty("--boot-k", k.toFixed(3));
+
+    /* a comet: a short lit segment with the dot riding its leading edge */
+    var tail = C * 0.26;
+    el.arcPath.style.strokeDasharray = tail + " " + (C - tail);
+    el.arcPath.style.strokeDashoffset = tail;
+
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ root.classList.add("go"); });
+    });
+
+    bootTimer = setTimeout(endBoot, BOOT_MS);
+    document.addEventListener("pointerdown", endBoot, { once:true });
+  }
+
+  render();      /* paint the real state first, so nothing changes on the way in */
+  startBoot();
+})();
+</script>
+</body>
+</html>
