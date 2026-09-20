@@ -1,7 +1,7 @@
 /* Orbit - offline service worker.
    Bump VERSION whenever index.html changes so installed copies pick it up. */
 
-const VERSION = "orbit-v1";
+const VERSION = "orbit-v2-brand-header";
 const FONTS   = "orbit-fonts-v1";
 
 const SHELL = [
