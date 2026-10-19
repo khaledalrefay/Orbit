@@ -17,7 +17,7 @@
 - [ ] الرخصة، و `.gitignore`، و `README.md`، وقالب PR، وقواعد حماية الفرع الرئيسي.
 
 ### ب. مشروع Flutter
-- [ ] `flutter create` بالمنصات المقررة ومعرّف الحزمة، مع تثبيت إصدار Flutter (FVM أو `.tool-versions`).
+- [ ] `flutter create` بالمنصات المقررة (Android و iOS و **Web**) ومعرّف الحزمة، مع تثبيت إصدار Flutter (FVM أو `.tool-versions`).
 - [ ] اختيار الحزم الأساسية وتثبيت إصداراتها (المقترح، ويُراجع وقتها):
   - إدارة الحالة: `flutter_bloc` (Cubit بدور ViewModel، حسب `.claude/flutter-knowledge`)، والحقن عبر constructor و `RepositoryProvider`.
   - التنقّل: `go_router`.
@@ -47,6 +47,7 @@
 
 ### ج. CI/CD
 - [ ] GitHub Actions: format، ثم analyze، ثم test، ثم build apk (debug) على كل PR.
+- [ ] بناء Web على كل PR، ونشر معاينة تلقائي (GitHub Pages أو Cloudflare Pages).
 - [ ] بناء iOS (Codemagic أو GitHub macOS runner) بلا توقيع في هذه المرحلة.
 - [ ] تخزين مفاتيح التوقيع لاحقًا كأسرار (لا مفاتيح داخل المستودع).
 
@@ -62,6 +63,7 @@
 - [ ] `docs/ai/project-decisions.md`: نقل D1 إلى D6 وقرارات المرحلتين 1 و2.
 - [ ] نقل `.claude/skills/` و `.claude/flutter-knowledge/` من Orbit إلى المستودع الجديد، وذكرهما في `CLAUDE.md`
       (متى يُستدعى كل skill).
+- [ ] الويب: التحقق من التثبيت كـ PWA والعمل بدون إنترنت مع نسخة Flutter المعتمدة، وتسجيل النتيجة كقرار.
 - [ ] Hook لبداية الجلسة (SessionStart) يثبّت Flutter في بيئة السحابة، إن احتجنا جلسات Claude Code على الويب.
 
 ## المخرجات
@@ -69,7 +71,7 @@
 و `ARCHITECTURE.md` و `docs/ai/project-decisions.md`.
 
 ## معايير الإنهاء
-- [ ] `flutter run` يعمل على محاكي Android و iOS (أو بناء iOS ناجح على CI).
+- [ ] `flutter run` يعمل على محاكي Android و iOS (أو بناء iOS ناجح على CI)، وعلى Chrome.
 - [ ] CI أخضر على PR تجريبي.
 - [ ] جلسة إيجنت جديدة تستطيع، بالاعتماد على `CLAUDE.md` وحده، تشغيل الفحوص والاختبارات بنجاح.
 
