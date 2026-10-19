@@ -19,7 +19,7 @@
 ### ب. مشروع Flutter
 - [ ] `flutter create` بالمنصات المقررة ومعرّف الحزمة، مع تثبيت إصدار Flutter (FVM أو `.tool-versions`).
 - [ ] اختيار الحزم الأساسية وتثبيت إصداراتها (المقترح، ويُراجع وقتها):
-  - إدارة الحالة: `flutter_riverpod`.
+  - إدارة الحالة: `flutter_bloc` (Cubit بدور ViewModel، حسب `.claude/flutter-knowledge`)، والحقن عبر constructor و `RepositoryProvider`.
   - التنقّل: `go_router`.
   - قاعدة البيانات: `drift` و `sqlite3_flutter_libs`.
   - الإعدادات: `shared_preferences`.
@@ -36,6 +36,7 @@
     data/           قاعدة البيانات، والمستودعات، والمحتوى
     features/
       today/  focus/  programs/  library/  progress/  onboarding/  settings/
+        (داخل كل ميزة: presentation/{cubit,views,widgets} و data/ عند الحاجة)
     l10n/
   assets/content/   assets/images/   assets/sounds/   assets/fonts/
   test/   integration_test/   tool/
@@ -58,12 +59,14 @@
   - ما لا يُفعل: لا تعديل ملفات مولّدة يدويًا، ولا حزم جديدة بلا قرار، ولا ادعاءات صحية في النصوص.
 - [ ] `docs/PROJECT_CONTEXT.md`: الفكرة والجمهور والهوية والقرارات المحسومة والمراجع (من `PRODUCT.md` و `BRAND.md`).
 - [ ] `docs/ARCHITECTURE.md`: نسخة أولى بالطبقات والحزم وتدفّق البيانات.
-- [ ] `DECISIONS.md`: نقل D1 إلى D6 وقرارات المرحلتين 1 و2.
+- [ ] `docs/ai/project-decisions.md`: نقل D1 إلى D6 وقرارات المرحلتين 1 و2.
+- [ ] نقل `.claude/skills/` و `.claude/flutter-knowledge/` من Orbit إلى المستودع الجديد، وذكرهما في `CLAUDE.md`
+      (متى يُستدعى كل skill).
 - [ ] Hook لبداية الجلسة (SessionStart) يثبّت Flutter في بيئة السحابة، إن احتجنا جلسات Claude Code على الويب.
 
 ## المخرجات
 مستودع جديد فيه: تطبيق Flutter فارغ يعمل على المنصتين، و CI أخضر، ووثائق `CLAUDE.md` و `PROJECT_CONTEXT.md`
-و `ARCHITECTURE.md` و `DECISIONS.md`.
+و `ARCHITECTURE.md` و `docs/ai/project-decisions.md`.
 
 ## معايير الإنهاء
 - [ ] `flutter run` يعمل على محاكي Android و iOS (أو بناء iOS ناجح على CI).
