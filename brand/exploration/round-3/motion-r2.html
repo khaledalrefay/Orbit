@@ -1,0 +1,542 @@
+<title>حركة همة: الجولة 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..700&display=swap">
+<style>
+/* Layout: one dark page. Section 1 compares four ways to show stations, each card running the same weekly plan and
+   focus rounds. Section 2 answers what the timer ring stands for, with two live dials. Section 3 is the boot. */
+:root {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222;
+  --warm: #F2A65A; --on-warm: #1B1406; --arc1: #6CB4E8; --arc2: #7FD8BE;
+  --ring: #2E3F70; --dots: #4A5C8C; --icon-bg: #14213D;
+  --ds: 200ms; --dm: 420ms; --dl: 880ms; --ease: cubic-bezier(.22,1,.36,1);
+  --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num, .dg, td { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.hd { padding-block: 40px 12px; display: grid; gap: 12px; }
+.eyebrow { color: var(--muted); font-size: 13px; }
+.hd h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; }
+.hd p { color: var(--muted); max-width: 70ch; }
+.note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.note i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.bar nav { display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: 13px; }
+.bar nav a { color: var(--muted); text-decoration: none; }
+.bar nav a:hover { color: var(--ink); }
+
+.sec { padding-block: 36px 8px; display: grid; gap: 14px; }
+.sec h2 { font-size: 22px; font-weight: 600; }
+.sec > p { color: var(--muted); max-width: 74ch; }
+.ctls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--line); background: var(--surface2); border-radius: 14px; padding: 7px 14px; cursor: pointer; font-size: 14px; }
+.btn:hover { border-color: var(--dots); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.btn.warm { background: var(--warm); color: var(--on-warm); border-color: var(--warm); font-weight: 500; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.cell { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 20px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.ch { display: grid; gap: 4px; }
+.ch h3 { font-size: 17px; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+.ch p { color: var(--muted); font-size: 14px; }
+.tag { width: 28px; height: 28px; border-radius: 9px; display: inline-grid; place-items: center; background: var(--surface2); color: var(--primary); font-weight: 600; font-size: 15px; flex: none; }
+.blk { background: var(--surface2); border-radius: 18px; padding: 14px; display: grid; gap: 8px; min-width: 0; }
+.blk .t { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.blk .t b { color: var(--ink); font-weight: 500; }
+.blk .msg { color: var(--arc2); font-weight: 500; transition: opacity var(--dm) linear; }
+.viz { position: relative; width: 100%; }
+.viz svg { display: block; width: 100%; height: auto; overflow: visible; }
+.viz .mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
+.viz .mid b { font-size: 22px; font-weight: 600; }
+.viz .mid span { font-size: 12px; color: var(--muted); }
+
+/* Station nodes (SVG) */
+.nd circle.b { stroke-width: 2; transition: fill var(--dm) linear, stroke var(--dm) linear; }
+.nd text { font-size: 11px; font-weight: 500; transition: fill var(--dm) linear, opacity var(--dm) linear; }
+.nd .ck { fill: none; stroke: #0B1222; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: opacity var(--dm) linear; }
+.nd.up circle.b { fill: var(--surface2); stroke: var(--dots); }
+.nd.up text { fill: var(--muted); }
+.nd.cur circle.b { fill: var(--surface2); stroke: var(--warm); stroke-width: 2.6; }
+.nd.cur text { fill: var(--warm); }
+.nd.done circle.b { fill: var(--arc2); stroke: var(--arc2); }
+.nd.done text { opacity: 0; }
+.nd:not(.done) .ck { opacity: 0; }
+.nd .hl { fill: var(--warm); opacity: 0; }
+.nd.cur .hl { opacity: .22; }
+.sm { fill: var(--dots); }
+.sml { font-size: 10px; fill: var(--muted); }
+.pop { transform-box: fill-box; transform-origin: center; }
+.halo { transform-box: fill-box; transform-origin: center; animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.4); opacity: .45; } }
+.nd.cur .hl { animation: breathe2 3.2s ease-in-out infinite; }
+@keyframes breathe2 { 0%, 100% { transform: scale(1); opacity: .25; } 50% { transform: scale(1.35); opacity: .1; } }
+
+/* Steps option (HTML) */
+.steps { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.stp { position: relative; overflow: hidden; border-radius: 14px; border: 1.5px solid var(--dots); background: var(--surface); padding: 8px 6px; display: grid; justify-items: center; gap: 2px; min-width: 0; transition: border-color var(--dm) linear, background var(--dm) linear; }
+.stp .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; background: color-mix(in srgb, var(--arc2) 22%, transparent); }
+.stp .i { position: relative; width: 22px; height: 22px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--muted); border: 1.5px solid var(--dots); transition: all var(--dm) linear; }
+.stp .i svg { width: 14px; height: 14px; opacity: 0; transition: opacity var(--dm) linear; position: absolute; }
+.stp small { position: relative; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.stp.cur { border-color: var(--warm); }
+.stp.cur .i { border-color: var(--warm); color: var(--warm); }
+.stp.cur small { color: var(--ink); }
+.stp.done { border-color: var(--arc2); background: color-mix(in srgb, var(--arc2) 14%, var(--surface)); }
+.stp.done .i { background: var(--arc2); border-color: var(--arc2); color: transparent; }
+.stp.done .i svg { opacity: 1; }
+
+/* Dials */
+.dials { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.dial { position: relative; width: min(240px, 100%); margin-inline: auto; aspect-ratio: 1; }
+.dial svg { width: 100%; height: 100%; overflow: visible; }
+.dial .c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; pointer-events: none; }
+.dg { font-size: 42px; font-weight: 500; line-height: 1.1; direction: ltr; }
+.lb { font-size: 13px; color: var(--muted); }
+.pills { display: flex; gap: 6px; margin-top: 6px; }
+.pills i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--dots); transition: background var(--dm) linear, border-color var(--dm) linear; }
+.pills i.done { background: var(--arc2); border-color: var(--arc2); }
+.pills i.cur { background: var(--warm); border-color: var(--warm); }
+.pc { display: grid; gap: 6px; font-size: 14px; }
+.pc b { font-weight: 600; }
+.pc ul { margin: 0; padding-inline-start: 18px; color: var(--muted); display: grid; gap: 2px; }
+
+/* Boot */
+.boot { background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--arc1) 14%, transparent), transparent 60%), var(--icon-bg); border-radius: 20px; height: 250px; display: grid; place-content: center; justify-items: center; gap: 12px; overflow: hidden; }
+.boot svg { width: 100px; height: 100px; overflow: visible; }
+.wordm { display: grid; justify-items: center; }
+.wordm b { font-size: 26px; font-weight: 700; line-height: 1.2; }
+.wordm span { font-size: 11px; font-weight: 500; letter-spacing: .22em; color: #A9B6D6; direction: ltr; }
+.steps-list { margin: 0; padding-inline-start: 20px; color: var(--muted); font-size: 14px; display: grid; gap: 2px; }
+
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+th, td { padding: 10px 14px; text-align: start; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child th, tr:last-child td { border-bottom: 0; }
+tbody th { color: var(--muted); font-weight: 400; white-space: nowrap; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--arc1); }
+.foot { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+
+.rm .halo, .rm .nd.cur .hl { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .halo, .nd.cur .hl { animation: none !important; } }
+@media (max-width: 900px) { .grid2, .dials { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<header class="wrap hd">
+  <span class="eyebrow">هِمّة · المرحلة 2 · القرار 5: لغة الحركة والمؤقت · الجولة 2</span>
+  <h1>المحطات، والحلقة، والإقلاع</h1>
+  <p>شخصية الحركة من الجولة الأولى: <b>ناعمة ومرنة</b> (الاتجاه ب)، وكل ما في الصفحة يتحرّك بمددها ومنحنياتها. الهدف هنا ثلاثة أسئلة: كيف نعرض المحطات بوضوح أكبر من النقاط على دائرة، وماذا تمثّل حلقة المؤقت، وشكل الإقلاع.</p>
+  <span class="note"><i></i>مرجع استكشافي غير معتمد. الوضع الغامق فقط.</span>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <nav aria-label="الأقسام"><a href="#stations">المحطات</a><a href="#ring">حلقة المؤقت</a><a href="#boot">الإقلاع</a><a href="#tokens">الأرقام</a></nav>
+    <button class="btn" id="rmToggle" type="button" aria-pressed="false">تقليل الحركة</button>
+  </div>
+</div>
+
+<main>
+  <section class="wrap sec" id="stations">
+    <h2>1. أربع طرق لعرض المحطات</h2>
+    <p>كل بطاقة تعرض الشيئين نفسيهما: خطة الأسبوع (3 جلسات على 7 أيام، اليوم الثلاثاء)، وجولات التركيز الأربع. القاعدة نفسها في الأربع: المنجزة ممتلئة بعلامة صح، والقادمة فارغة باسمها، والحالية بإطار مشمشي يتنفّس. الجولات تجري أسرع 30 مرة للعرض.</p>
+    <div class="ctls">
+      <button class="btn warm" type="button" id="wNext">أنهِ جلسة اليوم</button>
+      <button class="btn" type="button" id="wReset">أسبوع جديد</button>
+      <button class="btn" type="button" id="rEnd">أنهِ الجولة الحالية</button>
+    </div>
+    <div class="grid2" id="opts"></div>
+  </section>
+
+  <section class="wrap sec" id="ring">
+    <h2>2. ماذا تمثّل حلقة المؤقت؟</h2>
+    <p>هذا سؤالي الثالث بطريقة أوضح. جلسة التركيز فيها 4 جولات، كل جولة 25 دقيقة. الحلقة الكبيرة في المؤقت يمكن أن تعرض واحدًا من شيئين، والاثنان هنا يعملان معًا على نفس الوقت:</p>
+    <div class="dials" id="dials"></div>
+  </section>
+
+  <section class="wrap sec" id="boot">
+    <h2>3. الإقلاع</h2>
+    <p>كما طلبت: الحلقة تُرسم مثل الاتجاه أ، والنقطة تنزل وترتدّ مثل الاتجاه ج. بجانبه النسخة نفسها بنزول ناعم بلا ارتداد، للمقارنة فقط.</p>
+    <div class="ctls"><button class="btn" type="button" id="bReplay">أعد الإقلاع</button></div>
+    <div class="grid2" id="boots"></div>
+  </section>
+
+  <section class="wrap sec" id="tokens">
+    <h2>الأرقام المستعملة (الاتجاه ب)</h2>
+    <div class="tbl"><table>
+      <tbody>
+        <tr><th scope="row">قصيرة</th><td>200 مللي ثانية: الضغطات والتبديل</td></tr>
+        <tr><th scope="row">متوسطة</th><td>420 مللي ثانية: تغيّر حالة المحطة، وامتلاء العادة</td></tr>
+        <tr><th scope="row">طويلة</th><td>880 مللي ثانية: تقدّم القوس أو الخط، والإقلاع</td></tr>
+        <tr><th scope="row">المنحنى الأساسي</th><td><code>cubic-bezier(.22,1,.36,1)</code> · في Flutter <code>Curves.easeOutQuint</code></td></tr>
+        <tr><th scope="row">منحنى الإبراز</th><td><code>cubic-bezier(.16,1,.3,1)</code> · في Flutter <code>Curves.easeOutExpo</code></td></tr>
+        <tr><th scope="row">ارتداد الإقلاع</th><td><code>cubic-bezier(.34,1.56,.64,1)</code> · في Flutter <code>Curves.easeOutBack</code>. يُضاف فقط إن اعتمدنا الإقلاع المرتدّ.</td></tr>
+        <tr><th scope="row">الهالة</th><td>دورة 3.2 ثانية، تكبر حتى 1.4</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</main>
+
+<footer class="wrap foot">الجولة 2 للقرار 5. الجولة الأولى في <code>brand/exploration/round-3/motion.html</code>.</footer>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const C = { surface: '#141E36', surface2: '#1C2844', ring: '#2E3F70', dots: '#4A5C8C', soft: 'rgba(140,155,242,.12)', warm: '#F2A65A', arc1: '#6CB4E8', arc2: '#7FD8BE', primary: '#8C9BF2' };
+const D = { ds: 200, dm: 420, dl: 880 };
+const EASE = [.22, 1, .36, 1], EASE_CSS = 'cubic-bezier(.22,1,.36,1)', BACK_CSS = 'cubic-bezier(.34,1.56,.64,1)';
+let RM = false;
+try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+const el = (t, a = {}, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const anim = (n, f, o) => (RM || !n.animate) ? null : n.animate(f, o);
+const later = (ms, fn) => setTimeout(fn, RM ? 0 : ms);
+let gid = 0;
+
+// Cubic bezier easing, so one tween can move a line, its head dot and a counter together
+function bez([x1, y1, x2, y2]) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = t => ((ax * t + bx) * t + cx) * t, Y = t => ((ay * t + by) * t + cy) * t, dX = t => (3 * ax * t + 2 * bx) * t + cx;
+  return x => { let t = x; for (let i = 0; i < 6; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - x) / d; } return Y(Math.max(0, Math.min(1, t))); };
+}
+const easeB = bez(EASE), lin = x => x;
+function tween(o, to, dur, ease, step) {
+  cancelAnimationFrame(o._raf);
+  const from = o.v ?? to;
+  if (RM || dur <= 0 || from === to) { o.v = to; step(to); return; }
+  const t0 = performance.now();
+  const f = now => { const k = Math.min(1, (now - t0) / dur); o.v = from + (to - from) * ease(k); step(o.v); if (k < 1) o._raf = requestAnimationFrame(f); };
+  o._raf = requestAnimationFrame(f);
+}
+
+const CHECK = 'M-4.5 0.5l3 3 6-6.5';
+const DAYS = ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج'];
+const DAYS_FULL = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+const SESS = [1, 3, 5];
+
+/* ---------- Station views ----------
+   Every view takes positions 0..den along a path. Big nodes are stations; small ones are rest days or the start.
+   p is the head position on the same scale. */
+function PathView(kind, cfg) {
+  const { den, nodes } = cfg; // nodes: [{at, big, label, sub}]
+  const u = 'v' + (++gid);
+  let W, H, pt, d;
+  if (kind === 'line') {
+    W = 320; H = 66; const pad = 20, y = 24;
+    pt = j => [W - pad - j * (W - 2 * pad) / den, y];
+    const [x0] = pt(0), [x1] = pt(den); d = `M${x0} ${y}H${x1}`;
+  } else if (kind === 'arc') {
+    W = 320; H = 186; const cx = 160, cy = 146, R = 126;
+    pt = j => { const a = Math.PI * j / den; return [cx + R * Math.cos(a), cy - R * Math.sin(a)]; };
+    d = `M${cx + R} ${cy}A${R} ${R} 0 0 0 ${cx - R} ${cy}`;
+  } else {
+    W = 220; H = 220; const cx = 110, R = 80;
+    pt = j => { const a = (-90 + 360 * j / den) * Math.PI / 180; return [cx + R * Math.cos(a), cx + R * Math.sin(a)]; };
+    d = `M${cx} ${cx - R}A${R} ${R} 0 1 1 ${cx} ${cx + R}A${R} ${R} 0 1 1 ${cx} ${cx - R}`;
+  }
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
+  const defs = el('defs', {}, svg);
+  const g = el('linearGradient', { id: 'g' + u, x1: kind === 'orbit' ? 0 : 1, y1: 0, x2: kind === 'orbit' ? 1 : 0, y2: kind === 'orbit' ? 1 : 0 }, defs);
+  el('stop', { offset: 0, 'stop-color': C.arc1 }, g); el('stop', { offset: 1, 'stop-color': C.arc2 }, g);
+  const fl = el('filter', { id: 'f' + u, x: '-20%', y: '-50%', width: '140%', height: '200%' }, defs); el('feGaussianBlur', { stdDeviation: 4 }, fl);
+  el('path', { d, fill: 'none', stroke: C.soft, 'stroke-width': 12, 'stroke-linecap': 'round' }, svg);
+  const glow = el('path', { d, fill: 'none', stroke: `url(#g${u})`, 'stroke-width': 6, 'stroke-linecap': 'round', filter: `url(#f${u})`, opacity: .5 }, svg);
+  const prog = el('path', { d, fill: 'none', stroke: `url(#g${u})`, 'stroke-width': 6, 'stroke-linecap': 'round' }, svg);
+  const L = prog.getTotalLength ? prog.getTotalLength() : 1000;
+  [glow, prog].forEach(p => p.setAttribute('stroke-dasharray', `${L} ${L}`));
+  const ns = nodes.map((n, i) => {
+    const [x, y] = pt(n.at);
+    if (!n.big) {
+      el('circle', { cx: x, cy: y, r: 3.2, class: 'sm' }, svg);
+      if (n.label) { const t = el('text', { x, y: kind === 'arc' ? y + 18 : y + 24, 'text-anchor': 'middle', class: 'sml' }, svg); t.textContent = n.label; }
+      return null;
+    }
+    const gr = el('g', { class: 'nd up', transform: `translate(${x} ${y})` }, svg);
+    el('circle', { r: 20, class: 'hl pop' }, gr);
+    const b = el('circle', { r: 12, class: 'b pop' }, gr);
+    const t = el('text', { y: 4, 'text-anchor': 'middle' }, gr); t.textContent = n.label;
+    el('path', { d: CHECK, class: 'ck' }, gr);
+    if (n.sub && kind !== 'orbit') { const s = el('text', { x, y: kind === 'arc' ? y + 30 : y + 34, 'text-anchor': 'middle', class: 'sml' }, svg); s.textContent = n.sub; }
+    gr._x = x; gr._y = y; gr._b = b; gr._i = i; return gr;
+  });
+  const head = el('g', {}, svg);
+  el('circle', { r: 13, fill: C.warm, opacity: .25, class: 'halo' }, head);
+  el('circle', { r: 6, fill: C.warm, stroke: C.surface2, 'stroke-width': 2 }, head);
+  const o = {};
+  const place = v => {
+    const len = L * v / den;
+    prog.style.strokeDashoffset = glow.style.strokeDashoffset = L - len;
+    const q = prog.getPointAtLength ? prog.getPointAtLength(Math.max(.01, len)) : { x: 0, y: 0 };
+    head.setAttribute('transform', `translate(${q.x} ${q.y})`);
+  };
+  return {
+    svg,
+    render(s, how) {
+      // s: { p, done:Set(node index), showHead }
+      ns.forEach((n, i) => { if (!n) return; const st = s.done.has(i) ? 'done' : (nodes[i].at === s.p && !s.showHead) ? 'cur' : 'up'; n.setAttribute('class', 'nd ' + st); });
+      const dur = how === 'snap' ? 0 : how === 'tick' ? 1000 : D.dl;
+      tween(o, s.p, dur, how === 'tick' ? lin : easeB, place);
+      head.style.transition = `opacity ${D.ds}ms linear`; head.style.opacity = s.showHead ? 1 : 0;
+      glow.style.opacity = s.p > 0 ? .5 : 0; prog.style.opacity = s.p > 0 ? 1 : 0;
+    },
+    celebrate(i) {
+      const n = ns[i]; if (!n || RM) return;
+      const c = el('circle', { cx: n._x, cy: n._y, r: 12, fill: C.arc2, filter: `url(#f${u})`, class: 'pop' }, svg);
+      svg.insertBefore(c, n);
+      const a = anim(c, [{ transform: 'scale(.7)', opacity: .8 }, { transform: 'scale(2.6)', opacity: 0 }], { duration: D.dl * 1.3, easing: EASE_CSS });
+      if (a) a.onfinish = () => c.remove();
+      anim(n._b, [{ transform: 'scale(.82)' }, { transform: 'scale(1)' }], { duration: D.dm * 1.4, easing: EASE_CSS });
+    },
+    complete() {
+      if (RM) return;
+      anim(glow, [{ opacity: .5, strokeWidth: 6 }, { opacity: 1, strokeWidth: 14, offset: .35 }, { opacity: .5, strokeWidth: 6 }], { duration: D.dl * 2, easing: 'ease-in-out' });
+    }
+  };
+}
+
+function StepsView(items) {
+  const wrap = h(`<div class="steps">${items.map(t => `<div class="stp up"><span class="fill"></span><span class="i">${t.label}<svg viewBox="-8 -8 16 16"><path d="${CHECK}" fill="none" stroke="#0B1222" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><small>${t.sub}</small></div>`).join('')}</div>`);
+  const ps = [...wrap.children];
+  return {
+    svg: wrap,
+    render(s, how) {
+      // s: { states: ['done'|'cur'|'up'], frac: number|null for the current one }
+      ps.forEach((p, i) => {
+        p.className = 'stp ' + s.states[i];
+        const f = p.querySelector('.fill'); const w = s.states[i] === 'cur' && s.frac != null ? s.frac * 100 : 0;
+        f.style.transition = RM || how === 'snap' ? 'none' : how === 'tick' ? 'width 1000ms linear' : `width ${D.dl}ms ${EASE_CSS}`;
+        f.style.width = w + '%';
+      });
+    },
+    celebrate(i) { anim(ps[i], [{ transform: 'scale(.94)', boxShadow: '0 0 0 0 rgba(127,216,190,.5)' }, { transform: 'scale(1)', boxShadow: '0 0 0 10px rgba(127,216,190,0)' }], { duration: D.dl * 1.2, easing: EASE_CSS }); },
+    complete() { ps.forEach((p, i) => anim(p, [{ background: 'color-mix(in srgb, #7FD8BE 14%, #141E36)' }, { background: 'color-mix(in srgb, #7FD8BE 34%, #141E36)' }, { background: 'color-mix(in srgb, #7FD8BE 14%, #141E36)' }], { duration: D.dl * 1.6, delay: i * 120, easing: 'ease-in-out' })); }
+  };
+}
+
+/* ---------- State ---------- */
+const WK = { p: 3, done: new Set([1]) };       // day index of the head, finished session days
+const RS = { p: 1.45, hold: 0 };                // rounds finished + fraction of the current one
+
+const OPTS = [
+  { id: 'line', tag: 'أ', name: 'مسار الأيام', desc: 'خط أفقي من اليمين إلى اليسار عليه أيام الأسبوع. الجلسات محطات كبيرة باسم اليوم، وأيام الراحة نقاط صغيرة. أوضحها للقراءة السريعة.' },
+  { id: 'arc', tag: 'ب', name: 'قوس الأفق', desc: 'نصف مدار فوق الأيام، يحافظ على روح المدار ويعطي كل محطة مكانًا واضحًا واسمًا تحته.' },
+  { id: 'steps', tag: 'ج', name: 'خطوات', desc: 'بطاقة صغيرة لكل جلسة أو جولة باسمها وحالتها. لا رسم، والمعنى مباشر. الجولة الحالية تمتلئ من الداخل.' },
+  { id: 'orbit', tag: 'د', name: 'المدار بأسماء', desc: 'الدائرة نفسها، لكن المحطات أكبر وفيها اسم اليوم أو رقم الجولة، وتتحوّل إلى علامة صح عند الإنجاز.' }
+];
+
+const views = OPTS.map(o => {
+  const cell = h(`<article class="cell"><div class="ch"><h3><span class="tag">${o.tag}</span>${o.name}</h3><p>${o.desc}</p></div>
+    <div class="blk"><div class="t"><b>خطة الأسبوع</b><span class="num wkt"></span></div><div class="viz wv"></div><span class="msg">أتممت خطة الأسبوع</span></div>
+    <div class="blk"><div class="t"><b>جولات التركيز</b><span class="num rt"></span></div><div class="viz rv"></div></div></article>`);
+  let wv, rv;
+  if (o.id === 'steps') {
+    wv = StepsView(SESS.map(i => ({ label: DAYS[i], sub: DAYS_FULL[i] })));
+    rv = StepsView([1, 2, 3, 4].map(n => ({ label: n, sub: `جولة ${n}` })));
+  } else if (o.id === 'orbit') {
+    wv = PathView('orbit', { den: 7, nodes: DAYS.map((l, i) => ({ at: i, big: SESS.includes(i), label: l })) });
+    rv = PathView('orbit', { den: 4, nodes: [1, 2, 3, 4].map(n => ({ at: n % 4 === 0 ? 4 : n, big: true, label: String(n) })) });
+  } else {
+    wv = PathView(o.id, { den: 6, nodes: DAYS.map((l, i) => ({ at: i, big: SESS.includes(i), label: l, sub: SESS.includes(i) ? DAYS_FULL[i] : '' })).map(n => n.big ? n : { ...n, label: n.label }) });
+    rv = PathView(o.id, { den: 4, nodes: [{ at: 0, big: false }, ...[1, 2, 3, 4].map(n => ({ at: n, big: true, label: String(n) }))] });
+  }
+  const wBox = cell.querySelector('.wv'), rBox = cell.querySelector('.rv');
+  wBox.append(wv.svg); rBox.append(rv.svg);
+  if (o.id === 'orbit') {
+    wBox.style.maxWidth = rBox.style.maxWidth = '200px'; wBox.style.marginInline = rBox.style.marginInline = 'auto';
+    wBox.append(h('<div class="mid"><b class="num wmid"></b><span>جلسات</span></div>'));
+    rBox.append(h('<div class="mid"><b class="num rmid"></b><span class="rmids"></span></div>'));
+  }
+  document.getElementById('opts').append(cell);
+  const isSteps = o.id === 'steps';
+  return {
+    week(how) {
+      const n = WK.done.size;
+      cell.querySelector('.wkt').textContent = `${n} من 3 جلسات · اليوم ${DAYS_FULL[WK.p]}`;
+      cell.querySelector('.msg').style.opacity = n === 3 ? 1 : 0;
+      const wm = cell.querySelector('.wmid'); if (wm) wm.textContent = `${n}/3`;
+      if (isSteps) wv.render({ states: SESS.map(i => WK.done.has(i) ? 'done' : i === WK.p ? 'cur' : 'up'), frac: null }, how);
+      else {
+        const done = new Set(); DAYS.forEach((_, i) => { if (WK.done.has(i)) done.add(i); });
+        wv.render({ p: WK.p, done, showHead: !SESS.includes(WK.p) }, how);
+      }
+    },
+    weekCelebrate(day) { wv.celebrate(isSteps ? SESS.indexOf(day) : day); },
+    weekComplete() { wv.complete(); },
+    rounds(how) {
+      const k = Math.floor(RS.p + 1e-9), frac = RS.p - k, onBreak = frac < 1e-6 && k > 0;
+      const left = Math.round((1 - frac) * 1500), mm = String(Math.floor(left / 60)).padStart(2, '0'), ss = String(left % 60).padStart(2, '0');
+      cell.querySelector('.rt').textContent = onBreak ? (k === 4 ? 'انتهت الجولات الأربع' : `استراحة بعد الجولة ${k}`) : `الجولة ${k + 1} من 4 · ${mm}:${ss}`;
+      const rm = cell.querySelector('.rmid'); if (rm) { rm.textContent = onBreak ? `${k}/4` : `${mm}:${ss}`; cell.querySelector('.rmids').textContent = onBreak ? 'استراحة' : `الجولة ${k + 1}`; }
+      if (isSteps) rv.render({ states: [0, 1, 2, 3].map(i => i < k ? 'done' : i === k ? 'cur' : 'up'), frac }, how);
+      else {
+        const done = new Set(); const offset = o.id === 'orbit' ? 0 : 1;
+        for (let i = 0; i < k; i++) done.add(i + offset);
+        rv.render({ p: RS.p, done, showHead: !onBreak || k === 0 }, how);
+      }
+    },
+    roundCelebrate(k) { rv.celebrate(isSteps ? k - 1 : (o.id === 'orbit' ? k - 1 : k)); }
+  };
+});
+
+/* ---------- Week controls ---------- */
+const wNext = document.getElementById('wNext');
+const wSync = () => { wNext.disabled = WK.done.size >= 3; };
+wNext.addEventListener('click', () => {
+  if (WK.done.size >= 3) return;
+  if (!WK.done.has(WK.p) && SESS.includes(WK.p)) {
+    WK.done.add(WK.p); views.forEach(v => v.week('move')); views.forEach(v => v.weekCelebrate(WK.p));
+  } else {
+    const next = SESS.find(i => i > WK.p && !WK.done.has(i)); if (next == null) return;
+    WK.p = next; views.forEach(v => v.week('move'));
+    later(D.dl * .8, () => { WK.done.add(next); views.forEach(v => { v.week('move'); v.weekCelebrate(next); }); maybeComplete(); });
+    wSync(); return;
+  }
+  maybeComplete(); wSync();
+});
+function maybeComplete() { if (WK.done.size === 3) later(D.dm, () => views.forEach(v => v.weekComplete())); wSync(); }
+document.getElementById('wReset').addEventListener('click', () => { WK.p = 1; WK.done = new Set(); views.forEach(v => v.week('move')); wSync(); });
+
+/* ---------- Rounds clock (shared by the cards and the dials) ---------- */
+function roundsRender(how) { views.forEach(v => v.rounds(how)); dials.forEach(d => d.render(how)); }
+function finishRound(how) {
+  const k = Math.floor(RS.p + 1e-9) + 1; RS.p = k; RS.hold = performance.now() + 2600;
+  roundsRender(how);
+  later(how === 'tick' ? 300 : D.dl * .8, () => { views.forEach(v => v.roundCelebrate(k)); dials.forEach(d => d.celebrate(k)); });
+}
+document.getElementById('rEnd').addEventListener('click', () => { if (RS.p - Math.floor(RS.p) < 1e-6 && RS.p > 0) return; finishRound('move'); });
+setInterval(() => {
+  if (performance.now() < RS.hold) return;
+  if (RS.p >= 4) { RS.p = 0; return roundsRender('move'); }
+  const k = Math.floor(RS.p + 1e-9), next = RS.p + .02;
+  if (next >= k + 1 - 1e-6) return finishRound('tick');
+  RS.p = next; roundsRender('tick');
+}, 1000);
+
+/* ---------- Dials: current round vs whole cycle ---------- */
+function Dial(mode) {
+  const size = 240, cx = 120, r = 92, sw = 10, u = 'd' + (++gid);
+  const svg = el('svg', { viewBox: `0 0 ${size} ${size}`, 'aria-hidden': 'true' });
+  const defs = el('defs', {}, svg);
+  const g = el('linearGradient', { id: 'g' + u, x1: 0, y1: 0, x2: 1, y2: 1 }, defs);
+  el('stop', { offset: 0, 'stop-color': C.arc1 }, g); el('stop', { offset: 1, 'stop-color': C.arc2 }, g);
+  const fl = el('filter', { id: 'f' + u, x: '-30%', y: '-30%', width: '160%', height: '160%' }, defs); el('feGaussianBlur', { stdDeviation: 6 }, fl);
+  let mask = {};
+  const gaps = [1, 2, 3, 4].map(n => { const a = (-90 + 90 * n) * Math.PI / 180; return [cx + r * Math.cos(a), cx + r * Math.sin(a)]; });
+  if (mode === 'cycle') {
+    const m = el('mask', { id: 'm' + u, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: size, height: size }, defs);
+    el('rect', { width: size, height: size, fill: '#fff' }, m);
+    gaps.forEach(([x, y]) => el('circle', { cx: x, cy: y, r: 9, fill: '#000' }, m));
+    mask = { mask: `url(#m${u})` };
+  }
+  el('circle', { cx, cy: cx, r, fill: 'none', stroke: C.soft, 'stroke-width': sw + 8, ...mask }, svg);
+  const arcs = [true, false].map(gl => {
+    const c = el('circle', { cx, cy: cx, r, fill: 'none', stroke: `url(#g${u})`, 'stroke-width': sw, 'stroke-linecap': 'round', pathLength: 100, 'stroke-dasharray': '100 100', transform: `rotate(-90 ${cx} ${cx})`, ...mask }, svg);
+    if (gl) { c.setAttribute('filter', `url(#f${u})`); c.setAttribute('opacity', '.55'); }
+    return c;
+  });
+  const marks = mode === 'cycle' ? gaps.map(([x, y]) => el('circle', { cx: x, cy: y, r: 4.5, fill: C.surface, stroke: C.dots, 'stroke-width': 2, class: 'pop' }, svg)) : [];
+  const head = el('g', {}, svg);
+  el('circle', { r: 17, fill: C.warm, opacity: .22, class: 'halo' }, head);
+  el('circle', { r: 7.5, fill: C.warm, stroke: C.surface, 'stroke-width': 2 }, head);
+  const box = h(`<article class="cell"><div class="dial">${''}<div class="c"><b class="dg">13:30</b><span class="lb"></span>${mode === 'round' ? '<span class="pills"><i></i><i></i><i></i><i></i></span>' : ''}</div></div>
+    <div class="pc">${mode === 'round'
+      ? '<b>الخيار 1: الحلقة = الجولة الحالية</b><span>الحلقة تمتلئ مرة كل 25 دقيقة، ثم تبدأ من جديد. الجولات الأربع نقاط صغيرة تحت الوقت.</span><ul><li>تعرف بنظرة كم بقي من الجولة.</li><li>الحلقة تتحرّك بسرعة مريحة للعين.</li><li>صورة الجلسة كاملة أصغر وأقل بروزًا.</li></ul>'
+      : '<b>الخيار 2: الحلقة = الجلسة كاملة</b><span>الحلقة مقسومة 4 أرباع، كل ربع جولة، وبين الأرباع محطات للاستراحات. تمتلئ مرة واحدة في الجلسة كلها.</span><ul><li>ترى أين أنت في الجلسة كلها، والمحطات جزء من المؤقت.</li><li>الحلقة تتحرّك ببطء: ربع السرعة.</li><li>بقيّة الجولة الحالية أصعب قراءةً بنظرة.</li></ul>'}</div></article>`);
+  box.querySelector('.dial').prepend(svg);
+  document.getElementById('dials').append(box);
+  const o = {};
+  const place = q => {
+    arcs.forEach(a => { a.style.strokeDashoffset = 100 - q * 100; a.style.opacity = q > .001 ? '' : 0; });
+    const a = (-90 + 360 * q) * Math.PI / 180;
+    head.setAttribute('transform', `translate(${cx + r * Math.cos(a)} ${cx + r * Math.sin(a)})`);
+  };
+  return {
+    render(how) {
+      const k = Math.floor(RS.p + 1e-9), frac = RS.p - k, onBreak = frac < 1e-6 && k > 0;
+      let q = mode === 'round' ? (onBreak ? 1 : frac) : RS.p / 4;
+      if (mode === 'round' && !onBreak && (o.v ?? 0) > q + .5) o.v = 0;
+      if (mode === 'cycle' && (o.v ?? 0) > q + .5) o.v = 0;
+      tween(o, q, how === 'snap' ? 0 : how === 'tick' ? 1000 : D.dl, how === 'tick' ? lin : easeB, place);
+      const left = Math.round((1 - frac) * 1500);
+      box.querySelector('.dg').textContent = onBreak ? '05:00' : `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`;
+      box.querySelector('.lb').textContent = onBreak ? (k === 4 ? 'استراحة طويلة' : `استراحة بعد الجولة ${k}`) : `الجولة ${k + 1} من 4`;
+      box.querySelectorAll('.pills i').forEach((p, i) => { p.className = i < k ? 'done' : (i === k && !onBreak) ? 'cur' : ''; });
+      marks.forEach((m, i) => { m.setAttribute('fill', i < k ? C.arc2 : C.surface); m.setAttribute('stroke', i < k ? C.arc2 : C.dots); });
+    },
+    celebrate(k) {
+      if (RM) return;
+      if (mode === 'cycle' && marks[k - 1]) anim(marks[k - 1], [{ transform: 'scale(.6)' }, { transform: 'scale(1.6)', offset: .4 }, { transform: 'scale(1)' }], { duration: D.dl, easing: EASE_CSS });
+      if (mode === 'round') { const p = box.querySelectorAll('.pills i')[k - 1]; if (p) anim(p, [{ transform: 'scale(1)' }, { transform: 'scale(1.6)' }, { transform: 'scale(1)' }], { duration: D.dl, easing: EASE_CSS }); }
+    }
+  };
+}
+const dials = [Dial('round'), Dial('cycle')];
+
+/* ---------- Boot ---------- */
+const MR = 27, MA = -60;
+const mix = (a, b, t) => '#' + [1, 3, 5].map(i => Math.round(parseInt(a.substr(i, 2), 16) + (parseInt(b.substr(i, 2), 16) - parseInt(a.substr(i, 2), 16)) * t).toString(16).padStart(2, '0')).join('');
+const mpt = (deg, r) => [50 + r * Math.cos(deg * Math.PI / 180), 50 + r * Math.sin(deg * Math.PI / 180)];
+const BOOTS = [
+  { name: 'المطلوب: رسم أ ونزول ج', bounce: true, steps: ['الحلقة تُرسم من مكان النقطة في دورة كاملة: 1.1 ثانية بالمنحنى الأساسي.', 'النقطة تنزل من فوق وترتدّ ارتدادًا صغيرًا: 0.55 ثانية.', 'نبضة هالة واحدة عند الوصول، ثم يظهر الاسم.'] },
+  { name: 'للمقارنة: نفس الرسم، ونزول بلا ارتداد', bounce: false, steps: ['الحلقة تُرسم بنفس الطريقة.', 'النقطة تنزل وتتباطأ حتى تقف بمنحنى ب، بلا ارتداد.', 'نفس الهالة والاسم.'] }
+];
+const boots = BOOTS.map((b, bi) => {
+  const cell = h(`<article class="cell"><div class="ch"><h3>${b.name}</h3></div><div class="boot"><div class="wordm"><b>هِمّة</b><span>HIMMA</span></div></div><ol class="steps-list">${b.steps.map(s => `<li>${s}</li>`).join('')}</ol></article>`);
+  const u = 'bt' + bi, svg = el('svg', { viewBox: '0 0 100 100', 'aria-hidden': 'true' }), defs = el('defs', {}, svg);
+  const [dx, dy] = mpt(MA, MR);
+  const gm = el('mask', { id: u + 'g', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: 100, height: 100 }, defs);
+  el('rect', { width: 100, height: 100, fill: '#fff' }, gm); el('circle', { cx: dx, cy: dy, r: 11.75, fill: '#000' }, gm);
+  const rmk = el('mask', { id: u + 'r', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: 100, height: 100 }, defs);
+  const rv = el('circle', { cx: 50, cy: 50, r: MR, fill: 'none', stroke: '#fff', 'stroke-width': 16, pathLength: 100, 'stroke-dasharray': '100 100', transform: `rotate(${MA} 50 50)` }, rmk);
+  rv.style.strokeDashoffset = 0;
+  const g2 = el('g', { mask: `url(#${u}r)` }, el('g', { mask: `url(#${u}g)` }, svg));
+  for (let i = 0; i < 120; i++) {
+    const t = i / 120, a0 = MA - t * 360 + .8, a1 = MA - (i + 1) / 120 * 360 - .8;
+    const [x0, y0] = mpt(a0, MR), [x1, y1] = mpt(a1, MR);
+    el('path', { d: `M${x0.toFixed(2)} ${y0.toFixed(2)}A${MR} ${MR} 0 0 0 ${x1.toFixed(2)} ${y1.toFixed(2)}`, fill: 'none', stroke: mix(mix('#7FD8BE', '#6CB4E8', Math.min(1, t * 1.15)), '#14213D', .32 * t), 'stroke-width': 11 }, g2);
+  }
+  const dot = el('circle', { cx: dx, cy: dy, r: 8.25, fill: C.warm, class: 'pop' }, svg);
+  const box = cell.querySelector('.boot'); box.prepend(svg);
+  const word = cell.querySelector('.wordm');
+  document.getElementById('boots').append(cell);
+  return {
+    play() {
+      if (RM) { if (box.animate) box.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 }); return; }
+      const draw = 1100, drop = 550, at = draw - 150;
+      anim(rv, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: draw, easing: EASE_CSS });
+      anim(dot, [{ opacity: 0, transform: 'translateY(-30px)' }, { opacity: 1, offset: .35 }, { opacity: 1, transform: 'none' }], { duration: drop, delay: at, easing: b.bounce ? BACK_CSS : EASE_CSS, fill: 'backwards' });
+      later(at + drop * .8, () => {
+        const c = el('circle', { cx: dx, cy: dy, r: 8.25, fill: 'none', stroke: C.warm, 'stroke-width': 1.5, class: 'pop' }, svg);
+        const a = anim(c, [{ opacity: .8, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(2.4)' }], { duration: D.dl, easing: EASE_CSS });
+        if (a) a.onfinish = () => c.remove(); else c.remove();
+      });
+      anim(word, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: D.dl, delay: at + drop, easing: EASE_CSS, fill: 'backwards' });
+    }
+  };
+});
+document.getElementById('bReplay').addEventListener('click', () => boots.forEach(b => b.play()));
+
+/* ---------- Reduced motion toggle ---------- */
+const rmBtn = document.getElementById('rmToggle');
+function applyRM() { document.documentElement.classList.toggle('rm', RM); rmBtn.setAttribute('aria-pressed', String(RM)); rmBtn.textContent = RM ? 'تقليل الحركة: مفعّل' : 'تقليل الحركة'; }
+rmBtn.addEventListener('click', () => { RM = !RM; applyRM(); });
+
+applyRM();
+views.forEach(v => { v.week('snap'); v.rounds('snap'); });
+dials.forEach(d => d.render('snap'));
+wSync();
+boots.forEach(b => b.play());
+</script>
