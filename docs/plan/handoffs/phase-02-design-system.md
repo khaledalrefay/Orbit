@@ -14,7 +14,10 @@
   والنموذج المرجعي `brand/exploration/round-3/motion-r3.html`.
 - **أساس نظام التصميم (من هذا القرار):** الطباعة والمسافات المضغوطة، والزوايا المعتدلة، والأزرار المستطيلة.
   القيم في `docs/BRAND.md` القسم 3 و `brand/tokens/` (`typography.json` و`spacing.json` و`radius.json`)،
-  والنموذج `brand/exploration/round-4/foundations.html`. الباقي: الظلال، والأيقونات، والمكوّنات.
+  والنموذج `brand/exploration/round-4/foundations.html`.
+- **الأيقونات (من هذا القرار):** Phosphor بالوزن العادي، والحالة النشطة `fill`، ومربع الأيقونة بلون خفيف،
+  و«اليوم» من المكتبة. الأسماء في `brand/tokens/icons.json`، والنموذج `brand/exploration/round-4/icons.html`.
+  الباقي: الظلال والمكوّنات.
 
 ## اقرأ أولًا
 1. `docs/BRAND.md`: القسم 3 كاملًا، والقسم 6 (المؤجّل).

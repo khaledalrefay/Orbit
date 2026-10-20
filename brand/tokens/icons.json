@@ -1,0 +1,283 @@
+{
+  "$description": "Himma icons, approved 2026-10-20. Phosphor (MIT), regular weight, from @phosphor-icons/core 2.1.1. Names are Phosphor icon names; the active navigation tab uses the -fill variant. Reference prototype: brand/exploration/round-4/icons.html.",
+  "library": {
+    "name": "Phosphor",
+    "package": "@phosphor-icons/core",
+    "version": "2.1.1",
+    "license": "MIT",
+    "weight": "regular",
+    "activeWeight": "fill"
+  },
+  "size": {
+    "nav": 24,
+    "action": 24,
+    "tile": 22,
+    "button": 18,
+    "check": 18
+  },
+  "tile": {
+    "size": 40,
+    "radius": "tile",
+    "background": "habit or category color at 18% opacity",
+    "icon": "habit or category color"
+  },
+  "rtl": {
+    "mirror": [
+      "back"
+    ]
+  },
+  "icon": {
+    "nav": {
+      "today": {
+        "phosphor": "house",
+        "ar": "اليوم"
+      },
+      "programs": {
+        "phosphor": "squares-four",
+        "ar": "البرامج"
+      },
+      "habits": {
+        "phosphor": "check-square",
+        "ar": "العادات"
+      },
+      "focus": {
+        "phosphor": "timer",
+        "ar": "التركيز"
+      },
+      "progress": {
+        "phosphor": "chart-bar",
+        "ar": "التقدّم"
+      }
+    },
+    "action": {
+      "settings": {
+        "phosphor": "gear",
+        "ar": "الإعدادات"
+      },
+      "more": {
+        "phosphor": "dots-three",
+        "ar": "المزيد"
+      },
+      "add": {
+        "phosphor": "plus",
+        "ar": "إضافة"
+      },
+      "close": {
+        "phosphor": "x",
+        "ar": "إغلاق"
+      },
+      "back": {
+        "phosphor": "caret-left",
+        "ar": "رجوع"
+      },
+      "play": {
+        "phosphor": "play",
+        "ar": "بدء"
+      },
+      "pause": {
+        "phosphor": "pause",
+        "ar": "إيقاف"
+      },
+      "skip": {
+        "phosphor": "skip-forward",
+        "ar": "تخطٍّ"
+      },
+      "edit": {
+        "phosphor": "pencil-simple",
+        "ar": "تعديل"
+      },
+      "delete": {
+        "phosphor": "trash",
+        "ar": "حذف"
+      },
+      "bell": {
+        "phosphor": "bell",
+        "ar": "تذكير"
+      },
+      "calendar": {
+        "phosphor": "calendar-blank",
+        "ar": "التقويم"
+      },
+      "search": {
+        "phosphor": "magnifying-glass",
+        "ar": "بحث"
+      },
+      "info": {
+        "phosphor": "info",
+        "ar": "شرح"
+      },
+      "archive": {
+        "phosphor": "archive",
+        "ar": "أرشفة"
+      },
+      "check": {
+        "phosphor": "check",
+        "ar": "تم"
+      }
+    },
+    "category": {
+      "stretch": {
+        "phosphor": "person-simple-tai-chi",
+        "ar": "تمدّد ومرونة"
+      },
+      "strength": {
+        "phosphor": "barbell",
+        "ar": "بناء وقوة"
+      },
+      "cardio": {
+        "phosphor": "person-simple-run",
+        "ar": "هوائي"
+      },
+      "general": {
+        "phosphor": "shapes",
+        "ar": "عام"
+      }
+    },
+    "habit": {
+      "water": {
+        "phosphor": "drop",
+        "ar": "ماء"
+      },
+      "read": {
+        "phosphor": "book-open",
+        "ar": "قراءة"
+      },
+      "sleep": {
+        "phosphor": "moon",
+        "ar": "نوم"
+      },
+      "bed": {
+        "phosphor": "bed",
+        "ar": "سرير"
+      },
+      "walk": {
+        "phosphor": "person-simple-walk",
+        "ar": "مشي"
+      },
+      "bike": {
+        "phosphor": "bicycle",
+        "ar": "دراجة"
+      },
+      "swim": {
+        "phosphor": "swimming-pool",
+        "ar": "سباحة"
+      },
+      "meditate": {
+        "phosphor": "flower-lotus",
+        "ar": "تأمّل"
+      },
+      "breathe": {
+        "phosphor": "wind",
+        "ar": "تنفّس"
+      },
+      "stairs": {
+        "phosphor": "stairs",
+        "ar": "درج"
+      },
+      "coffee": {
+        "phosphor": "coffee",
+        "ar": "قهوة"
+      },
+      "veg": {
+        "phosphor": "carrot",
+        "ar": "خضار"
+      },
+      "salad": {
+        "phosphor": "bowl-food",
+        "ar": "وجبة صحية"
+      },
+      "pill": {
+        "phosphor": "pill",
+        "ar": "فيتامين"
+      },
+      "phone": {
+        "phosphor": "device-mobile-slash",
+        "ar": "الهاتف"
+      },
+      "eye": {
+        "phosphor": "eye",
+        "ar": "راحة العين"
+      },
+      "sun": {
+        "phosphor": "sun",
+        "ar": "شمس"
+      },
+      "alarm": {
+        "phosphor": "alarm",
+        "ar": "استيقاظ"
+      },
+      "journal": {
+        "phosphor": "notebook",
+        "ar": "يوميات"
+      },
+      "music": {
+        "phosphor": "music-notes",
+        "ar": "موسيقى"
+      },
+      "language": {
+        "phosphor": "translate",
+        "ar": "لغة"
+      },
+      "code": {
+        "phosphor": "code",
+        "ar": "برمجة"
+      },
+      "laptop": {
+        "phosphor": "laptop",
+        "ar": "عمل"
+      },
+      "learn": {
+        "phosphor": "brain",
+        "ar": "تعلّم"
+      },
+      "save": {
+        "phosphor": "piggy-bank",
+        "ar": "ادخار"
+      },
+      "clean": {
+        "phosphor": "spray-bottle",
+        "ar": "ترتيب"
+      },
+      "plant": {
+        "phosphor": "plant",
+        "ar": "نبات"
+      },
+      "pet": {
+        "phosphor": "dog",
+        "ar": "حيوان أليف"
+      },
+      "call": {
+        "phosphor": "phone",
+        "ar": "اتصال"
+      },
+      "friends": {
+        "phosphor": "users",
+        "ar": "أصدقاء"
+      },
+      "gratitude": {
+        "phosphor": "heart",
+        "ar": "امتنان"
+      },
+      "mood": {
+        "phosphor": "smiley",
+        "ar": "مزاج"
+      },
+      "smoke": {
+        "phosphor": "cigarette-slash",
+        "ar": "بلا تدخين"
+      },
+      "mosque": {
+        "phosphor": "mosque",
+        "ar": "صلاة"
+      },
+      "shower": {
+        "phosphor": "shower",
+        "ar": "استحمام"
+      },
+      "target": {
+        "phosphor": "target",
+        "ar": "هدف"
+      }
+    }
+  }
+}
