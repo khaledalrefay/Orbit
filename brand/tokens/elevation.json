@@ -1,0 +1,23 @@
+{
+  "$description": "Himma elevation, approved 2026-10-20. Four levels. Cards and lists use a thin border and no shadow; floating layers (bottom sheet, menus) and dialogs use a shadow and no border. Colors refer to brand/tokens/colors.json. Shadows as [x, y, blur, spread, color]. Reference prototype: brand/exploration/round-4/components.html.",
+  "level": {
+    "0": { "use": "screen background", "light": { "surface": "bg" }, "dark": { "surface": "bg" } },
+    "1": {
+      "use": "cards, lists, bottom navigation",
+      "light": { "surface": "surface", "border": "line", "shadow": [] },
+      "dark": { "surface": "surface", "border": "line", "shadow": [] }
+    },
+    "2": {
+      "use": "bottom sheet, menus",
+      "light": { "surface": "surface", "border": null, "shadow": [[0, -2, 10, 0, "#14213D14"], [0, -12, 32, 0, "#14213D1A"]] },
+      "dark": { "surface": "surface2", "border": null, "shadow": [[0, -2, 10, 0, "#00000059"], [0, -12, 32, 0, "#00000059"]] }
+    },
+    "3": {
+      "use": "dialogs",
+      "light": { "surface": "surface", "border": null, "shadow": [[0, 8, 20, 0, "#14213D1F"], [0, 20, 48, 0, "#14213D24"]] },
+      "dark": { "surface": "surface2", "border": null, "shadow": [[0, 8, 20, 0, "#00000073"], [0, 20, 48, 0, "#00000066"]] }
+    }
+  },
+  "scrim": { "light": "#14213D66", "dark": "#0000008C" },
+  "borderWidth": 1
+}

@@ -81,7 +81,7 @@
 | # | المرحلة | الملف | المخرَج الأساسي |
 |---|---|---|---|
 | 1 ✅ | تعريف المنتج: الاسم والميزات | [phase-01](phases/phase-01-product-definition.md) | `docs/PRODUCT.md`، والاسم محسوم (هِمّة) |
-| 2 | بناء الهوية | [phase-02](phases/phase-02-brand-identity.md) | `docs/BRAND.md` وأصول الهوية (النصية معتمدة، والبصرية جارية) |
+| 2 | بناء الهوية | [phase-02](phases/phase-02-brand-identity.md) | `docs/BRAND.md` وأصول الهوية و`brand/tokens/` (القرارات الستة معتمدة، والبنود المكمّلة باقية) |
 | 3 | تهيئة بيئة المشروع | [phase-03](phases/phase-03-environment-setup.md) | مستودع جديد ومشروع Flutter و CI وملف الإيجنت |
 | 4 | نظام التصميم وهيكل التطبيق | [phase-04](phases/phase-04-design-system-shell.md) | Theme ومكوّنات وتنقّل ولغتين مع RTL |
 | 5 | المحتوى | [phase-05](phases/phase-05-content.md) | مكتبة تمارين موحّدة بالعربي والإنجليزي، مع تحقق آلي |

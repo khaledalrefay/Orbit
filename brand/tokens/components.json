@@ -1,0 +1,40 @@
+{
+  "$description": "Himma component specs, approved 2026-10-20. Sizes in dp, radius names from radius.json, colors from colors.json, durations and curves from motion.json. Reference prototype: brand/exploration/round-4/components.html.",
+  "state": {
+    "pressed": { "overlayOpacity": 0.12, "overlayColor": "content color", "scale": 0.97, "duration": "short", "curve": "standard" },
+    "focus": { "ring": "primary", "width": 2, "offset": 2 },
+    "disabled": { "contentOpacity": 0.38, "containerOpacity": 0.12, "containerColor": "ink" }
+  },
+  "button": {
+    "height": 40, "minTouchTarget": 48, "paddingInline": 16, "radius": "md", "iconSize": 18, "gap": 8, "text": "button",
+    "variant": {
+      "start": { "background": "warm", "content": "onWarm", "use": "start a session or round only" },
+      "primary": { "background": "primary", "content": "onPrimary" },
+      "secondary": { "background": null, "border": { "color": "dots", "width": 1.5 }, "content": "ink" },
+      "text": { "background": null, "content": "primary", "paddingInline": 12 }
+    }
+  },
+  "iconButton": {
+    "size": 44, "radius": "tile", "iconSize": 24,
+    "variant": { "outlined": { "background": "surface", "border": "line" }, "standard": { "background": null }, "filled": { "background": "primary", "content": "onPrimary" } }
+  },
+  "card": { "padding": 12, "gap": 8, "radius": "lg", "elevation": 1 },
+  "sessionCard": { "background": "hero", "content": "heroInk", "secondaryContent": "heroMuted", "padding": 12, "radius": "xl" },
+  "iconTile": { "size": 40, "radius": "tile", "iconSize": 22, "backgroundOpacity": 0.18, "neutralBackground": "surface2" },
+  "habitRow": {
+    "gap": 10, "control": 44,
+    "checkBox": { "size": 28, "radius": "sm", "border": { "color": "dots", "width": 2 }, "checkSize": 18, "done": "habit color fill", "missed": { "border": "error", "backgroundOpacity": 0.16, "icon": "x" } },
+    "quantityRing": { "size": 40, "radius": 15, "stroke": 3.5, "track": "ring", "segmentGapDegrees": 14 }
+  },
+  "list": { "grouped": true, "rowMinHeight": 56, "rowPadding": [8, 12], "gap": 12, "sectionHeader": { "text": "caption", "weight": 500, "padding": [12, 12, 6, 12] }, "divider": "line", "chevron": 18 },
+  "switch": { "track": [52, 32], "trackBorder": 2, "thumbOff": 16, "thumbOn": 24, "thumbPressed": 28, "on": { "track": "primary", "thumb": "onPrimary" }, "off": { "track": "surface2", "border": "dots", "thumb": "muted" } },
+  "slider": { "trackHeight": 4, "thumb": 20, "active": "primary", "inactive": "dots", "pressedHalo": 10, "haloOpacity": 0.18 },
+  "stepper": { "background": "surface2", "radius": "md", "padding": 2, "button": 40, "valueMinWidth": 84, "value": "title" },
+  "textField": { "height": 44, "radius": "md", "paddingInline": 12, "background": "bg", "border": { "color": "dots", "width": 1.5 }, "focusBorder": { "color": "primary", "width": 2 }, "errorBorder": "error", "label": "above, caption 500", "helper": "caption" },
+  "pageHeader": { "large": { "title": "display", "subtitle": "caption", "actions": "iconButton outlined" }, "compact": { "title": "title", "leading": "back iconButton", "dividerOnScroll": true } },
+  "bottomNav": { "items": 5, "indicator": [56, 30], "indicatorRadius": "full", "indicatorOpacity": 0.18, "icon": 24, "activeIcon": "fill", "label": "label", "padding": [8, 4, 14, 4] },
+  "bottomSheet": { "radius": "xl", "padding": [8, 16, 20, 16], "gap": 12, "handle": [36, 4], "elevation": 2 },
+  "dialog": { "radius": "xl", "padding": 16, "inset": 24, "elevation": 3, "use": "confirm an action that cannot be undone" },
+  "emptyState": { "art": "orbit: dotted orbit r40, ring r24 stroke 7, apricot dot", "title": "title", "body": "body muted, max 30ch", "action": "primary button" },
+  "loading": { "style": "static skeleton blocks in surface2, no shimmer" }
+}
