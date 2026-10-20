@@ -36,7 +36,7 @@ h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; text-wrap: 
 .rule svg { width: 40px; height: 40px; }
 .rule b { display: block; }
 .rule span { color: var(--muted); font-size: 13px; }
-.sw-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.sw-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
 .sw { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .sw i { height: 26px; border-radius: 6px; background: var(--c); border: 1px solid rgb(0 0 0 / .08); }
 .sw b { font-family: var(--f-mono); font-size: 10px; font-weight: 500; color: var(--muted); direction: ltr; text-align: right; overflow-wrap: anywhere; }
@@ -61,7 +61,7 @@ h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; text-wrap: 
 .phone.light {
   --p-bg:#F3F6FA; --p-surface:#FFFFFF; --p-surface2:#E9EEF6; --p-ink:#14213D; --p-muted:#5A6785; --p-line:#DCE3EE;
   --p-primary:#3D4FA3; --p-on-primary:#FFFFFF; --p-warm:#F2A65A; --p-on-warm:#1B1406; --p-warm-text:#A5561A;
-  --p-done:#2E9C82; --p-on-done:#FFFFFF; --p-miss:#C2563F; --p-wave:#8FD6D0;
+  --p-done:#2E9C82; --p-on-done:#FFFFFF; --p-miss:#C2563F; --p-g1:#3D4FA3; --p-g2:#4FB3C8; --p-arc1:#6CB4E8;
   --p-hero:#14213D; --p-hero-ink:#EEF3FF; --p-hero-muted:#AEBBDA; --p-ring:#2B3A66; --p-arc:#7FD8BE; --p-track:#DCE3EE;
   --p-frame:#D3DBE8; --p-wall:linear-gradient(160deg,#C9D6EA,#E9D9C8);
   --h1:#3E8FD6; --h2:#2E9C82; --h3:#6A5FD0; --h4:#3D4FA3; --h5:#E0705A; --h6:#C77A2E;
@@ -69,7 +69,7 @@ h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; text-wrap: 
 .phone.dark {
   --p-bg:#0B1222; --p-surface:#141E36; --p-surface2:#1C2844; --p-ink:#E8EEFB; --p-muted:#93A0BE; --p-line:#24314F;
   --p-primary:#8C9BF2; --p-on-primary:#0B1222; --p-warm:#F2A65A; --p-on-warm:#1B1406; --p-warm-text:#F2A65A;
-  --p-done:#7FD8BE; --p-on-done:#0B1222; --p-miss:#F08A72; --p-wave:#3C7F95;
+  --p-done:#7FD8BE; --p-on-done:#0B1222; --p-miss:#F08A72; --p-g1:#8C9BF2; --p-g2:#7FD8BE; --p-arc1:#6CB4E8;
   --p-hero:#1B2B55; --p-hero-ink:#EEF3FF; --p-hero-muted:#A9B6D6; --p-ring:#2E3F70; --p-arc:#7FD8BE; --p-track:#24314F;
   --p-frame:#2A3550; --p-wall:linear-gradient(160deg,#1B2440,#3A2C2A);
   --h1:#6CB4E8; --h2:#7FD8BE; --h3:#A99BF5; --h4:#8C9BF2; --h5:#F48E78; --h6:#F2A65A;
@@ -98,14 +98,13 @@ h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; text-wrap: 
 button { cursor: default; }
 .ib:focus-visible, .cta:focus-visible, .ghost:focus-visible, .chip:focus-visible { outline: 2px solid var(--p-primary); outline-offset: 2px; }
 
-/* Hero: Orbit navy with Hybrid's soft wave at the base */
+/* Hero: Orbit navy, Hybrid's wider radius */
 .hero { position: relative; overflow: hidden; background: var(--p-hero); color: var(--p-hero-ink); border-radius: 22px; padding: 16px; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
 .hero .txt { display: flex; flex-direction: column; gap: 2px; position: relative; z-index: 1; min-width: 0; }
 .hero .lbl { font-size: 12px; color: var(--p-hero-muted); }
 .hero .ttl { font-size: 19px; font-weight: 700; line-height: 1.35; }
 .hero .meta { font-size: 12.5px; color: var(--p-hero-muted); }
 .hero > svg.art { position: relative; z-index: 1; width: 84px; height: 84px; }
-.wave-bg { position: absolute; inset: auto 0 0 0; height: 46px; width: 100%; z-index: 0; }
 .cta { margin-top: 10px; align-self: flex-start; font: inherit; font-weight: 600; font-size: 13.5px; border: 0; background: var(--p-warm); color: var(--p-on-warm); border-radius: 999px; padding: 7px 18px; }
 .ghost { font: inherit; font-size: 12.5px; font-weight: 600; background: var(--p-surface2); color: var(--p-ink); border: 0; border-radius: 999px; padding: 7px 14px; white-space: nowrap; }
 
@@ -115,14 +114,18 @@ button { cursor: default; }
 .rh span { font-size: 12px; color: var(--p-muted); }
 
 .week { display: grid; grid-template-columns: repeat(7, 1fr); position: relative; }
-.week::before { content: ""; position: absolute; inset-inline: 7%; top: 33px; height: 2px; background: var(--p-line); }
+.week::before { content: ""; position: absolute; inset-inline: 7.14%; top: 33px; height: 2px; background: var(--p-line); border-radius: 1px; }
+.week .wfill { position: absolute; inset-inline-start: 7.14%; width: 42.86%; top: 32px; height: 4px; border-radius: 2px; background: linear-gradient(to left, var(--p-g1), var(--p-g2)); }
+.phone[dir="ltr"] .week .wfill { background: linear-gradient(to right, var(--p-g1), var(--p-g2)); }
 .day { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; color: var(--p-muted); position: relative; }
-.day .mk { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--p-surface); }
-.day.done .mk { background: var(--p-done); color: var(--p-on-done); }
-.day.today .mk { border: 2.5px solid var(--p-warm); }
+.day .mk { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+.day .mk::after { content: ""; border-radius: 50%; }
+.day.done .mk { background: var(--p-done); color: var(--p-on-done); box-shadow: 0 0 0 3px var(--p-surface); }
+.day.done .mk::after { display: none; }
 .day.today { color: var(--p-ink); font-weight: 700; }
-.day.plan .mk { border: 1.5px dashed var(--p-muted); }
-.day.rest .mk::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--p-line); }
+.day.today .mk::after { width: 13px; height: 13px; background: var(--p-warm); box-shadow: 0 0 0 5px color-mix(in srgb, var(--p-warm) 28%, transparent); }
+.day.plan .mk::after { width: 9px; height: 9px; background: var(--p-surface); box-shadow: 0 0 0 2px var(--p-muted); }
+.day.rest .mk::after { width: 4px; height: 4px; background: var(--p-muted); opacity: .5; }
 .day .mk svg { width: 12px; height: 12px; }
 
 .sec { font-size: 11px; color: var(--p-muted); letter-spacing: .02em; }
@@ -168,7 +171,6 @@ button { cursor: default; }
 .nextup { position: relative; overflow: hidden; border-radius: 18px; background: var(--p-surface); border: 1px solid var(--p-line); padding: 10px 14px; display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; }
 .nextup span:first-child { color: var(--p-muted); }
 .nextup b { font-weight: 600; position: relative; z-index: 1; }
-.nextup .wave-bg { height: 26px; }
 
 /* Habits list */
 .dstrip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
@@ -191,10 +193,13 @@ button { cursor: default; }
 .stat b small { font-size: 12px; font-weight: 500; color: var(--p-muted); }
 .stat span { font-size: 11.5px; color: var(--p-muted); }
 .goal { display: flex; flex-direction: column; gap: 6px; }
-.goal .track { height: 8px; border-radius: 4px; background: var(--p-track); position: relative; }
-.goal .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 64%; border-radius: 4px; background: var(--p-done); }
-.goal .dot { position: absolute; top: 50%; inset-inline-start: 64%; width: 14px; height: 14px; border-radius: 50%; background: var(--p-warm); transform: translate(50%, -50%); border: 2px solid var(--p-surface); }
-.phone[dir="ltr"] .goal .dot { transform: translate(-50%, -50%); }
+.goal .track { height: 4px; border-radius: 2px; background: var(--p-track); position: relative; margin-block: 8px 2px; }
+.goal .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 64%; border-radius: 2px; background: linear-gradient(to left, var(--p-g1), var(--p-g2)); }
+.goal .ms { position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%; transform: translate(50%, -50%); background: var(--p-surface); box-shadow: 0 0 0 2px var(--p-g2); }
+.goal .ms.ahead { box-shadow: 0 0 0 2px var(--p-line); }
+.goal .dot { position: absolute; top: 50%; inset-inline-start: 64%; width: 13px; height: 13px; border-radius: 50%; background: var(--p-warm); transform: translate(50%, -50%); box-shadow: 0 0 0 5px color-mix(in srgb, var(--p-warm) 28%, transparent); }
+.goal .msl { position: relative; height: 14px; font-size: 10.5px; color: var(--p-muted); }
+.goal .msl span { position: absolute; transform: translateX(50%); }
 .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 11.5px; }
 .cal .h { color: var(--p-muted); font-size: 10.5px; }
 .cal span { height: 30px; display: grid; place-items: center; border-radius: 50%; }
@@ -256,14 +261,19 @@ button { cursor: default; }
 .wsmall .w { aspect-ratio: 1; max-width: 100%; justify-content: space-between; }
 .wsmall .w.hero-w { background: var(--p-hero); color: var(--p-hero-ink); position: relative; overflow: hidden; }
 .wsmall .w.hero-w small { color: var(--p-hero-muted); }
+.wring { width: 44px; height: 44px; }
 .wsmall .w b.t { font-family: "IBM Plex Mono", monospace; font-size: 22px; direction: ltr; text-align: end; }
 .wsmall .w .go { align-self: flex-start; font-size: 11.5px; font-weight: 600; background: var(--p-warm); color: var(--p-on-warm); border-radius: 999px; padding: 3px 12px; position: relative; z-index: 1; }
 .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding-inline: 8px; margin-top: auto; }
 .apps i { aspect-ratio: 1; border-radius: 14px; background: rgb(255 255 255 / .35); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .spin { animation: spin 20s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .arc { stroke-dasharray: 100 100; animation: draw 1.4s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes draw { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+  .halo { transform-box: fill-box; transform-origin: center; animation: halo 2.8s ease-in-out infinite; }
+  @keyframes halo { 0%, 100% { transform: scale(1); opacity: .28; } 50% { transform: scale(1.35); opacity: .12; } }
+  .day.today .mk::after, .goal .dot { animation: halo-shadow 2.8s ease-in-out infinite; }
+  @keyframes halo-shadow { 50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--p-warm) 10%, transparent); } }
 }
 </style>
 
@@ -272,29 +282,32 @@ button { cursor: default; }
     <div class="intro-text">
       <div class="eyebrow">همة · المرحلة 2 · جولة الاستكشاف الثانية · نموذج موسّع</div>
       <h1>Orbit Calm مع لمسات Hybrid</h1>
-      <p>الأساس من Orbit Calm: الكحلي العميق، والحلقة والنقطة الدافئة، والهدوء والتنظيم. ومن Hybrid: الموجة الناعمة للحركة، والزوايا الأوسع، والأيقونات المربعة المستديرة. 7 شاشات بالترتيب حسب أهميتها، مع نسخة إنجليزية لشاشة «اليوم».</p>
+      <p>الأساس من Orbit Calm: الكحلي العميق، والحلقة والنقطة الدافئة، والهدوء والتنظيم. ومن Hybrid: الزوايا الأوسع والأيقونات المربعة المستديرة فقط. الموجة أُزيلت، والمدار ومؤشرات التقدّم صارت أغنى بصريًا وبقيت بسيطة. 7 شاشات بالترتيب حسب أهميتها، مع نسخة إنجليزية لشاشة «اليوم».</p>
       <div class="notice"><strong>مرجع استكشافي، لا شيء معتمد.</strong> اسم الاتجاه والألوان والخط مبدئية، والتباين لم يُفحص بعد. رسم التمرين مكان محجوز لأن أسلوب الرسوم لم يُحسم.</div>
     </div>
     <aside class="rules" aria-label="قواعد الدمج">
       <h2>قاعدة الدمج</h2>
       <div class="rule">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="none" stroke="#3D4FA3" stroke-width="3.5"/><circle cx="20" cy="6" r="4.5" fill="#F2A65A"/></svg>
-        <div><b>المدار للوقت والخطة</b><span>خطة الأسبوع، والمؤقت، وهدف الأيام.</span></div>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="rg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3D4FA3"/><stop offset="1" stop-color="#4FB3C8"/></linearGradient></defs><circle cx="20" cy="20" r="14" fill="none" stroke="#DCE3EE" stroke-width="1.5"/><path d="M20 6 A14 14 0 0 1 32.1 27" fill="none" stroke="url(#rg1)" stroke-width="4" stroke-linecap="round"/><circle cx="32.1" cy="27" r="6" fill="#F2A65A" opacity=".25"/><circle cx="32.1" cy="27" r="3.6" fill="#F2A65A"/></svg>
+        <div><b>المدار للوقت والخطة</b><span>مسار رفيع، وقوس متدرّج للتقدّم: خطة الأسبوع، والمؤقت، وهدف الأيام.</span></div>
       </div>
       <div class="rule">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M2 24 C 9 12, 15 12, 20 22 S 32 32, 38 18" fill="none" stroke="#2E9C82" stroke-width="3.5" stroke-linecap="round"/></svg>
-        <div><b>الموجة للحركة</b><span>بطاقة الجلسة، ومشغّل التمرين، والاستراحات.</span></div>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="none" stroke="#DCE3EE" stroke-width="1.5"/><circle cx="20" cy="6" r="3.5" fill="#2E9C82"/><circle cx="32.1" cy="27" r="3.5" fill="#fff" stroke="#5A6785" stroke-width="1.5"/><circle cx="7.9" cy="27" r="3.5" fill="#fff" stroke="#5A6785" stroke-width="1.5"/></svg>
+        <div><b>المحطات للأحداث</b><span>كل جلسة أو جولة نقطة على المدار: ممتلئة إن أُنجزت، وفارغة إن كانت قادمة.</span></div>
       </div>
       <div class="rule">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="9" fill="#F2A65A"/></svg>
-        <div><b>النقطة الدافئة للمبادرة</b><span>ما يحدث الآن: اليوم، والزر الأساسي، والوقت الجاري.</span></div>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="13" fill="#F2A65A" opacity=".25"/><circle cx="20" cy="20" r="8" fill="#F2A65A"/></svg>
+        <div><b>النقطة الدافئة: أنت هنا</b><span>نقطة واحدة بهالة تتنفّس ببطء: اليوم، والوقت الجاري، والزر الأساسي.</span></div>
+      </div>
+      <div class="rule">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="13" fill="none" stroke="#DCE3EE" stroke-width="3.5" stroke-dasharray="8.2 2"/><circle cx="20" cy="20" r="13" fill="none" stroke="#3E8FD6" stroke-width="3.5" stroke-dasharray="8.2 2 8.2 2 8.2 2 0 82" transform="rotate(-90 20 20)"/></svg>
+        <div><b>حلقة مقسّمة للكميات</b><span>العادة الكمّية تُرى أجزاءً: 3 من 8 كاسات تظهر 3 أقسام من 8.</span></div>
       </div>
       <div class="sw-row">
         <div class="sw"><i style="--c:#14213D"></i><b>#14213D</b><small>كحلي</small></div>
         <div class="sw"><i style="--c:#3D4FA3"></i><b>#3D4FA3</b><small>نيلي</small></div>
         <div class="sw"><i style="--c:#6CB4E8"></i><b>#6CB4E8</b><small>سماوي</small></div>
         <div class="sw"><i style="--c:#7FD8BE"></i><b>#7FD8BE</b><small>نعناعي</small></div>
-        <div class="sw"><i style="--c:#8FD6D0"></i><b>#8FD6D0</b><small>موجة</small></div>
         <div class="sw"><i style="--c:#F2A65A"></i><b>#F2A65A</b><small>مشمشي</small></div>
       </div>
     </aside>
@@ -347,23 +360,40 @@ const I = {
 const status = () => `<div class="status"><span class="num">9:41</span><i><b></b><b></b></i></div>`;
 const TABS = { ar: ['اليوم','البرامج','العادات','التركيز','التقدّم'], en: ['Today','Programs','Habits','Focus','Progress'] };
 const tabs = (on, lang = 'ar') => `<nav class="tabs">${['today','programs','habits','focus','progress'].map((k, i) => `<span class="tab${i === on ? ' on' : ''}"><span class="pill">${I[k]}</span>${TABS[lang][i]}</span>`).join('')}</nav>`;
-const waveBg = (h = 46, op = .3) => `<svg class="wave-bg" viewBox="0 0 320 ${h}" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ${h*.6} C 60 ${h*.2}, 110 ${h*.95}, 170 ${h*.55} S 270 ${h*.15}, 320 ${h*.45} V${h} H0 Z" fill="var(--p-wave)" opacity="${op}"/></svg>`;
 const ringSvg = (p, size, r, sw, col, track) => {
   const c = 2 * Math.PI * r, cx = size / 2;
-  return `<svg class="ring" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${track}" stroke-width="${sw}"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 ${cx} ${cx})"/></svg>`;
+  return `<svg class="ring" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${track}" stroke-width="${sw}"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 ${cx} ${cx})"/></svg>`;
 };
-// Orbit ring with a warm dot at the end of the arc
-function orbit(size, r, sw, p, label, sub, track = 'var(--p-ring)', arc = 'var(--p-arc)', ink = 'var(--p-hero-ink)', fs = 15) {
-  const cx = size / 2, a = (-90 + 360 * p) * Math.PI / 180;
-  const x = cx + r * Math.cos(a), y = cx + r * Math.sin(a);
-  const large = p > .5 ? 1 : 0;
-  return `<svg class="art" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${track}" stroke-width="${sw}"/><path d="M${cx} ${cx - r} A${r} ${r} 0 ${large} 1 ${x.toFixed(1)} ${y.toFixed(1)}" fill="none" stroke="${arc}" stroke-width="${sw}" stroke-linecap="round"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${sw * 1.25}" fill="var(--p-warm)"/>${label ? `<text x="${cx}" y="${cx + fs * .35}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="${ink}" font-family="IBM Plex Sans Arabic, IBM Plex Sans">${label}</text>` : ''}${sub || ''}</svg>`;
+// Segmented ring for quantitative habits: n parts, k filled
+const segRing = (n, k, size, r, sw, col, track) => {
+  const c = 2 * Math.PI * r, cx = size / 2, gap = Math.max(1.6, c * .025), seg = c / n - gap;
+  const filled = Array(k).fill(`${seg.toFixed(2)} ${gap.toFixed(2)}`).join(' ') + ` 0 ${c.toFixed(2)}`;
+  return `<svg class="ring" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${track}" stroke-width="${sw}" stroke-dasharray="${seg.toFixed(2)} ${gap.toFixed(2)}" transform="rotate(-90 ${cx} ${cx})"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${col}" stroke-width="${sw}" stroke-dasharray="${filled}" transform="rotate(-90 ${cx} ${cx})"/></svg>`;
+};
+// Orbit: faint dotted outer path, thin track, gradient progress arc, station nodes, warm "you are here" dot with a breathing halo
+let gid = 0;
+function orbit(o) {
+  const { size, r, sw, p, label = '', sub = '', nodes = [], outerNodes = [], ink = 'var(--p-hero-ink)', fs = 15, track = 'var(--p-ring)', c1 = 'var(--p-arc1)', c2 = 'var(--p-arc)', base = 'var(--p-hero)', cls = 'art', outer = true, mono = false } = o;
+  const id = 'og' + (++gid), cx = size / 2, ro = r + sw * 1.9;
+  const pt = (f, rr) => { const a = (-90 + 360 * f) * Math.PI / 180; return [(cx + rr * Math.cos(a)).toFixed(1), (cx + rr * Math.sin(a)).toFixed(1)]; };
+  const [x, y] = pt(p, r);
+  let s = `<svg class="${cls}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:${c1}"/><stop offset="1" style="stop-color:${c2}"/></linearGradient></defs>`;
+  if (outer) s += `<circle cx="${cx}" cy="${cx}" r="${ro}" fill="none" style="stroke:${track}" stroke-width="1.2" stroke-dasharray="0.5 5" stroke-linecap="round"/>`;
+  s += `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${track}" stroke-width="${Math.max(1.5, sw * .4)}"/>`;
+  if (p > 0) s += `<path class="arc" pathLength="100" d="M${cx} ${cx - r} A${r} ${r} 0 ${p > .5 ? 1 : 0} 1 ${x} ${y}" fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round"/>`;
+  const node = (f, rr, done, rad) => { const [nx, ny] = pt(f, rr); return `<circle cx="${nx}" cy="${ny}" r="${rad}" style="fill:${done ? c2 : base};stroke:${done ? base : track}" stroke-width="${done ? 1.5 : 1.8}"/>`; };
+  nodes.forEach(n => { s += node(n.at, r, n.done, sw * .62); });
+  outerNodes.forEach(n => { s += n.now ? (() => { const [nx, ny] = pt(n.at, ro); return `<circle cx="${nx}" cy="${ny}" r="3.4" style="fill:var(--p-warm)"/>`; })() : node(n.at, ro, n.done, 3.4); });
+  s += `<circle class="halo" cx="${x}" cy="${y}" r="${sw * 2.3}" style="fill:var(--p-warm)" opacity=".28"/><circle cx="${x}" cy="${y}" r="${sw * 1.15}" style="fill:var(--p-warm);stroke:${base}" stroke-width="1.5"/>`;
+  if (label) s += `<text x="${cx}" y="${cx + fs * .35}" text-anchor="middle" font-size="${fs}" font-weight="${mono ? 600 : 700}" style="fill:${ink}" font-family="${mono ? 'IBM Plex Mono, monospace' : 'IBM Plex Sans Arabic, IBM Plex Sans'}">${label}</text>`;
+  return s + sub + '</svg>';
 }
+const weekOrbit = () => orbit({ size: 84, r: 30, sw: 5, p: 1 / 3, label: '1/3', nodes: [{ at: 0, done: true }, { at: 2 / 3 }] });
 const habit = (icon, name, meta, hc, state) => {
   let c;
   if (state === 'done') c = `<span class="chk done">${I.check}</span>`;
   else if (state === 'miss') c = `<span class="chk miss">${I.x}</span>`;
-  else if (state === 'qty') c = `<span class="chk qty">${ringSvg(3 / 8, 30, 13, 2.5, `var(--${hc})`, 'var(--p-line)')}<span>+</span></span>`;
+  else if (state === 'qty') c = `<span class="chk qty">${segRing(8, 3, 30, 12.5, 3, `var(--${hc})`, 'var(--p-line)')}<span>+</span></span>`;
   else c = `<span class="chk todo"></span>`;
   return `<div class="habit" style="--hc:var(--${hc})"><span class="ic">${I[icon]}</span><span class="nm"><b>${name}</b><small class="num">${meta}</small></span>${c}</div>`;
 };
@@ -380,8 +410,8 @@ function scrToday(mode, lang = 'ar') {
   const week = t.days.map((d, i) => `<span class="day ${st[i]}"><span>${d}</span><span class="mk">${st[i] === 'done' ? I.check : ''}</span></span>`).join('');
   return `<div class="phone ${mode}" lang="${lang}" dir="${lang === 'ar' ? 'rtl' : 'ltr'}">${status()}<div class="body">
     <div class="top"><div><div class="sub">${t.date}</div><h3>${t.today}</h3></div><button class="ib" type="button" aria-label="${t.settings}">${I.settings}</button></div>
-    <section class="hero">${waveBg()}<div class="txt"><span class="lbl">${t.sess}</span><span class="ttl">${t.prog}</span><span class="meta num">${t.meta}</span><button class="cta" type="button">${t.start}</button></div>${orbit(84, 32, 5, 1 / 3, '1/3')}</section>
-    <section class="card"><div class="rh"><h4>${t.plan}</h4><span class="num">${t.planN}</span></div><div class="week">${week}</div></section>
+    <section class="hero"><div class="txt"><span class="lbl">${t.sess}</span><span class="ttl">${t.prog}</span><span class="meta num">${t.meta}</span><button class="cta" type="button">${t.start}</button></div>${weekOrbit()}</section>
+    <section class="card"><div class="rh"><h4>${t.plan}</h4><span class="num">${t.planN}</span></div><div class="week"><i class="wfill"></i>${week}</div></section>
     <section class="card"><div class="rh"><h4>${t.habits}</h4><span class="num">${t.habN}</span></div>
       <div class="sec">${t.mor}</div>${habit('water', t.water, t.waterM, 'h1', 'qty')}${habit('book', t.read, t.readM, 'h4', 'done')}
       <div class="sec">${t.noon}</div>${habit('walk', t.walk, t.walkM, 'h2', 'done')}
@@ -393,7 +423,7 @@ function scrToday(mode, lang = 'ar') {
 
 function scrPlayer(mode) {
   const fig = `<svg class="fig" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--p-line)" stroke-width="1.5" stroke-dasharray="3 5"/><g fill="none" stroke="var(--p-muted)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="60" cy="30" r="9"/><path d="M60 40v34M60 74l-12 26M60 74l12 26"/><path d="M60 48c-10-6-20-4-26 4M60 48c10-6 20-4 26 4"/></g><path d="M28 40 a10 10 0 1 1 6 12" fill="none" stroke="var(--p-warm)" stroke-width="2.5" stroke-linecap="round"/><path d="M92 40 a10 10 0 1 0 -6 12" fill="none" stroke="var(--p-warm)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
-  const tr = orbit(92, 36, 6, .6, '00:18', '', 'var(--p-track)', 'var(--p-done)', 'var(--p-ink)', 17);
+  const tr = orbit({ size: 92, r: 34, sw: 6, p: .4, label: '00:18', mono: true, fs: 16, track: 'var(--p-line)', c1: 'var(--p-g1)', c2: 'var(--p-g2)', base: 'var(--p-bg)', ink: 'var(--p-ink)', outerNodes: [{ at: 0, done: true }, { at: 1 / 3, now: true }, { at: 2 / 3 }] });
   return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="body">
     <div class="bar"><button class="ib flat" type="button" aria-label="إغلاق">${I.close}</button><h3 class="num">تمرين 3 من 6</h3><button class="ib flat" type="button" aria-label="قائمة التمارين">${I.list}</button></div>
     <div class="segs"><i class="d"></i><i class="d"></i><i class="c"></i><i></i><i></i><i></i></div>
@@ -401,7 +431,7 @@ function scrPlayer(mode) {
     <div class="ex"><div><h4>لف الكتفين</h4><small class="num">المجموعة 2 من 3 · 30 ثانية</small></div>${tr}</div>
     <div class="tip"><b>تلميح:</b> حركة بطيئة، والكتفان بعيدان عن الأذنين.</div>
     <div class="ctrls"><button class="ib" type="button" aria-label="السابق">${I.prev}</button><button class="big" type="button" aria-label="إيقاف مؤقت">${I.pause}</button><button class="ib" type="button" aria-label="التالي">${I.next}</button></div>
-    <div class="nextup">${waveBg(26, .35)}<span>التالي</span><b class="num">تمدّد الرقبة الجانبي · 30 ثانية</b></div>
+    <div class="nextup"><span>التالي</span><b class="num">تمدّد الرقبة الجانبي · 30 ثانية</b></div>
   </div></div>`;
 }
 
@@ -438,7 +468,7 @@ function scrHabit(mode) {
       <div class="stat"><b class="num">90%</b><span>نسبة الإنجاز هذا الشهر</span></div>
       <div class="stat"><b class="num">64 <small>يومًا</small></b><span>المجموع</span></div>
     </div>
-    <section class="card goal"><div class="rh"><h4>هدف 100 يوم</h4><span class="num">64 من 100</span></div><div class="track"><span class="fill"></span><span class="dot"></span></div></section>
+    <section class="card goal"><div class="rh"><h4>هدف 100 يوم</h4><span class="num">64 من 100</span></div><div class="track"><span class="fill"></span><span class="ms" style="inset-inline-start:21%"></span><span class="ms" style="inset-inline-start:50%"></span><span class="ms ahead" style="inset-inline-start:100%"></span><span class="dot"></span></div><div class="msl num"><span style="inset-inline-start:21%">21</span><span style="inset-inline-start:50%">50</span><span style="inset-inline-start:100%">100</span></div></section>
     <section class="card"><div class="rh"><h4>أكتوبر 2026</h4><span>‹ ›</span></div><div class="cal">${heads}${cells}</div>
       <div class="legend"><span><i style="background:var(--hc)"></i>أُنجزت</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--p-miss)"></i>لم تُنجز</span><span><i style="box-shadow:0 0 0 2px var(--p-warm)"></i>اليوم</span></div>
     </section>
@@ -449,7 +479,7 @@ function scrPrograms(mode) {
   const prog = (icon, hc, name, cat, levels, dur) => `<div class="prog" style="--hc:var(--${hc})"><span class="ic">${I[icon]}</span><span class="nm"><b>${name}</b><span class="cat">${cat}</span><small class="num">${levels}</small></span><span class="dur num">${dur}</span></div>`;
   return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="body">
     <div class="top"><div><div class="sub">مكتبة البرامج</div><h3>البرامج</h3></div><button class="ib" type="button" aria-label="الإعدادات">${I.settings}</button></div>
-    <section class="hero">${waveBg()}<div class="txt"><span class="lbl">برنامجك الحالي</span><span class="ttl">حركة</span><span class="meta num">تمدّد ومرونة · 3 أيام بالأسبوع</span><span class="lv" aria-label="المستوى 2 من 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="meta num" style="margin-top:2px">المستوى 2 من 5</span></div>${orbit(84, 32, 5, 1 / 3, '1/3')}</section>
+    <section class="hero"><div class="txt"><span class="lbl">برنامجك الحالي</span><span class="ttl">حركة</span><span class="meta num">تمدّد ومرونة · 3 أيام بالأسبوع</span><span class="lv" aria-label="المستوى 2 من 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="meta num" style="margin-top:2px">المستوى 2 من 5</span></div>${weekOrbit()}</section>
     <div class="chips"><button class="chip on" type="button">الكل</button><button class="chip" type="button">تمدّد ومرونة</button><button class="chip" type="button">بناء وقوة</button><button class="chip" type="button">هوائي</button><button class="chip" type="button">عام</button></div>
     <section class="card">
       ${prog('general', 'h1', 'أساس', 'عام', '3 مستويات · بدون أدوات', '15 د')}<div class="sep"></div>
@@ -461,23 +491,19 @@ function scrPrograms(mode) {
 }
 
 function scrFocus(mode) {
-  const size = 236, r = 100, p = .45, cx = size / 2, a = (-90 + 360 * p) * Math.PI / 180;
-  const x = (cx + r * Math.cos(a)).toFixed(1), y = (cx + r * Math.sin(a)).toFixed(1);
-  const ticks = Array.from({ length: 60 }, (_, i) => { const t = i * 6 * Math.PI / 180; const r1 = 112, r2 = i % 5 ? 114 : 117; return `<path d="M${(cx + r1 * Math.sin(t)).toFixed(1)} ${(cx - r1 * Math.cos(t)).toFixed(1)} L${(cx + r2 * Math.sin(t)).toFixed(1)} ${(cx - r2 * Math.cos(t)).toFixed(1)}"/>`; }).join('');
+  const ring = orbit({ size: 236, r: 96, sw: 9, p: .45, cls: '', track: 'var(--p-line)', c1: 'var(--p-g1)', c2: 'var(--p-g2)', base: 'var(--p-bg)', outerNodes: [{ at: 0, done: true }, { at: .25, now: true }, { at: .5 }, { at: .75 }] });
   return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="body">
     <div class="top"><div><div class="sub">بومودورو</div><h3>التركيز</h3></div><button class="ib" type="button" aria-label="الإعدادات">${I.settings}</button></div>
     <span class="fname">كتابة التقرير</span>
-    <div class="timer"><svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><g stroke="var(--p-line)" stroke-width="1.5">${ticks}</g><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--p-track)" stroke-width="8"/><path d="M${cx} ${cx - r} A${r} ${r} 0 0 1 ${x} ${y}" fill="none" stroke="var(--p-primary)" stroke-width="8" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="10" fill="var(--p-warm)" stroke="var(--p-bg)" stroke-width="3"/></svg>
-      <div class="c"><b>13:40</b><span class="num">جولة تركيز 2 من 4</span></div></div>
-    <div class="rounds" aria-label="الجولة 2 من 4"><i class="d"></i><i class="c"></i><i></i><i></i></div>
+    <div class="timer">${ring}<div class="c"><b>13:40</b><span class="num">جولة تركيز 2 من 4</span></div></div>
     <div class="fctrl"><button class="cta" type="button">إيقاف مؤقت</button><button class="ghost" type="button">تخطٍّ</button></div>
-    <section class="card brk">${waveBg(40, .3)}<div class="rh"><h4>الاستراحة القادمة</h4><span class="num">5 دقائق</span></div><div class="opts"><span>تحرّك</span><span>ارتاح</span></div></section>
+    <section class="card brk"><div class="rh"><h4>الاستراحة القادمة</h4><span class="num">5 دقائق</span></div><div class="opts"><span>تحرّك</span><span>ارتاح</span></div></section>
   </div>${tabs(3)}</div>`;
 }
 
 function scrWidget(mode) {
   const row = (icon, name, hc, state) => {
-    let c = state === 'done' ? `<span class="chk done">${I.check}</span>` : state === 'qty' ? `<span class="chk qty">${ringSvg(3 / 8, 26, 11, 2.5, `var(--${hc})`, 'var(--p-line)')}<span>+</span></span>` : `<span class="chk todo"></span>`;
+    let c = state === 'done' ? `<span class="chk done">${I.check}</span>` : state === 'qty' ? `<span class="chk qty">${segRing(8, 3, 26, 10.5, 2.6, `var(--${hc})`, 'var(--p-line)')}<span>+</span></span>` : `<span class="chk todo"></span>`;
     return `<div class="wrow" style="--hc:var(--${hc})"><span class="ic">${I[icon]}</span><span>${name}</span>${c}</div>`;
   };
   return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="home">
@@ -486,8 +512,8 @@ function scrWidget(mode) {
       ${row('water', 'شرب الماء', 'h1', 'qty')}${row('book', 'القراءة', 'h4', 'done')}${row('walk', 'مشي قصير', 'h2', 'done')}${row('moon', 'النوم قبل 11', 'h3', 'todo')}
     </div>
     <div class="wsmall">
-      <div class="w hero-w">${waveBg(40, .3)}<small style="position:relative">جلسة اليوم</small><b style="position:relative;font-size:14px">تمدّد ومرونة</b><small class="num" style="position:relative">20 دقيقة</small><span class="go">ابدأ</span></div>
-      <div class="w"><div class="wh"><b>التركيز</b></div>${ringSvg(.45, 40, 16, 4, 'var(--p-primary)', 'var(--p-track)').replace('class="ring"', 'style="width:40px;height:40px"')}<b class="t num">13:40</b><small style="color:var(--p-muted);font-size:11px" class="num">جولة 2 من 4</small></div>
+      <div class="w hero-w"><small style="position:relative">جلسة اليوم</small><b style="position:relative;font-size:14px">تمدّد ومرونة</b><small class="num" style="position:relative">20 دقيقة</small><span class="go">ابدأ</span></div>
+      <div class="w"><div class="wh"><b>التركيز</b></div>${orbit({ size: 44, r: 15, sw: 4, p: .45, cls: 'wring', outer: false, track: 'var(--p-line)', c1: 'var(--p-g1)', c2: 'var(--p-g2)', base: 'var(--p-surface)' })}<b class="t num">13:40</b><small style="color:var(--p-muted);font-size:11px" class="num">جولة 2 من 4</small></div>
     </div>
     <div class="apps"><i></i><i></i><i></i><i></i></div>
   </div></div>`;
@@ -495,11 +521,11 @@ function scrWidget(mode) {
 
 const SCREENS = [
   ['اليوم', 'جلسة اليوم في الأعلى، ثم خطة الأسبوع والعادات.', scrToday],
-  ['مشغّل الجلسة', 'أثناء تمرين: الموجة للحركة، والمدار لوقت التمرين.', scrPlayer],
-  ['قائمة العادات', 'شريط الأسبوع بحلقات إنجاز، والعادات حسب أقسام اليوم.', scrHabits],
-  ['صفحة عادة', 'الإحصائيات، وهدف الأيام، والتقويم الشهري.', scrHabit],
+  ['مشغّل الجلسة', 'أثناء تمرين: مدار وقت التمرين، ومحطات المجموعات حوله.', scrPlayer],
+  ['قائمة العادات', 'شريط الأسبوع بحلقات إنجاز، وحلقة مقسّمة للعادة الكمّية.', scrHabits],
+  ['صفحة عادة', 'الإحصائيات، وهدف الأيام بمحطات 21 و50 و100، والتقويم.', scrHabit],
   ['البرامج', 'البرنامج الحالي ومستواه، ثم المكتبة حسب الفئة.', scrPrograms],
-  ['مؤقت التركيز', 'المدار بنقطة دافئة، والموجة تظهر في الاستراحة.', scrFocus],
+  ['مؤقت التركيز', 'قوس متدرّج ونقطة دافئة، ومحطات الجولات على المدار الخارجي.', scrFocus],
   ['ويدجت', 'العادات، وبدء الجلسة، والتركيز على الشاشة الرئيسية.', scrWidget],
   ['Today (English)', 'نسخة إنجليزية من «اليوم» بالاتجاه من اليسار لليمين.', (m) => scrToday(m, 'en')]
 ];
