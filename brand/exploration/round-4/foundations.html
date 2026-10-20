@@ -1,0 +1,479 @@
+<title>أساس نظام همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..700&display=swap">
+<style>
+/* Layout: header, sticky bar (mode, language, text size), section 1 = three ready combinations side by side
+   on the Today screen, section 2 = a mixer (type, spacing, radius, button shape) on Today + Focus,
+   section 3 = the exact values of the mixed choice, section 4 = what needs a decision.
+   Page chrome uses the approved Himma tokens; phones carry their own light/dark token sets. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --surface2: #E9EEF6; --line: #DCE3EE;
+  --ink: #14213D; --muted: #5A6785; --primary: #3D4FA3; --on-primary: #FFFFFF; --warm: #F2A65A; --warm-text: #A5561A;
+  --code: #2A8CA6;
+  --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F; --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222; --warm-text: #F2A65A; --code: #6CB4E8; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F; --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222; --warm-text: #F2A65A; --code: #6CB4E8; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1220px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.num, td.m { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--code); }
+
+.hd { padding-block: 40px 16px; display: grid; gap: 12px; }
+.eyebrow { color: var(--muted); font-size: 13px; }
+.hd h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; line-height: 1.25; }
+.hd p { color: var(--muted); max-width: 76ch; }
+.note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.note i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); flex: none; }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.bar nav { display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: 13px; margin-inline-end: auto; }
+.bar nav a { color: var(--muted); text-decoration: none; }
+.bar nav a:hover { color: var(--ink); }
+.grp { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.grp > span { font-size: 13px; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--surface2); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 9px; cursor: pointer; font-size: 13.5px; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); font-weight: 500; }
+
+.sec { padding-block: 36px 8px; display: grid; gap: 16px; align-content: start; }
+.sec h2 { font-size: 22px; font-weight: 600; }
+.sec > p { color: var(--muted); max-width: 76ch; }
+
+.presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 20px; align-items: start; }
+.preset { display: grid; gap: 12px; justify-items: center; min-width: 0; }
+.cap { display: grid; gap: 2px; text-align: center; max-width: 360px; }
+.cap b { font-size: 16px; font-weight: 600; }
+.cap span { font-size: 13px; color: var(--muted); }
+.cap .num { font-size: 12px; }
+.use { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 6px 14px; cursor: pointer; font-size: 13.5px; }
+.use:hover { border-color: var(--primary); }
+
+.mixer { display: grid; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 16px; }
+.mixer .grp { gap: 6px 10px; }
+.mixer .grp > span { min-width: 64px; }
+.mixer .hint { font-size: 13px; color: var(--muted); }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; align-items: start; justify-items: center; }
+
+.specs { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.box h3 { font-size: 17px; font-weight: 600; }
+.box > p { color: var(--muted); font-size: 14px; }
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: start; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-weight: 500; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.m { direction: ltr; text-align: end; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+td.u { color: var(--muted); font-size: 13px; }
+td.s { white-space: nowrap; }
+.ruler { display: grid; gap: 6px; }
+.ruler div { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.ruler i { height: 10px; border-radius: 3px; background: color-mix(in srgb, var(--primary) 55%, transparent); }
+.radii { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; }
+.rad { display: grid; gap: 6px; justify-items: center; text-align: center; font-size: 12px; color: var(--muted); }
+.rad i { width: 64px; height: 64px; border: 2px solid var(--primary); background: color-mix(in srgb, var(--primary) 12%, transparent); }
+.rad b { color: var(--ink); font-weight: 500; font-size: 13px; }
+
+.qs ol { margin: 0; padding-inline-start: 20px; display: grid; gap: 10px; font-size: 14.5px; }
+.qs li span { display: block; color: var(--muted); font-size: 13.5px; }
+.foot { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+
+/* ---------- Phone ---------- */
+.ph.light {
+  --p-bg:#F3F6FA; --p-surface:#FFFFFF; --p-surface2:#E9EEF6; --p-line:#DCE3EE; --p-ink:#14213D; --p-muted:#5A6785;
+  --p-primary:#3D4FA3; --p-on-primary:#FFFFFF; --p-warm:#F2A65A; --p-warm-text:#A5561A; --p-on-warm:#1B1406;
+  --p-hero:#14213D; --p-hero-ink:#EEF3FF; --p-hero-muted:#AEBBDA; --p-hero-ring:#2B3A66;
+  --p-arc1:#6CB4E8; --p-arc2:#7FD8BE; --p-done:#2E9C82; --p-on-done:#FFFFFF; --p-dots:#8390AD; --p-track:#DCE3EE;
+  --p-frame:#D3DBE8; --h-sky:#3E8FD6; --h-violet:#7A5FD0; --h-green:#2E9C5E;
+}
+.ph.dark {
+  --p-bg:#0B1222; --p-surface:#141E36; --p-surface2:#1C2844; --p-line:#24314F; --p-ink:#E8EEFB; --p-muted:#93A0BE;
+  --p-primary:#8C9BF2; --p-on-primary:#0B1222; --p-warm:#F2A65A; --p-warm-text:#F2A65A; --p-on-warm:#1B1406;
+  --p-hero:#1B2B55; --p-hero-ink:#EEF3FF; --p-hero-muted:#A9B6D6; --p-hero-ring:#2E3F70;
+  --p-arc1:#6CB4E8; --p-arc2:#7FD8BE; --p-done:#7FD8BE; --p-on-done:#0B1222; --p-dots:#4A5C8C; --p-track:#2E3F70;
+  --p-frame:#2A3550; --h-sky:#6CB4E8; --h-violet:#B09CF5; --h-green:#7FD39A;
+}
+.ph { width: 360px; max-width: 100%; background: var(--p-bg); color: var(--p-ink); font-family: var(--f); border-radius: 38px; border: 6px solid var(--p-frame); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 12px 32px rgb(11 18 34 / .12); }
+.ph .r-timer { font-size: var(--timer-s); font-weight: var(--timer-w); line-height: var(--timer-lh); font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; direction: ltr; }
+.ph .r-display { font-size: var(--display-s); font-weight: var(--display-w); line-height: var(--display-lh); }
+.ph .r-titleLg { font-size: var(--titleLg-s); font-weight: var(--titleLg-w); line-height: var(--titleLg-lh); }
+.ph .r-title { font-size: var(--title-s); font-weight: var(--title-w); line-height: var(--title-lh); }
+.ph .r-body { font-size: var(--body-s); font-weight: var(--body-w); line-height: var(--body-lh); }
+.ph .r-bodyStrong { font-size: var(--body-s); font-weight: 500; line-height: var(--body-lh); }
+.ph .r-button { font-size: var(--button-s); font-weight: var(--button-w); line-height: var(--button-lh); }
+.ph .r-caption { font-size: var(--caption-s); font-weight: var(--caption-w); line-height: var(--caption-lh); color: var(--p-muted); }
+.ph .r-label { font-size: var(--label-s); font-weight: var(--label-w); line-height: var(--label-lh); }
+.ph .r-labelCap { font-size: var(--labelCap-s); font-weight: var(--label-w); line-height: var(--label-lh); }
+.ph .num { font-variant-numeric: tabular-nums; }
+.ph svg { display: block; flex: none; }
+
+.st { display: flex; justify-content: space-between; padding: 10px 24px 2px; font-size: 12px; font-weight: 500; direction: ltr; }
+.st i { display: inline-flex; gap: 4px; align-items: center; }
+.st i b { width: 14px; height: 8px; border-radius: 2px; background: currentColor; opacity: .8; }
+.scr { padding: 8px var(--g) var(--sg); display: flex; flex-direction: column; gap: var(--sg); }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: var(--ig); }
+.top > div { display: flex; flex-direction: column; min-width: 0; }
+.ib { width: 44px; height: 44px; border-radius: var(--rtile); border: 1px solid var(--p-line); background: var(--p-surface); color: var(--p-ink); display: grid; place-items: center; padding: 0; flex: none; cursor: pointer; }
+.ib svg { width: 22px; height: 22px; }
+
+.hero { background: var(--p-hero); color: var(--p-hero-ink); border-radius: var(--rxl); padding: var(--cp); display: flex; flex-wrap: wrap; gap: var(--ig); align-items: center; }
+.hero .txt { flex: 1 1 160px; display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+.hero .r-caption { color: var(--p-hero-muted); }
+.hero .acts { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: var(--ig); margin-top: calc(var(--ig) / 2); }
+
+.btn { min-height: var(--bh); padding-inline: calc(var(--bh) * .45); border-radius: var(--rbtn); border: 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-align: center; }
+.btn svg { width: 18px; height: 18px; }
+.btn.warm { background: var(--p-warm); color: var(--p-on-warm); }
+.btn.pri { background: var(--p-primary); color: var(--p-on-primary); }
+.btn.sec { background: transparent; color: var(--p-ink); border: 1.5px solid var(--p-dots); }
+.btn.txt { background: transparent; color: var(--p-primary); padding-inline: 10px; }
+.btn.onhero { background: color-mix(in srgb, var(--p-hero-ink) 14%, transparent); color: var(--p-hero-ink); }
+
+.sx { display: flex; flex-direction: column; gap: var(--ig); }
+.sh { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.card { background: var(--p-surface); border: 1px solid var(--p-line); border-radius: var(--rlg); padding: var(--cp); display: flex; flex-direction: column; gap: var(--rg); }
+
+/* linked steps (approved component) */
+.steps { display: flex; align-items: flex-start; }
+.steps .it { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 52px; max-width: 76px; }
+.steps .sq { width: 30px; height: 30px; border-radius: var(--rsm); border: 1.5px solid var(--p-dots); background: var(--p-surface); display: grid; place-items: center; color: var(--p-muted); position: relative; overflow: hidden; font-size: 12px; font-weight: 600; }
+.steps .sq .fl { position: absolute; inset-block: 0; inset-inline-start: 0; background: color-mix(in srgb, var(--p-arc2) 28%, transparent); }
+.steps .sq span { position: relative; }
+.steps .it small { color: var(--p-muted); text-align: center; overflow-wrap: anywhere; }
+.steps .it.done .sq { background: var(--p-done); border-color: var(--p-done); color: var(--p-on-done); }
+.steps .it.cur .sq { border-color: var(--p-warm); color: var(--p-warm-text); }
+.steps .it.cur small { color: var(--p-ink); }
+.steps .cn { flex: 1; height: 3px; border-radius: 2px; background: var(--p-track); margin-top: 14px; min-width: 8px; }
+.steps .cn.on { background: var(--p-done); }
+
+/* habit rows */
+.hr { display: flex; align-items: center; gap: calc(var(--ig) + 2px); }
+.hr + .hr { border-top: 1px solid var(--p-line); padding-top: var(--rg); }
+.tile { width: 40px; height: 40px; border-radius: var(--rtile); background: color-mix(in srgb, var(--hc) 18%, transparent); color: var(--hc); display: grid; place-items: center; flex: none; }
+.tile svg { width: 22px; height: 22px; }
+.hr .nm { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ctl { width: 44px; height: 44px; display: grid; place-items: center; flex: none; border: 0; background: none; padding: 0; color: var(--hc); cursor: pointer; }
+.cb { width: 28px; height: 28px; border-radius: var(--rsm); border: 2px solid var(--p-dots); display: grid; place-items: center; }
+.cb.on { background: var(--hc); border-color: var(--hc); color: var(--p-surface); }
+.cb svg { width: 16px; height: 16px; }
+
+/* tabs */
+.tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--p-surface); border-top: 1px solid var(--p-line); padding: 8px 4px 14px; margin-top: auto; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--p-muted); text-align: center; min-width: 0; }
+.tab .pill { width: 56px; height: 30px; border-radius: 999px; display: grid; place-items: center; }
+.tab svg { width: 22px; height: 22px; }
+.tab.on { color: var(--p-ink); }
+.tab.on .pill { background: color-mix(in srgb, var(--p-primary) 18%, transparent); color: var(--p-primary); }
+.tab small { overflow-wrap: anywhere; }
+
+/* focus */
+.dial { position: relative; width: 236px; max-width: 100%; aspect-ratio: 1; margin-inline: auto; }
+.dial svg { width: 100%; height: 100%; overflow: visible; }
+.dial .c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; padding: 28px; }
+.halo { transform-box: fill-box; transform-origin: center; animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.4); opacity: .45; } }
+.acts3 { display: flex; flex-wrap: wrap; gap: var(--ig); justify-content: center; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: var(--ig); }
+.row + .row { border-top: 1px solid var(--p-line); padding-top: var(--rg); }
+.row > div { display: flex; flex-direction: column; min-width: 0; }
+.sw { width: 52px; height: 32px; border-radius: 999px; background: var(--p-primary); position: relative; flex: none; border: 0; padding: 0; cursor: pointer; }
+.sw::after { content: ""; position: absolute; top: 4px; inset-inline-end: 4px; width: 24px; height: 24px; border-radius: 50%; background: var(--p-on-primary); }
+
+@media (prefers-reduced-motion: reduce) { .halo { animation: none; } }
+@media (max-width: 1140px) { .presets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 960px) { .specs { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 780px) { .presets, .pair { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<header class="wrap hd" dir="rtl" lang="ar">
+  <span class="eyebrow">هِمّة · المرحلة 2 · القرار 6: نظام التصميم · الجولة 4</span>
+  <h1>الأساس: الطباعة والمسافات والزوايا</h1>
+  <p>ثلاثة محاور تبني عليها كل المكوّنات. لكل محور ثلاثة خيارات، معروضة على شاشتين حقيقيتين: «اليوم» (بطاقة جلسة اليوم، وخطة الأسبوع، وصفوف العادات) و«التركيز» (المؤقت والأزرار والقائمة). القسم 1 ثلاث تركيبات جاهزة للمقارنة السريعة، والقسم 2 للخلط بين المحاور بحرية. الألوان والخط والحركة كما اعتُمدت.</p>
+  <span class="note"><i></i>مرجع استكشافي حتى تعتمده. الأحجام بوحدة sp والمسافات بوحدة dp، والشاشة بعرض 360.</span>
+</header>
+
+<div class="bar" dir="rtl" lang="ar">
+  <div class="wrap">
+    <nav aria-label="الأقسام"><a href="#presets">التركيبات</a><a href="#mixer">الخلط</a><a href="#values">القيم</a><a href="#decide">للقرار</a></nav>
+    <div class="grp"><span>الوضع</span><div class="seg" id="segMode" role="group" aria-label="الوضع"><button type="button" id="m-dark" data-v="dark">غامق</button><button type="button" id="m-light" data-v="light">فاتح</button></div></div>
+    <div class="grp"><span>اللغة</span><div class="seg" id="segLang" role="group" aria-label="لغة الشاشات"><button type="button" id="l-ar" data-v="ar">عربي</button><button type="button" id="l-en" data-v="en">English</button></div></div>
+    <div class="grp"><span>حجم النص</span><div class="seg" id="segScale" role="group" aria-label="تكبير النص في النظام"><button type="button" id="k-100" data-v="1">100%</button><button type="button" id="k-130" data-v="1.3">130%</button><button type="button" id="k-160" data-v="1.6">160%</button><button type="button" id="k-200" data-v="2">200%</button></div></div>
+  </div>
+</div>
+
+<main dir="rtl" lang="ar">
+  <section class="wrap sec" id="presets">
+    <h2>1. ثلاث تركيبات</h2>
+    <p>كل تركيبة تجمع خيارًا من كل محور بنفس الروح: من المضغوط إلى الرحب. جرّب «حجم النص» من الشريط العلوي لترى كيف يتحمّل كل خيار تكبير النص في النظام. زر «اخلط من هنا» ينقل التركيبة إلى القسم 2.</p>
+    <div class="presets" id="presetGrid"></div>
+  </section>
+
+  <section class="wrap sec" id="mixer">
+    <h2>2. اخلط بين المحاور</h2>
+    <p>نفس الخيارات، لكن كل محور مستقل. شكل الأزرار سؤال منفصل: مستطيلة بزاوية السُلّم، أو كبسولة كما في نموذج الجولة الثانية.</p>
+    <div class="mixer">
+      <div class="grp"><span>الطباعة</span><div class="seg" id="segType" role="group" aria-label="سُلّم الطباعة"></div></div>
+      <div class="grp"><span>المسافات</span><div class="seg" id="segSpace" role="group" aria-label="المسافات"></div></div>
+      <div class="grp"><span>الزوايا</span><div class="seg" id="segRadius" role="group" aria-label="الزوايا"></div></div>
+      <div class="grp"><span>الأزرار</span><div class="seg" id="segBtn" role="group" aria-label="شكل الأزرار"><button type="button" id="b-scale" data-v="scale">مستطيلة مستديرة</button><button type="button" id="b-pill" data-v="pill">كبسولة</button></div></div>
+      <p class="hint" id="mixHint"></p>
+    </div>
+    <div class="pair" id="mixPair"></div>
+  </section>
+
+  <section class="wrap sec" id="values">
+    <h2>3. القيم الدقيقة للخلطة الحالية</h2>
+    <p>تتحدّث مع القسم 2. هذه القيم ستُكتب في <code>brand/tokens/typography.json</code> و<code>spacing.json</code> و<code>radius.json</code> بعد الاعتماد.</p>
+    <div class="specs">
+      <div class="box">
+        <h3>سُلّم الطباعة</h3>
+        <p>Rubik للغتين بنفس القيم. الحجم / الوزن / ارتفاع السطر.</p>
+        <div class="tw"><table id="typeTable"></table></div>
+      </div>
+      <div style="display:grid;gap:16px;min-width:0">
+        <div class="box">
+          <h3>المسافات</h3>
+          <div class="ruler" id="ruler"></div>
+          <div class="tw"><table id="spaceTable"></table></div>
+        </div>
+        <div class="box">
+          <h3>الزوايا</h3>
+          <div class="radii" id="radii"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap sec qs" id="decide">
+    <h2>4. المطلوب للقرار</h2>
+    <div class="box">
+      <ol>
+        <li>سُلّم الطباعة: مضغوط، أو متوازن، أو رحب.<span>يمكن أخذ الأحجام من خيار والأوزان من آخر، مثل أحجام «متوازن» بعناوين 700.</span></li>
+        <li>المسافات: مضغوطة، أو متوازنة، أو رحبة.<span>الهامش الجانبي للشاشة هو الفرق الأوضح بينها: 16 أو 20 أو 24.</span></li>
+        <li>الزوايا: معتدلة، أو متدرّجة، أو أوسع.<span>«متدرّجة» هي ترتيب لما في نموذج Hybrid (14 للأزرار و 22 للبطاقات).</span></li>
+        <li>شكل الأزرار: مستطيلة بزاوية السُلّم، أو كبسولة.</li>
+        <li>تكبير النص: أقترح أن يكبر كل النص مع النظام حتى 200%، إلا استثناءين.<span>أرقام المؤقت حتى 120% (هي كبيرة أصلًا، وتخرج من الحلقة بعدها)، وتسميات القائمة السفلية وأسماء الخطوات حتى 130% (تحت الأيقونات في مساحة ثابتة). جرّب 200% لترى الأثر.</span></li>
+      </ol>
+      <p>بعد اعتماد الأساس: جولة للمكوّنات بكل حالاتها (عادي، ومضغوط، ومعطّل، وتركيز لوحة المفاتيح) بالوضعين، ومعها الظلال والارتفاع. والأيقونات في جولة خاصة؛ الأيقونات هنا مؤقتة من النماذج السابقة.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot" dir="rtl" lang="ar">الجولة 4 للقرار 6. المعتمد حتى الآن في <code>docs/BRAND.md</code> القسم 3.</footer>
+
+<script>
+/* ---------- Options ---------- */
+const ROLES = [
+  ['timer', 'أرقام المؤقت', 'المؤقت والعدّادات الكبيرة', '18:42', '18:42'],
+  ['display', 'عنوان الشاشة', 'اليوم، التركيز', 'اليوم', 'Today'],
+  ['titleLg', 'عنوان كبير', 'بطاقة جلسة اليوم، اسم التمرين', 'تمدّد ومرونة', 'Stretch & mobility'],
+  ['title', 'عنوان قسم', 'خطة الأسبوع، عادات اليوم', 'عادات اليوم', 'Habits today'],
+  ['body', 'نص', 'أسماء العادات والقوائم والشروح', 'قراءة 10 صفحات', 'Read 10 pages'],
+  ['button', 'زر', 'نص الأزرار', 'ابدأ الجلسة', 'Start session'],
+  ['caption', 'نص ثانوي', 'التفاصيل والعدّادات الصغيرة', '3 من 8 كاسات', '3 of 8 glasses'],
+  ['label', 'تسمية', 'القائمة السفلية والخطوات', 'التقدّم', 'Progress']
+];
+const TYPE = {
+  compact: { name: 'مضغوط', desc: 'نص 14، ونسبة 1.125. عناوين 700.', r: { timer: [48, 500, 1.1], display: [24, 700, 1.3], titleLg: [19, 700, 1.35], title: [16, 600, 1.4], body: [14, 400, 1.55], button: [14, 500, 1.3], caption: [12, 400, 1.5], label: [11, 500, 1.4] } },
+  balanced: { name: 'متوازن', desc: 'نص 15، ونسبة 1.2 تقريبًا. عناوين 600.', r: { timer: [56, 500, 1.1], display: [28, 600, 1.3], titleLg: [21, 600, 1.35], title: [17, 600, 1.4], body: [15, 400, 1.55], button: [15, 500, 1.3], caption: [13, 400, 1.5], label: [12, 500, 1.4] } },
+  roomy: { name: 'رحب', desc: 'نص 16، ونسبة 1.25. عناوين 600 ومؤقت أخف.', r: { timer: [64, 400, 1.1], display: [32, 600, 1.25], titleLg: [23, 600, 1.35], title: [18, 600, 1.4], body: [16, 400, 1.6], button: [16, 500, 1.3], caption: [14, 400, 1.5], label: [12, 500, 1.4] } }
+};
+const SPACE = {
+  compact: { name: 'مضغوطة', desc: 'وحدة 4. هامش 16، وداخل البطاقة 12.', base: 4, scale: [4, 8, 12, 16, 20, 24, 32], g: 16, cp: 12, cg: 8, sg: 20, rg: 8, ig: 8, bh: 40 },
+  balanced: { name: 'متوازنة', desc: 'وحدة 4. هامش 20، وداخل البطاقة 16.', base: 4, scale: [4, 8, 12, 16, 20, 24, 32, 40], g: 20, cp: 16, cg: 12, sg: 24, rg: 12, ig: 12, bh: 44 },
+  roomy: { name: 'رحبة', desc: 'وحدة 8. هامش 24، وداخل البطاقة 24.', base: 8, scale: [4, 8, 16, 24, 32, 40, 48], g: 24, cp: 24, cg: 16, sg: 32, rg: 16, ig: 16, bh: 48 }
+};
+const SPACE_ROLES = [['g', 'الهامش الجانبي للشاشة'], ['cp', 'داخل البطاقة'], ['cg', 'بين البطاقات'], ['sg', 'بين الأقسام'], ['rg', 'بين الصفوف داخل البطاقة'], ['ig', 'بين العناصر المتجاورة'], ['bh', 'ارتفاع الزر']];
+const RADIUS = {
+  soft: { name: 'معتدلة', desc: '4 إلى 20. الأقرب لـ Material.', xs: 4, sm: 8, tile: 10, md: 12, lg: 16, xl: 20 },
+  hybrid: { name: 'متدرّجة', desc: '6 إلى 28. ترتيب لزوايا Hybrid.', xs: 6, sm: 10, tile: 12, md: 14, lg: 22, xl: 28 },
+  wide: { name: 'أوسع', desc: '8 إلى 34. أنعم وأقرب للمربع المستدير.', xs: 8, sm: 12, tile: 14, md: 18, lg: 26, xl: 34 }
+};
+const RAD_ROLES = [['xs', 'أشرطة التقدّم الصغيرة'], ['sm', 'الخطوات، ومربع التسجيل'], ['tile', 'مربع الأيقونة 40'], ['md', 'الأزرار والحقول'], ['lg', 'البطاقات'], ['xl', 'بطاقة الجلسة، و bottom sheet']];
+const PRESETS = [
+  { name: 'أ · مضغوط ومعتدل', t: 'compact', s: 'compact', r: 'soft', b: 'scale', desc: 'محتوى أكثر في الشاشة. عملي وقريب من Material.' },
+  { name: 'ب · متوازن ومتدرّج', t: 'balanced', s: 'balanced', r: 'hybrid', b: 'scale', desc: 'وسط بين الاثنين، وزوايا Hybrid مرتّبة.' },
+  { name: 'ج · رحب وأوسع', t: 'roomy', s: 'roomy', r: 'wide', b: 'pill', desc: 'هواء أكثر وزوايا أنعم. أهدأ، ويحتاج تمريرًا أكثر.' }
+];
+const CAP = { timer: 1.2, labelCap: 1.3 };
+
+/* ---------- Strings ---------- */
+const TX = {
+  ar: { date: 'الثلاثاء، 20 أكتوبر', today: 'اليوم', sLbl: 'جلسة اليوم', sTitle: 'تمدّد ومرونة', sMeta: 'المستوى 2 · 20 دقيقة · 6 تمارين', start: 'ابدأ الجلسة', details: 'التفاصيل',
+    week: 'خطة الأسبوع', weekN: '1 من 3 جلسات', days: ['الأحد', 'الثلاثاء', 'الخميس'], habits: 'عادات اليوم', habitsN: '1 من 3',
+    water: 'شرب الماء', waterM: '3 من 8 كاسات', read: 'قراءة 10 صفحات', readM: 'مرة واحدة يوميًا', walk: 'مشي 20 دقيقة', walkM: 'أُنجزت · 5 أيام متتالية',
+    tabs: ['اليوم', 'البرامج', 'العادات', 'التركيز', 'التقدّم'], focus: 'التركيز', task: 'كتابة التقرير', round: 'جولة تركيز 2 من 4', rounds: n => `جولة ${n}`,
+    pause: 'إيقاف مؤقت', skip: 'تخطي الجولة', end: 'إنهاء', next: 'الاستراحة التالية', nextV: '5 دقائق · تحرّك أو ارتاح', stretch: 'تمارين تمدّد في الاستراحة', stretchM: 'تمرين واحد قصير من مكتبة التمدّد',
+    settings: 'الإعدادات', more: 'المزيد', add: 'أضف كأسًا', check: 'سجّل القراءة', undo: 'أُنجزت' },
+  en: { date: 'Tuesday, Oct 20', today: 'Today', sLbl: "Today's session", sTitle: 'Stretch & mobility', sMeta: 'Level 2 · 20 min · 6 exercises', start: 'Start session', details: 'Details',
+    week: 'Weekly plan', weekN: '1 of 3 sessions', days: ['Sun', 'Tue', 'Thu'], habits: 'Habits today', habitsN: '1 of 3',
+    water: 'Drink water', waterM: '3 of 8 glasses', read: 'Read 10 pages', readM: 'Once a day', walk: 'Walk 20 min', walkM: 'Done · 5-day streak',
+    tabs: ['Today', 'Programs', 'Habits', 'Focus', 'Progress'], focus: 'Focus', task: 'Write the report', round: 'Focus round 2 of 4', rounds: n => `Round ${n}`,
+    pause: 'Pause', skip: 'Skip round', end: 'End', next: 'Next break', nextV: '5 min · move or rest', stretch: 'Stretch during breaks', stretchM: 'One short move from the stretch library',
+    settings: 'Settings', more: 'More', add: 'Add a glass', check: 'Log reading', undo: 'Done' }
+};
+
+/* ---------- Icons (placeholder set from earlier rounds) ---------- */
+const S = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC = {
+  settings: S('<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>'),
+  more: S('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'),
+  today: S('<circle cx="12" cy="12" r="7.5"/><circle cx="17.3" cy="6.7" r="2" fill="currentColor"/>'),
+  programs: S('<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>'),
+  habits: S('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>'),
+  focus: S('<circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.5 1.5M10 3h4"/>'),
+  progress: S('<path d="M5 20V12M12 20V5M19 20v-6"/>'),
+  water: S('<path d="M12 3.5c3 4 6 7.2 6 10.5a6 6 0 0 1-12 0c0-3.3 3-6.5 6-10.5z"/>'),
+  book: S('<path d="M4 5.5c3-1 5.5-1 8 .8 2.5-1.8 5-1.8 8-.8V19c-3-1-5.5-1-8 .8-2.5-1.8-5-1.8-8-.8z"/><path d="M12 6.3V19.8"/>'),
+  walk: S('<circle cx="13" cy="4.5" r="1.8"/><path d="M10 21l2-6 3 3v3M12 15l1-5 3 3h3M13 10l-4 1-2 3"/>'),
+  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.5"/><rect x="13.5" y="5" width="4" height="14" rx="1.5"/></svg>',
+  check: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>'
+};
+
+/* ---------- State ---------- */
+const st = { mode: 'dark', lang: 'ar', k: 1, t: 'balanced', s: 'balanced', r: 'hybrid', b: 'scale' };
+try { st.mode = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } catch (e) {}
+try { Object.assign(st, JSON.parse(localStorage.getItem('himma-r4') || '{}')); } catch (e) {}
+const save = () => { try { localStorage.setItem('himma-r4', JSON.stringify(st)); } catch (e) {} };
+
+/* ---------- Building blocks ---------- */
+function vars(c) {
+  const T = TYPE[c.t].r, Sp = SPACE[c.s], R = RADIUS[c.r], out = [];
+  for (const [role, [s, w, lh]] of Object.entries(T)) {
+    const k = role === 'timer' ? Math.min(st.k, CAP.timer) : st.k;
+    out.push(`--${role}-s:${(s * k).toFixed(1)}px`, `--${role}-w:${w}`, `--${role}-lh:${lh}`);
+  }
+  out.push(`--labelCap-s:${(T.label[0] * Math.min(st.k, CAP.labelCap)).toFixed(1)}px`);
+  ['g', 'cp', 'cg', 'sg', 'rg', 'ig', 'bh'].forEach(key => out.push(`--${key}:${Sp[key]}px`));
+  ['xs', 'sm', 'tile', 'md', 'lg', 'xl'].forEach(key => out.push(`--r${key}:${R[key]}px`));
+  out.push(`--rbtn:${c.b === 'pill' ? '999px' : R.md + 'px'}`);
+  return out.join(';');
+}
+const frame = (c, inner, tab) => {
+  const L = TX[st.lang];
+  return `<div class="ph ${st.mode}" dir="${st.lang === 'ar' ? 'rtl' : 'ltr'}" lang="${st.lang}" style="${vars(c)}">
+    <div class="st"><span class="num">9:41</span><i><b></b><b></b></i></div>
+    <div class="scr">${inner}</div>
+    <nav class="tabs">${['today', 'programs', 'habits', 'focus', 'progress'].map((id, i) => `<span class="tab${i === tab ? ' on' : ''}"><span class="pill">${IC[id]}</span><small class="r-labelCap">${L.tabs[i]}</small></span>`).join('')}</nav>
+  </div>`;
+};
+const steps = (items, cur, frac) => `<div class="steps">${items.map((label, i) => {
+  const s = i < cur ? 'done' : i === cur ? 'cur' : 'up';
+  return `${i ? `<span class="cn${i <= cur ? ' on' : ''}"></span>` : ''}<div class="it ${s}"><span class="sq">${s === 'cur' ? `<i class="fl" style="width:${frac * 100}%"></i>` : ''}<span>${s === 'done' ? IC.check : i + 1}</span></span><small class="r-labelCap">${label}</small></div>`;
+}).join('')}</div>`;
+function segRing(n, k) {
+  const cx = 20, r = 15, out = [];
+  for (let i = 0; i < n; i++) {
+    const a0 = (-90 + i * 360 / n + 7) * Math.PI / 180, a1 = (-90 + (i + 1) * 360 / n - 7) * Math.PI / 180;
+    const d = `M${(cx + r * Math.cos(a0)).toFixed(2)} ${(cx + r * Math.sin(a0)).toFixed(2)}A${r} ${r} 0 0 1 ${(cx + r * Math.cos(a1)).toFixed(2)} ${(cx + r * Math.sin(a1)).toFixed(2)}`;
+    out.push(`<path d="${d}" fill="none" stroke="${i < k ? 'currentColor' : 'var(--p-track)'}" stroke-width="3.5" stroke-linecap="round"/>`);
+  }
+  return `<svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true">${out.join('')}<text x="20" y="25" text-anchor="middle" font-size="13" font-weight="500" fill="var(--p-muted)">+</text></svg>`;
+}
+let gid = 0;
+function heroArt() {
+  const id = 'ha' + (++gid), cx = 32, r = 24, q = 1 / 3, a = (-90 + 360 * q) * Math.PI / 180;
+  return `<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--p-arc1)"/><stop offset="1" stop-color="var(--p-arc2)"/></linearGradient></defs>
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--p-hero-ring)" stroke-width="5"/>
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="5" stroke-linecap="round" pathLength="100" stroke-dasharray="${q * 100} 100" transform="rotate(-90 ${cx} ${cx})"/>
+    <circle cx="${cx + r * Math.cos(a)}" cy="${cx + r * Math.sin(a)}" r="5.5" fill="var(--p-warm)" stroke="var(--p-hero)" stroke-width="2"/></svg>`;
+}
+function dial() {
+  const id = 'dl' + (++gid), cx = 118, r = 98, q = .45, a = (-90 + 360 * q) * Math.PI / 180, x = cx + r * Math.cos(a), y = cx + r * Math.sin(a);
+  return `<svg viewBox="0 0 236 236" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--p-arc1)"/><stop offset="1" stop-color="var(--p-arc2)"/></linearGradient></defs>
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--p-track)" stroke-width="10"/>
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round" pathLength="100" stroke-dasharray="${q * 100} 100" transform="rotate(-90 ${cx} ${cx})"/>
+    <g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="18" fill="var(--p-warm)" opacity=".22" class="halo"/><circle r="8.5" fill="var(--p-warm)" stroke="var(--p-bg)" stroke-width="2"/></g></svg>`;
+}
+
+/* ---------- Screens ---------- */
+function today(c) {
+  const L = TX[st.lang];
+  return frame(c, `
+    <div class="top"><div><span class="r-caption">${L.date}</span><span class="r-display">${L.today}</span></div><button class="ib" type="button" aria-label="${L.settings}">${IC.settings}</button></div>
+    <div style="display:flex;flex-direction:column;gap:var(--cg)">
+      <div class="hero"><div class="txt"><span class="r-caption">${L.sLbl}</span><span class="r-titleLg">${L.sTitle}</span><span class="r-caption num">${L.sMeta}</span></div>${heroArt()}
+        <div class="acts"><button class="btn warm r-button" type="button">${IC.play}${L.start}</button><button class="btn onhero r-button" type="button">${L.details}</button></div></div>
+      <div class="card"><div class="sh"><span class="r-title">${L.week}</span><span class="r-caption num">${L.weekN}</span></div>${steps(L.days, 1, 0)}</div>
+    </div>
+    <div class="sx"><div class="sh"><span class="r-title">${L.habits}</span><span class="r-caption num">${L.habitsN}</span></div>
+      <div class="card">
+        <div class="hr" style="--hc:var(--h-sky)"><span class="tile">${IC.water}</span><span class="nm"><span class="r-bodyStrong">${L.water}</span><span class="r-caption num">${L.waterM}</span></span><button class="ctl" type="button" aria-label="${L.add}">${segRing(8, 3)}</button></div>
+        <div class="hr" style="--hc:var(--h-violet)"><span class="tile">${IC.book}</span><span class="nm"><span class="r-bodyStrong">${L.read}</span><span class="r-caption">${L.readM}</span></span><button class="ctl" type="button" aria-label="${L.check}"><span class="cb"></span></button></div>
+        <div class="hr" style="--hc:var(--h-green)"><span class="tile">${IC.walk}</span><span class="nm"><span class="r-bodyStrong">${L.walk}</span><span class="r-caption num">${L.walkM}</span></span><button class="ctl" type="button" aria-label="${L.undo}"><span class="cb on">${IC.check}</span></button></div>
+      </div></div>`, 0);
+}
+function focus(c) {
+  const L = TX[st.lang];
+  return frame(c, `
+    <div class="top"><div><span class="r-caption">${L.task}</span><span class="r-display">${L.focus}</span></div><button class="ib" type="button" aria-label="${L.more}">${IC.more}</button></div>
+    <div class="dial">${dial()}<div class="c"><span class="r-timer">13:45</span><span class="r-caption">${L.round}</span></div></div>
+    <div class="card">${steps([1, 2, 3, 4].map(L.rounds), 1, .45)}</div>
+    <div class="acts3"><button class="btn pri r-button" type="button">${IC.pause}${L.pause}</button><button class="btn sec r-button" type="button">${L.skip}</button><button class="btn txt r-button" type="button">${L.end}</button></div>
+    <div class="card">
+      <div class="row"><div><span class="r-bodyStrong">${L.next}</span><span class="r-caption num">${L.nextV}</span></div></div>
+      <div class="row"><div><span class="r-bodyStrong">${L.stretch}</span><span class="r-caption">${L.stretchM}</span></div><button class="sw" type="button" role="switch" aria-checked="true" aria-label="${L.stretch}"></button></div>
+    </div>`, 3);
+}
+
+/* ---------- Page ---------- */
+const $ = id => document.getElementById(id);
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+function seg(id, opts, key) {
+  const box = $(id);
+  if (!box.children.length) Object.entries(opts).forEach(([v, o]) => box.append(h(`<button type="button" id="${key}-${v}" data-v="${v}">${o.name}</button>`)));
+  box.onclick = e => { const b = e.target.closest('button'); if (!b) return; st[key] = key === 'k' ? +b.dataset.v : b.dataset.v; render(); };
+}
+seg('segType', TYPE, 't'); seg('segSpace', SPACE, 's'); seg('segRadius', RADIUS, 'r');
+seg('segBtn', {}, 'b'); seg('segMode', {}, 'mode'); seg('segLang', {}, 'lang'); seg('segScale', {}, 'k');
+
+function render() {
+  document.documentElement.setAttribute('data-theme', st.mode);
+  const mark = (id, val) => $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === String(val))));
+  mark('segType', st.t); mark('segSpace', st.s); mark('segRadius', st.r); mark('segBtn', st.b); mark('segMode', st.mode); mark('segLang', st.lang); mark('segScale', st.k);
+
+  $('presetGrid').innerHTML = PRESETS.map((p, i) => `<div class="preset">${today(p)}
+    <div class="cap"><b>${p.name}</b><span>${p.desc}</span><span class="num">${TYPE[p.t].name} · ${SPACE[p.s].name} · ${RADIUS[p.r].name} · ${p.b === 'pill' ? 'كبسولة' : 'أزرار مستطيلة'}</span></div>
+    <button class="use" type="button" data-i="${i}">اخلط من هنا</button></div>`).join('');
+
+  const mix = { t: st.t, s: st.s, r: st.r, b: st.b };
+  $('mixPair').innerHTML = `<div class="preset">${today(mix)}</div><div class="preset">${focus(mix)}</div>`;
+  $('mixHint').textContent = `${TYPE[st.t].desc} ${SPACE[st.s].desc} ${RADIUS[st.r].desc}`;
+
+  const T = TYPE[st.t].r;
+  $('typeTable').innerHTML = `<thead><tr><th>الدور</th><th>الاستعمال</th><th>عربي</th><th>English</th><th>sp</th></tr></thead><tbody>${ROLES.map(([k, n, u, ar, en]) => {
+    const [s, w, lh] = T[k], css = `font-size:${s}px;font-weight:${w};line-height:${lh};${k === 'timer' ? 'font-variant-numeric:tabular-nums;direction:ltr' : ''}`;
+    return `<tr><td>${n}</td><td class="u">${u}</td><td class="s" style="${css}">${ar}</td><td class="s" dir="ltr" style="${css}">${en}</td><td class="m">${s} / ${w} / ${lh}</td></tr>`;
+  }).join('')}</tbody>`;
+
+  const Sp = SPACE[st.s];
+  $('ruler').innerHTML = Sp.scale.map(v => `<div><span class="num">${v}</span><i style="width:${v * 2.4}px"></i></div>`).join('');
+  $('spaceTable').innerHTML = `<tbody>${SPACE_ROLES.map(([k, n]) => `<tr><td>${n}</td><td class="m">${Sp[k]}</td></tr>`).join('')}</tbody>`;
+
+  const R = RADIUS[st.r];
+  $('radii').innerHTML = RAD_ROLES.map(([k, n]) => `<div class="rad"><i style="border-radius:${R[k]}px"></i><b class="num">${k} · ${R[k]}</b><span>${n}</span></div>`).join('')
+    + `<div class="rad"><i style="border-radius:${st.b === 'pill' ? 999 : R.md}px;height:40px"></i><b>${st.b === 'pill' ? 'كبسولة' : 'md'}</b><span>الزر</span></div>`;
+  save();
+}
+$('presetGrid').addEventListener('click', e => {
+  const b = e.target.closest('.use'); if (!b) return;
+  const p = PRESETS[+b.dataset.i]; Object.assign(st, { t: p.t, s: p.s, r: p.r, b: p.b }); render();
+  $('mixer').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+});
+render();
+</script>
