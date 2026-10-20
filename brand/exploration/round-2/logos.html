@@ -1,0 +1,155 @@
+<title>رموز همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: intro, a category filter, then a 2-column grid of ten concept cards. Each card: app icon (dark + light tile), monochrome, small sizes, wordmark lockup, and the rationale. Brand colors are the approved palette. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --fg: #14213D; --muted: #5A6785; --line: #DCE3EE; --chip: #E9EEF6; --focus: #3D4FA3;
+  --navy: #14213D; --indigo: #3D4FA3; --sky: #6CB4E8; --mint: #7FD8BE; --warm: #F2A65A;
+  --f: "Rubik", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
+.wrap { max-width: 1160px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 10px; max-width: 74ch; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; font-weight: 700; }
+header p { margin: 0; color: var(--muted); }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+
+.filter { display: inline-flex; flex-wrap: wrap; gap: 4px; background: var(--chip); border-radius: 18px; padding: 3px; align-self: flex-start; }
+.filter button { font: inherit; font-size: 14px; border: 0; background: transparent; color: var(--fg); padding: 5px 16px; border-radius: 999px; cursor: pointer; }
+.filter button[aria-pressed="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / .12); }
+.filter button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.head h2 { margin: 0; font-size: 20px; font-weight: 700; }
+.head h2 small { font-size: 13px; color: var(--muted); font-weight: 500; margin-inline-start: 6px; }
+.tag { font-size: 12.5px; border-radius: 999px; padding: 2px 12px; white-space: nowrap; font-weight: 500; }
+.tag.aligned { background: color-mix(in srgb, #3D4FA3 16%, transparent); }
+.tag.bold { background: color-mix(in srgb, #F2A65A 26%, transparent); }
+.tag.neutral { background: color-mix(in srgb, #7FD8BE 26%, transparent); }
+
+.show { display: grid; grid-template-columns: auto auto 1fr; gap: 14px; align-items: center; }
+@media (max-width: 480px) { .show { grid-template-columns: auto auto; } .show .lock { grid-column: 1 / -1; } }
+.tile { width: 104px; height: 104px; border-radius: 24px; display: grid; place-items: center; overflow: hidden; }
+.tile svg { width: 100%; height: 100%; }
+.tile.dark { background: var(--navy); }
+.tile.light { background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCE3EE; }
+.lock { display: flex; align-items: center; gap: 12px; min-width: 0; flex-wrap: wrap; }
+.lock svg { width: 56px; height: 56px; flex: none; color: var(--fg); }
+.lock .words { display: flex; flex-direction: column; line-height: 1.15; }
+.lock .ar { font-size: 32px; font-weight: 700; }
+.lock .en { font-size: 15px; font-weight: 500; letter-spacing: .06em; color: var(--muted); direction: ltr; text-align: right; }
+
+.small { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.small .s { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.small .t { background: var(--navy); display: grid; place-items: center; overflow: hidden; }
+.small .t svg { width: 100%; height: 100%; }
+.small .mono { color: var(--fg); }
+.small .mono svg { width: 40px; height: 40px; }
+
+dl { margin: 0; display: grid; grid-template-columns: 6.5em 1fr; gap: 6px 12px; font-size: 14px; }
+dt { color: var(--muted); }
+dd { margin: 0; min-width: 0; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.ask h2 { margin: 0 0 6px; font-size: 18px; }
+.ask ol { margin: 0; padding-inline-start: 1.3em; }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="eyebrow">همة · المرحلة 2 · القرار 4 من 6 · جولة أولى</div>
+    <h1>10 أفكار للرمز والأيقونة</h1>
+    <p>أفكار متنوعة عمدًا: بعضها من لغة المدار المعتمدة، وبعضها جريء وخارج المألوف، وبعضها حيادي يصلح لأي اتجاه. لكل فكرة: أيقونة التطبيق على خلفية غامقة وفاتحة، ونسخة بلون واحد، والمقاسات الصغيرة، والرمز مع الاسم بخط Rubik.</p>
+    <div class="notice"><strong>رسومات أولية للمقارنة، لا شيء معتمد.</strong> الفكرة المختارة تُرسم بعناية بعد الاختيار: النسب، وكلمة «هِمّة» المرسومة، وأيقونات Android و iOS بكل المقاسات.</div>
+  </header>
+
+  <div class="filter" role="group" aria-label="تصفية">
+    <button type="button" id="c-all" data-c="all" aria-pressed="true">الكل</button>
+    <button type="button" id="c-aligned" data-c="aligned" aria-pressed="false">موافقة للتوجّه</button>
+    <button type="button" id="c-bold" data-c="bold" aria-pressed="false">جريئة</button>
+    <button type="button" id="c-neutral" data-c="neutral" aria-pressed="false">حيادية</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <section class="ask">
+    <h2>للاختيار</h2>
+    <ol>
+      <li>أي 2 أو 3 أفكار تريد تطويرها؟ ويمكن دمج فكرتين.</li>
+      <li>هل في فكرة تستبعدها تمامًا، حتى أعرف ما لا يناسبك؟</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+// Each symbol draws in a 100x100 box. c = { fg, ac, bg, mono }
+const SYM = {
+  orbit: c => `<circle cx="50" cy="50" r="27" fill="none" stroke="${c.fg}" stroke-width="9"/><circle cx="69.1" cy="30.9" r="12" fill="${c.bg}"/><circle cx="69.1" cy="30.9" r="8.5" fill="${c.ac}"/>`,
+  haa: c => `<circle cx="50" cy="46" r="26" fill="none" stroke="${c.fg}" stroke-width="9"/><circle cx="50" cy="60" r="9.5" fill="none" stroke="${c.fg}" stroke-width="8"/><circle cx="72" cy="26" r="7" fill="${c.ac}"/>`,
+  shadda: c => `<path d="M20 58 C 21 38, 36 38, 37 55 C 38 38, 52 38, 53 55 C 54 38, 70 36, 78 50" fill="none" stroke="${c.fg}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="M58 76 L 76 70" stroke="${c.ac}" stroke-width="9" stroke-linecap="round"/>`,
+  steps: c => `<rect x="62" y="56" width="16" height="24" rx="8" fill="${c.fg}" opacity="${c.mono ? 1 : .55}"/><rect x="42" y="42" width="16" height="38" rx="8" fill="${c.fg}" opacity="${c.mono ? 1 : .8}"/><rect x="22" y="28" width="16" height="52" rx="8" fill="${c.fg}"/><circle cx="30" cy="17" r="7" fill="${c.ac}"/>`,
+  spark: c => `<path d="M50 14 C 53 40, 60 47, 86 50 C 60 53, 53 60, 50 86 C 47 60, 40 53, 14 50 C 40 47, 47 40, 50 14 Z" fill="${c.ac}"/><circle cx="76" cy="24" r="5" fill="${c.fg}"/>`,
+  body: c => `<path d="M30 84 C 32 62, 44 46, 66 38" fill="none" stroke="${c.fg}" stroke-width="10" stroke-linecap="round"/><path d="M42 58 C 50 44, 58 32, 74 22" fill="none" stroke="${c.fg}" stroke-width="7" stroke-linecap="round" opacity="${c.mono ? 1 : .6}"/><circle cx="72" cy="50" r="9" fill="${c.ac}"/>`,
+  chain: c => `<circle cx="80" cy="74" r="4.5" fill="${c.fg}" opacity="${c.mono ? 1 : .5}"/><circle cx="66" cy="63" r="6" fill="${c.fg}" opacity="${c.mono ? 1 : .65}"/><circle cx="51" cy="51" r="7.5" fill="${c.fg}" opacity="${c.mono ? 1 : .8}"/><circle cx="35" cy="39" r="9" fill="${c.fg}"/><circle cx="20" cy="25" r="10.5" fill="${c.ac}"/>`,
+  kufi: c => `<rect x="22" y="22" width="56" height="56" rx="6" fill="none" stroke="${c.fg}" stroke-width="12"/><rect x="44" y="44" width="12" height="12" rx="2" fill="${c.ac}"/><rect x="22" y="78" width="0" height="0"/><path d="M78 40 H 90" stroke="${c.fg}" stroke-width="12" stroke-linecap="square"/>`,
+  pebble: c => `<path d="M24 56 C 18 34, 38 18, 58 20 C 78 22, 86 40, 80 58 C 74 76, 56 84, 42 80 C 30 77, 27 66, 24 56 Z" fill="${c.fg}"/><circle cx="62" cy="40" r="8" fill="${c.mono ? c.bg : c.ac}"/>`,
+  mono: c => `<path d="M26 20 V 80 M74 20 V 80" stroke="${c.fg}" stroke-width="9" stroke-linecap="round"/><circle cx="50" cy="50" r="17" fill="none" stroke="${c.fg}" stroke-width="9"/><circle cx="50" cy="50" r="5.5" fill="${c.ac}"/>`
+};
+
+const CONCEPTS = [
+  { k: 'orbit', cat: 'aligned', name: 'نقطة على المدار', en: 'Orbit dot', idea: 'حلقة واحدة ونقطة دافئة تقطعها. الترجمة المباشرة للغة الشكل المعتمدة في التطبيق.', why: 'متّسق تمامًا مع الواجهة، وبسيط جدًا في المقاسات الصغيرة.', risk: 'الحلقة مع نقطة شائعة في تطبيقات النشاط والساعات، فالتميّز محدود.' },
+  { k: 'haa', cat: 'aligned', name: 'هاء مدارية', en: 'Orbital Haa', idea: 'حرف «ه» العربي مرسومًا كحلقتين متداخلتين: مدار كبير وحلقة داخلية، ونقطة دافئة.', why: 'يجمع الحرف الأول من الاسم مع لغة المدار، وعربي بوضوح.', risk: 'قد لا يُقرأ كحرف عند غير العرب، ويحتاج ضبطًا دقيقًا حتى لا يشبه رمزًا عامًا.' },
+  { k: 'shadda', cat: 'bold', name: 'حركات هِمّة', en: 'Shadda & Kasra', idea: 'الرمز هو الشدّة والكسرة من كلمة «هِمّة» نفسها: الشدّة موجة الحركة، والكسرة شرطة دافئة تحتها.', why: 'فكرة غير مسبوقة وعربية خالصة، وتربط الرمز بالاسم بالتشكيل حرفيًا.', risk: 'جريئة جدًا: قد تُفهم كزخرفة بلا معنى عند من لا يعرف السياق.' },
+  { k: 'steps', cat: 'neutral', name: 'درجات', en: 'Steps', idea: 'ثلاث أعمدة مستديرة تكبر من اليمين لليسار، باتجاه القراءة العربية، وفوق آخرها نقطة البداية.', why: 'يحكي «ابدأ صغيرًا واستمر» بوضوح، ويصلح للبرامج والعادات معًا.', risk: 'يقترب من أيقونات الإحصائيات والإشارة، فقد يبدو عامًا.' },
+  { k: 'spark', cat: 'bold', name: 'شرارة', en: 'Spark', idea: 'نجمة رباعية بأقواس ناعمة باللون الدافئ وحده، مع نقطة صغيرة: لحظة المبادرة.', why: 'لافتة جدًا على الشاشة الرئيسية، وتعبّر عن معنى «هِمّة» مباشرة.', risk: 'الشرارات والنجوم الرباعية صارت شائعة في تطبيقات الذكاء الاصطناعي.' },
+  { k: 'body', cat: 'bold', name: 'تمدّد', en: 'Reach', idea: 'جسم مختصر في خطّين وانحناءة واحدة، يمدّ يده للأعلى، ورأسه النقطة الدافئة.', why: 'الوحيد الذي يقول «حركة وتمارين» من النظرة الأولى.', risk: 'أقرب للطابع الرياضي، ويغطي البرامج أكثر من العادات والتركيز.' },
+  { k: 'chain', cat: 'neutral', name: 'سلسلة الأيام', en: 'Streak', idea: 'نقاط تكبر وترتفع يومًا بعد يوم، وآخرها النقطة الدافئة: الاستمرار مرئيًا.', why: 'يعبّر عن العادات والاستمرارية، وناعم وهادئ.', risk: 'قد يُقرأ كفقاعات أو مؤشر تحميل إن لم تُضبط المسافات.' },
+  { k: 'kufi', cat: 'bold', name: 'هاء كوفية', en: 'Square Kufi Haa', idea: 'حرف «ه» بالخط الكوفي المربع: مربع مفرّغ ومربع دافئ في قلبه، وامتداد صغير كالكشيدة.', why: 'هوية عربية قوية ومختلفة عن كل المنافسين، وهندسية بما يناسب الجمهور التقني.', risk: 'الحواف المربعة تخالف استدارة الواجهة، وقد يُقرأ كرمز تقني عام.' },
+  { k: 'pebble', cat: 'neutral', name: 'حصاة', en: 'Pebble', idea: 'شكل عضوي ناعم كحصاة ملساء، وفيه نقطة دافئة. هدوء وراحة بلا رموز.', why: 'ودود ومريح، ويصلح لأي اتجاه مستقبلي.', risk: 'بلا معنى محدد، فيعتمد على اللون والاسم للتمييز.' },
+  { k: 'mono', cat: 'bold', name: 'مونوغرام ثنائي', en: 'Haa + H', idea: 'حرف H اللاتيني تصير عارضته حلقة «ه» العربية، وفي قلبها النقطة الدافئة. حرفان في رمز واحد.', why: 'يحمل اللغتين معًا، ويُقرأ كحرف في الثقافتين.', risk: 'المونوغرامات المركّبة قد تبدو مزدحمة في مقاس 20 بكسل.' }
+];
+const CAT = { aligned: 'موافقة للتوجّه', bold: 'جريئة', neutral: 'حيادية' };
+
+const svg = (k, c, extra = '') => `<svg viewBox="0 0 100 100" aria-hidden="true" ${extra}>${SYM[k](c)}</svg>`;
+// App icon: symbol scaled into the ~66% safe zone of an adaptive icon
+const icon = (k, c) => `<svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="${c.bg}"/><g transform="translate(18 18) scale(.64)">${SYM[k](c)}</g></svg>`;
+const DARK = { fg: '#EEF3FF', ac: '#F2A65A', bg: '#14213D' };
+const LIGHT = { fg: '#14213D', ac: '#F2A65A', bg: '#FFFFFF' };
+const DARK_ALT = { fg: '#7FD8BE', ac: '#F2A65A', bg: '#14213D' };
+
+function card(x, i) {
+  const darkC = ['orbit', 'haa', 'chain'].includes(x.k) ? DARK_ALT : DARK;
+  const monoC = { fg: 'currentColor', ac: 'currentColor', bg: 'var(--surface)', mono: true };
+  const small = [48, 32, 20].map(sz => `<span class="s"><span class="t" style="width:${sz}px;height:${sz}px;border-radius:${sz * .23}px">${icon(x.k, darkC)}</span>${sz}</span>`).join('');
+  return `<article class="card" data-cat="${x.cat}">
+    <div class="head"><h2>${i + 1}. ${x.name}<small><bdi>${x.en}</bdi></small></h2><span class="tag ${x.cat}">${CAT[x.cat]}</span></div>
+    <div class="show">
+      <span class="tile dark">${icon(x.k, darkC)}</span>
+      <span class="tile light">${icon(x.k, LIGHT)}</span>
+      <span class="lock">${svg(x.k, { fg: 'currentColor', ac: '#F2A65A', bg: 'var(--surface)' })}<span class="words"><span class="ar">هِمّة</span><span class="en">HIMMA</span></span></span>
+    </div>
+    <div class="small">${small}<span class="s mono">${svg(x.k, monoC)}بلون واحد</span></div>
+    <dl><dt>الفكرة</dt><dd>${x.idea}</dd><dt>لماذا</dt><dd>${x.why}</dd><dt>المخاطرة</dt><dd>${x.risk}</dd></dl>
+  </article>`;
+}
+const grid = document.getElementById('grid');
+grid.innerHTML = CONCEPTS.map(card).join('');
+function filter(c) {
+  grid.querySelectorAll('.card').forEach(el => { el.hidden = c !== 'all' && el.dataset.cat !== c; });
+  document.querySelectorAll('.filter button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.c === c)));
+}
+document.querySelectorAll('.filter button').forEach(b => b.addEventListener('click', () => filter(b.dataset.c)));
+</script>
