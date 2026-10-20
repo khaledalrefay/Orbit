@@ -1,0 +1,260 @@
+<title>ألوان همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: intro, then option pickers driving a live light/dark preview, then token tables, semantic + category colors, the habit palette, and a live WCAG contrast table. */
+:root {
+  --bg: #f4f5f7; --surface: #ffffff; --fg: #1c2230; --muted: #5d6576; --line: #dfe2e8; --chip: #eceef3; --focus: #3d63d6;
+  --ok: #1f7a4d; --bad: #b3261e;
+  --f-body: "IBM Plex Sans Arabic", system-ui, sans-serif; --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #10141c; --surface: #191e28; --fg: #e8eaf0; --muted: #9aa2b3; --line: #2c3240; --chip: #252a35; --focus: #8aa6ff; --ok: #6fd39a; --bad: #ff8a80; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #10141c; --surface: #191e28; --fg: #e8eaf0; --muted: #9aa2b3; --line: #2c3240; --chip: #252a35; --focus: #8aa6ff; --ok: #6fd39a; --bad: #ff8a80; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
+.wrap { max-width: 1120px; margin-inline: auto; display: flex; flex-direction: column; gap: 36px; }
+header { display: flex; flex-direction: column; gap: 10px; max-width: 72ch; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; }
+h2 { margin: 0; font-size: 21px; line-height: 1.35; }
+section > p, header p { margin: 0; color: var(--muted); max-width: 70ch; }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+section { display: flex; flex-direction: column; gap: 14px; }
+.mono { font-family: var(--f-mono); direction: ltr; unicode-bidi: isolate; }
+
+/* Pickers */
+.pickers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .pickers { grid-template-columns: 1fr; } }
+fieldset { margin: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+legend { font-weight: 600; padding-inline: 4px; }
+.opt { display: grid; grid-template-columns: auto 56px 1fr; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+.opt:has(input:checked) { background: var(--chip); }
+.opt input { margin: 0; accent-color: var(--focus); }
+.opt .chips { display: flex; height: 26px; border-radius: 6px; overflow: hidden; border: 1px solid rgb(0 0 0 / .08); }
+.opt .chips i { flex: 1; }
+.opt b { font-weight: 600; font-size: 14px; }
+.opt small { display: block; color: var(--muted); font-size: 12.5px; }
+
+/* Preview */
+.preview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .preview { grid-template-columns: 1fr; } }
+.pv { background: var(--v-bg); color: var(--v-ink); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); font-size: 13.5px; }
+.pv .lab { font-size: 12px; color: var(--v-muted); }
+.pv .hero { background: var(--v-hero); color: var(--v-hero-ink); border-radius: 22px; padding: 16px; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.pv .hero small { color: var(--v-hero-muted); display: block; font-size: 12px; }
+.pv .hero b { font-size: 18px; display: block; }
+.pv .cta { margin-top: 8px; display: inline-block; background: var(--v-warm); color: var(--v-on-warm); border-radius: 999px; padding: 5px 16px; font-weight: 600; font-size: 13px; }
+.pv svg.orb { width: 80px; height: 80px; }
+.pv .card { background: var(--v-surface); border: 1px solid var(--v-line); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.pv .row { display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center; }
+.pv .ic { width: 32px; height: 32px; border-radius: 10px; background: color-mix(in srgb, var(--hc) 20%, transparent); }
+.pv .ck { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--hc); color: var(--v-surface); font-size: 13px; font-weight: 700; }
+.pv .ck.todo { background: none; box-shadow: inset 0 0 0 2px var(--v-line); }
+.pv .muted { color: var(--v-muted); font-size: 12px; }
+.pv .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.pv .btn { border-radius: 999px; padding: 5px 14px; font-size: 12.5px; font-weight: 600; }
+.pv .btn.p { background: var(--v-primary); color: var(--v-on-primary); }
+.pv .btn.s { background: var(--v-surface2); color: var(--v-ink); }
+.pv .link { color: var(--v-primary); font-weight: 600; font-size: 12.5px; }
+.pv .sem { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12.5px; font-weight: 600; }
+
+/* Token tables */
+.tables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .tables { grid-template-columns: 1fr; } }
+.tw { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: start; padding: 7px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-weight: 600; color: var(--muted); font-size: 12.5px; }
+tr:last-child td { border-bottom: 0; }
+td .sw { display: inline-block; width: 22px; height: 22px; border-radius: 6px; border: 1px solid rgb(0 0 0 / .1); vertical-align: middle; }
+td.r { font-family: var(--f-mono); font-variant-numeric: tabular-nums; direction: ltr; text-align: end; }
+.pass { color: var(--ok); font-weight: 600; }
+.fail { color: var(--bad); font-weight: 600; }
+caption { text-align: start; padding: 10px 12px 4px; font-weight: 600; }
+
+/* Habit + category palettes */
+.pal { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .pal { grid-template-columns: 1fr; } }
+.palbox { border-radius: 14px; padding: 14px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px 8px; border: 1px solid var(--line); }
+.palbox.cat { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.hb { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0; text-align: center; }
+.hb .i { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; }
+.hb .i i { width: 14px; height: 14px; border-radius: 50%; }
+.hb .d { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.hb span { font-size: 11.5px; }
+.hb code { font-family: var(--f-mono); font-size: 10px; opacity: .75; direction: ltr; }
+.qs { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.qs ol { margin: 0; padding-inline-start: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="eyebrow">همة · المرحلة 2 · القرار 2 من 6</div>
+    <h1>لوحة الألوان</h1>
+    <p>لوحة واحدة للتطبيق، بالوضعين الفاتح والغامق، مبنية على ألوان Orbit Calm المقبولة. اختر اللون الأساسي واللون الدافئ، والمعاينة وجدول التباين يتحدّثان مباشرة.</p>
+    <div class="notice"><strong>مقترح للاعتماد، لا شيء معتمد بعد.</strong> التباين محسوب بمعيار WCAG 2.1: النص العادي 4.5 على الأقل، والأشكال والنص الكبير 3 على الأقل.</div>
+  </header>
+
+  <section>
+    <h2>1. الخياران الأساسيان</h2>
+    <div class="pickers">
+      <fieldset id="f-primary"><legend>اللون الأساسي (الأزرار، والقسم النشط، والروابط)</legend></fieldset>
+      <fieldset id="f-warm"><legend>اللون الدافئ (النقطة «أنت هنا»، وزر البدء)</legend></fieldset>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. معاينة</h2>
+    <div class="preview" id="preview"></div>
+  </section>
+
+  <section>
+    <h2>3. أدوار الألوان</h2>
+    <p>كل لون في التطبيق يأتي من هذه الأدوار. القيم تتحوّل إلى design tokens في المرحلة 4.</p>
+    <div class="tables" id="tokens"></div>
+  </section>
+
+  <section>
+    <h2>4. ألوان فئات البرامج</h2>
+    <p>تُستعمل للأيقونة واسم الفئة فقط، لا لخلفيات كاملة، حتى يبقى الطابع هادئًا. «هوائي» مرجاني حتى لا يختلط بالنقطة الدافئة.</p>
+    <div class="pal" id="cats"></div>
+  </section>
+
+  <section>
+    <h2>5. لوحة ألوان العادات (12 لونًا)</h2>
+    <p>يختار المستخدم منها لون كل عادة. لكل لون قيمة للفاتح وقيمة للغامق، وكلها تتجاوز 3:1 على سطح البطاقة، فتبقى علامة الإنجاز واضحة.</p>
+    <div class="pal" id="habits"></div>
+  </section>
+
+  <section>
+    <h2>6. فحص التباين</h2>
+    <p>محسوب مباشرة من القيم المختارة أعلاه.</p>
+    <div class="tables" id="contrast"></div>
+  </section>
+
+  <section class="qs">
+    <h2>للاعتماد</h2>
+    <ol>
+      <li>اللون الأساسي واللون الدافئ: أي خيار؟</li>
+      <li>ألوان الحالات وفئات البرامج: مناسبة كما هي؟</li>
+      <li>لوحة العادات: هل 12 لونًا مناسبة، وهل في لون تريد استبداله؟</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+const PRIMARY = [
+  { id: 'indigo', name: 'نيلي (الحالي)', note: 'الأقرب لـ Orbit Calm، هادئ ومتّزن', L: '#3D4FA3', D: '#8C9BF2' },
+  { id: 'blue', name: 'أزرق أنقى', note: 'أكثر حيوية وتقنية، وأقل دفئًا', L: '#3451C9', D: '#86A0FF' },
+  { id: 'violet', name: 'نيلي بنفسجي', note: 'أنعم وأكثر تميّزًا، يقترب من البنفسجي', L: '#4B48A8', D: '#A19BF2' }
+];
+const WARM = [
+  { id: 'apricot', name: 'مشمشي (الحالي)', note: 'دافئ وهادئ', v: '#F2A65A', text: '#A5561A' },
+  { id: 'coral', name: 'مشمشي مرجاني', note: 'طاقة أكثر، أقرب لمعنى المبادرة', v: '#F4946A', text: '#B9531F' },
+  { id: 'amber', name: 'كهرماني', note: 'أكثر إشراقًا، يقترب من الذهبي', v: '#EDB24E', text: '#9A6A12' }
+];
+
+const BASE = {
+  light: { bg: '#F3F6FA', surface: '#FFFFFF', surface2: '#E9EEF6', line: '#DCE3EE', ink: '#14213D', muted: '#5A6785', onPrimary: '#FFFFFF', onWarm: '#1B1406', hero: '#14213D', heroInk: '#EEF3FF', heroMuted: '#AEBBDA', heroRing: '#2B3A66', arc1: '#6CB4E8', arc2: '#7FD8BE', g2: '#2A8CA6', success: '#2E9C82', successText: '#1F7A64', warning: '#F2C14E', warningText: '#9A6510', error: '#B84A34' },
+  dark:  { bg: '#0B1222', surface: '#141E36', surface2: '#1C2844', line: '#24314F', ink: '#E8EEFB', muted: '#93A0BE', onPrimary: '#0B1222', onWarm: '#1B1406', hero: '#1B2B55', heroInk: '#EEF3FF', heroMuted: '#A9B6D6', heroRing: '#2E3F70', arc1: '#6CB4E8', arc2: '#7FD8BE', g2: '#7FD8BE', success: '#7FD8BE', successText: '#7FD8BE', warning: '#F2C14E', warningText: '#F2C14E', error: '#F08A72' }
+};
+const ROLES = [
+  ['bg', 'الخلفية'], ['surface', 'سطح البطاقة'], ['surface2', 'سطح ثانوي'], ['line', 'الحدود والمسار'], ['ink', 'النص'], ['muted', 'نص ثانوي'],
+  ['primary', 'الأساسي'], ['onPrimary', 'نص على الأساسي'], ['warm', 'الدافئ'], ['warmText', 'نص دافئ'], ['onWarm', 'نص على الدافئ'],
+  ['hero', 'بطاقة الجلسة'], ['heroInk', 'نص بطاقة الجلسة'], ['heroMuted', 'نص ثانوي فيها'], ['arc1', 'بداية قوس المدار'], ['arc2', 'نهاية قوس المدار'],
+  ['success', 'نجاح / أُنجزت'], ['warning', 'تحذير'], ['error', 'خطأ / لم تُنجز']
+];
+const CATS = [
+  ['تمدّد ومرونة', '#1F948A', '#7FD8BE'], ['بناء وقوة', '#6A5FD0', '#A99BF5'], ['هوائي', '#D2603F', '#F49A7E'], ['عام', '#3E8FD6', '#6CB4E8']
+];
+const HABITS = [
+  ['سماوي', '#3E8FD6', '#6CB4E8'], ['نيلي', '#4F5FC4', '#8C9BF2'], ['بنفسجي', '#7A5FD0', '#B09CF5'], ['أرجواني', '#A653B0', '#D79BE0'],
+  ['وردي', '#C9506E', '#F28FA8'], ['مرجاني', '#D2603F', '#F49A7E'], ['مشمشي', '#C7772A', '#F2A65A'], ['عسلي', '#A98516', '#E9C15A'],
+  ['زيتوني', '#6E9A2E', '#B4D77A'], ['أخضر', '#2E9C5E', '#7FD39A'], ['نعناعي', '#1F948A', '#7FD8BE'], ['رمادي أزرق', '#64748B', '#A3B1C6']
+];
+
+const lum = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+
+let state = { primary: 'indigo', warm: 'apricot' };
+try { const s = JSON.parse(localStorage.getItem('himma-colors') || '{}'); if (PRIMARY.some(p => p.id === s.primary)) state.primary = s.primary; if (WARM.some(w => w.id === s.warm)) state.warm = s.warm; } catch (e) {}
+
+function tokens(mode) {
+  const p = PRIMARY.find(x => x.id === state.primary), w = WARM.find(x => x.id === state.warm);
+  const t = { ...BASE[mode], primary: mode === 'light' ? p.L : p.D, warm: w.v, warmText: mode === 'light' ? w.text : w.v };
+  t.g1 = t.primary;
+  return t;
+}
+
+function buildPickers() {
+  const mk = (list, key, sw) => list.map(o => `<label class="opt"><input type="radio" name="${key}" id="${key}-${o.id}" value="${o.id}" ${state[key] === o.id ? 'checked' : ''}><span class="chips">${sw(o)}</span><span><b>${o.name}</b><small>${o.note}</small></span></label>`).join('');
+  document.getElementById('f-primary').insertAdjacentHTML('beforeend', mk(PRIMARY, 'primary', o => `<i style="background:${o.L}"></i><i style="background:${o.D}"></i>`));
+  document.getElementById('f-warm').insertAdjacentHTML('beforeend', mk(WARM, 'warm', o => `<i style="background:${o.v}"></i><i style="background:${o.text}"></i>`));
+  document.querySelectorAll('.pickers input').forEach(i => i.addEventListener('change', () => { state[i.name] = i.value; try { localStorage.setItem('himma-colors', JSON.stringify(state)); } catch (e) {} render(); }));
+}
+
+function orb(t) {
+  const r = 30, c = 40, p = 1 / 3, a = (-90 + 360 * p) * Math.PI / 180, x = (c + r * Math.cos(a)).toFixed(1), y = (c + r * Math.sin(a)).toFixed(1);
+  const id = 'g' + Math.random().toString(36).slice(2, 7);
+  return `<svg class="orb" viewBox="0 0 80 80" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${t.arc1}"/><stop offset="1" stop-color="${t.arc2}"/></linearGradient></defs><circle cx="40" cy="40" r="38" fill="none" stroke="${t.heroRing}" stroke-width="1.2" stroke-dasharray=".5 5" stroke-linecap="round"/><circle cx="40" cy="40" r="${r}" fill="none" stroke="${t.heroRing}" stroke-width="2"/><path d="M40 10 A${r} ${r} 0 0 1 ${x} ${y}" fill="none" stroke="url(#${id})" stroke-width="5" stroke-linecap="round"/><circle cx="40" cy="10" r="3.2" fill="${t.arc2}" stroke="${t.hero}" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="11" fill="${t.warm}" opacity=".28"/><circle cx="${x}" cy="${y}" r="5.8" fill="${t.warm}" stroke="${t.hero}" stroke-width="1.5"/><text x="40" y="45" text-anchor="middle" font-size="14" font-weight="700" fill="${t.heroInk}" font-family="IBM Plex Sans Arabic">1/3</text></svg>`;
+}
+
+function preview(mode) {
+  const t = tokens(mode), H = mode === 'light' ? 1 : 2;
+  const vars = `--v-bg:${t.bg};--v-surface:${t.surface};--v-surface2:${t.surface2};--v-line:${t.line};--v-ink:${t.ink};--v-muted:${t.muted};--v-primary:${t.primary};--v-on-primary:${t.onPrimary};--v-warm:${t.warm};--v-on-warm:${t.onWarm};--v-hero:${t.hero};--v-hero-ink:${t.heroInk};--v-hero-muted:${t.heroMuted}`;
+  return `<div class="pv" style="${vars}">
+    <span class="lab">${mode === 'light' ? 'فاتح' : 'غامق'}</span>
+    <div class="hero"><div><small>جلسة اليوم</small><b>تمدّد ومرونة</b><small>المستوى 2 · 20 دقيقة</small><span class="cta">ابدأ الجلسة</span></div>${orb(t)}</div>
+    <div class="card">
+      <div class="row" style="--hc:${HABITS[0][H]}"><span class="ic"></span><span>شرب الماء<br><span class="muted">3 من 8 كاسات</span></span><span class="ck todo"></span></div>
+      <div class="row" style="--hc:${HABITS[1][H]}"><span class="ic"></span><span>القراءة<br><span class="muted">10 صفحات</span></span><span class="ck">✓</span></div>
+      <div class="row" style="--hc:${HABITS[9][H]}"><span class="ic"></span><span>مشي قصير<br><span class="muted">15 دقيقة</span></span><span class="ck">✓</span></div>
+    </div>
+    <div class="card">
+      <div class="btns"><span class="btn p">حفظ الخطة</span><span class="btn s">إلغاء</span><span class="link">عرض المكتبة</span></div>
+      <div class="sem"><span style="color:${t.successText}">أُنجزت الخطة</span><span style="color:${t.warningText}">تذكير متأخر</span><span style="color:${t.error}">لم تُنجز</span><span style="color:${t.warmText}">اليوم</span></div>
+    </div>
+  </div>`;
+}
+
+function tokenTable(mode) {
+  const t = tokens(mode);
+  return `<div class="tw"><table><caption>${mode === 'light' ? 'الوضع الفاتح' : 'الوضع الغامق'}</caption><thead><tr><th>الدور</th><th>اللون</th><th>القيمة</th></tr></thead><tbody>${ROLES.map(([k, n]) => `<tr><td>${n}</td><td><span class="sw" style="background:${t[k]}"></span></td><td class="r">${t[k]}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+function contrastTable(mode) {
+  const t = tokens(mode);
+  const rows = [
+    ['النص على الخلفية', t.ink, t.bg, 4.5], ['النص على البطاقة', t.ink, t.surface, 4.5], ['نص ثانوي على الخلفية', t.muted, t.bg, 4.5], ['نص ثانوي على السطح الثانوي', t.muted, t.surface2, 4.5],
+    ['الأساسي كنص على البطاقة', t.primary, t.surface, 4.5], ['نص على زر أساسي', t.onPrimary, t.primary, 4.5], ['نص على زر دافئ', t.onWarm, t.warm, 4.5], ['نص دافئ على البطاقة', t.warmText, t.surface, 4.5],
+    ['نص بطاقة الجلسة', t.heroInk, t.hero, 4.5], ['نص ثانوي في بطاقة الجلسة', t.heroMuted, t.hero, 4.5], ['النقطة الدافئة على بطاقة الجلسة', t.warm, t.hero, 3], ['قوس المدار على بطاقة الجلسة', t.arc2, t.hero, 3],
+    ['قوس المدار على البطاقة (بداية)', t.g1, t.surface, 3], ['قوس المدار على البطاقة (نهاية)', t.g2, t.surface, 3],
+    ['نجاح كشكل', t.success, t.surface, 3], ['نجاح كنص', t.successText, t.surface, 4.5], ['تحذير كنص', t.warningText, t.surface, 4.5], ['خطأ كنص', t.error, t.surface, 4.5]
+  ];
+  const H = mode === 'light' ? 1 : 2;
+  HABITS.forEach(h => rows.push([`عادة: ${h[0]}`, h[H], t.surface, 3]));
+  CATS.forEach(c => rows.push([`فئة: ${c[0]}`, c[H], t.surface, 3]));
+  return `<div class="tw"><table><caption>${mode === 'light' ? 'الوضع الفاتح' : 'الوضع الغامق'}</caption><thead><tr><th>التركيبة</th><th>الحد</th><th>النسبة</th></tr></thead><tbody>${rows.map(([n, a, b, min]) => { const r = ratio(a, b); return `<tr><td><span class="sw" style="background:${b};box-shadow:inset 0 0 0 6px ${b};outline:4px solid ${a};outline-offset:-10px"></span> ${n}</td><td class="r">${min}</td><td class="r ${r >= min ? 'pass' : 'fail'}">${r.toFixed(2)} ${r >= min ? '✓' : '✗'}</td></tr>`; }).join('')}</tbody></table></div>`;
+}
+
+function palette(list, mode, cls) {
+  const t = tokens(mode), H = mode === 'light' ? 1 : 2;
+  return `<div class="palbox ${cls}" style="background:${t.surface};color:${t.ink}">${list.map(h => `<div class="hb"><span class="i" style="background:color-mix(in srgb, ${h[H]} 20%, transparent)"><i style="background:${h[H]}"></i></span><span class="d" style="background:${h[H]};color:${t.surface}">✓</span><span>${h[0]}</span><code>${h[H]}</code></div>`).join('')}</div>`;
+}
+
+function render() {
+  document.getElementById('preview').innerHTML = preview('light') + preview('dark');
+  document.getElementById('tokens').innerHTML = tokenTable('light') + tokenTable('dark');
+  document.getElementById('contrast').innerHTML = contrastTable('light') + contrastTable('dark');
+  document.getElementById('habits').innerHTML = palette(HABITS, 'light', '') + palette(HABITS, 'dark', '');
+  document.getElementById('cats').innerHTML = palette(CATS, 'light', 'cat') + palette(CATS, 'dark', 'cat');
+}
+buildPickers();
+render();
+</script>
