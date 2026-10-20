@@ -48,7 +48,8 @@
 
 ### ج. CI/CD
 - [ ] GitHub Actions: format، ثم analyze، ثم test، ثم build apk (debug) على كل PR.
-- [ ] بناء iOS (Codemagic أو GitHub macOS runner) بلا توقيع في هذه المرحلة.
+- [ ] بناء iOS مؤجّل حتى توفّر Mac (D14). الكود يبقى متوافقًا مع iOS، ولا نضيف حزمًا لا تدعمه.
+- [ ] (لاحقًا) بناء iOS (Codemagic أو GitHub macOS runner) بلا توقيع في هذه المرحلة.
 - [ ] تخزين مفاتيح التوقيع لاحقًا كأسرار (لا مفاتيح داخل المستودع).
 
 ### د. وثائق العمل وملف الإيجنت
@@ -71,7 +72,7 @@
 و `ARCHITECTURE.md` و `docs/ai/project-decisions.md`.
 
 ## معايير الإنهاء
-- [ ] `flutter run` يعمل على محاكي Android و iOS (أو بناء iOS ناجح على CI).
+- [ ] `flutter run` يعمل على محاكي Android وجهاز Android حقيقي. iOS عند توفّر Mac (D14).
 - [ ] CI أخضر على PR تجريبي.
 - [ ] جلسة إيجنت جديدة تستطيع، بالاعتماد على `CLAUDE.md` وحده، تشغيل الفحوص والاختبارات بنجاح.
 
