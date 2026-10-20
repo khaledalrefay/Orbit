@@ -1,0 +1,178 @@
+<title>رموز همة: الجولة الثانية</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: intro, then four groups (the three shortlisted concepts and their combinations), each a 2-column grid of variant cards. Each card: app icon (dark + light tile), monochrome, small sizes, wordmark lockup, and the rationale. Brand colors are the approved palette. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --fg: #14213D; --muted: #5A6785; --line: #DCE3EE; --chip: #E9EEF6; --focus: #3D4FA3;
+  --g1: #3D4FA3; --g2: #2A8CA6; --navy: #14213D; --indigo: #3D4FA3; --sky: #6CB4E8; --mint: #7FD8BE; --warm: #F2A65A;
+  --f: "Rubik", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
+.wrap { max-width: 1160px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 10px; max-width: 74ch; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; font-weight: 700; }
+header p { margin: 0; color: var(--muted); }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+
+.filter { display: inline-flex; flex-wrap: wrap; gap: 4px; background: var(--chip); border-radius: 18px; padding: 3px; align-self: flex-start; }
+.filter button { font: inherit; font-size: 14px; border: 0; background: transparent; color: var(--fg); padding: 5px 16px; border-radius: 999px; cursor: pointer; }
+.filter button[aria-pressed="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / .12); }
+.filter button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.head h2 { margin: 0; font-size: 20px; font-weight: 700; }
+.head h2 small { font-size: 13px; color: var(--muted); font-weight: 500; margin-inline-start: 6px; }
+.tag { font-size: 12.5px; border-radius: 999px; padding: 2px 12px; white-space: nowrap; font-weight: 500; }
+.tag.aligned { background: color-mix(in srgb, #3D4FA3 16%, transparent); }
+.tag.bold { background: color-mix(in srgb, #F2A65A 26%, transparent); }
+.tag.letter { background: color-mix(in srgb, #6CB4E8 26%, transparent); }
+.tag.neutral { background: color-mix(in srgb, #7FD8BE 26%, transparent); }
+
+.show { display: grid; grid-template-columns: auto auto 1fr; gap: 14px; align-items: center; }
+@media (max-width: 480px) { .show { grid-template-columns: auto auto; } .show .lock { grid-column: 1 / -1; } }
+.tile { width: 104px; height: 104px; border-radius: 24px; display: grid; place-items: center; overflow: hidden; }
+.tile svg { width: 100%; height: 100%; }
+.tile.dark { background: var(--navy); }
+.tile.circle { border-radius: 50%; background: var(--navy); }
+.tile.light { background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCE3EE; }
+.lock { display: flex; align-items: center; gap: 12px; min-width: 0; flex-wrap: wrap; }
+.lock svg { width: 56px; height: 56px; flex: none; color: var(--fg); }
+.lock .words { display: flex; flex-direction: column; line-height: 1.15; }
+.lock .ar { font-size: 32px; font-weight: 700; }
+.lock .en { font-size: 15px; font-weight: 500; letter-spacing: .06em; color: var(--muted); direction: ltr; text-align: right; }
+
+.small { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.small .s { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.small .t { background: var(--navy); display: grid; place-items: center; overflow: hidden; }
+.small .t svg { width: 100%; height: 100%; }
+.small .mono { color: var(--fg); }
+.small .mono svg { width: 40px; height: 40px; }
+
+dl { margin: 0; display: grid; grid-template-columns: 6.5em 1fr; gap: 6px 12px; font-size: 14px; }
+dt { color: var(--muted); }
+dd { margin: 0; min-width: 0; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.ask h2 { margin: 0 0 6px; font-size: 18px; }
+.ask ol { margin: 0; padding-inline-start: 1.3em; }
+.group { display: flex; flex-direction: column; gap: 14px; }
+.group > h2 { margin: 0; font-size: 22px; }
+.group > p { margin: 0; color: var(--muted); max-width: 72ch; }
+.show { grid-template-columns: auto auto auto 1fr; }
+@media (max-width: 560px) { .show { grid-template-columns: auto auto auto; } .show .lock { grid-column: 1 / -1; } .tile { width: 84px; height: 84px; border-radius: 20px; } }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="eyebrow">همة · المرحلة 2 · القرار 4 من 6 · جولة ثانية</div>
+    <h1>تطوير الأفكار 1 و11 و16</h1>
+    <p>4 تنويعات لكل فكرة مختارة، ثم دمجان بينها. حرف الهاء مأخوذ من خط Rubik نفسه بالوزن العريض، كمنطلق قبل رسمه يدويًا. لكل تنويعة: أيقونة على خلفية غامقة وفاتحة، وقناع Android الدائري، والمقاسات الصغيرة، ونسخة بلون واحد، والرمز مع الاسم.</p>
+    <div class="notice"><strong>رسومات للمقارنة، لا شيء معتمد.</strong> الأرقام تحمل حرف المجموعة (أ، ب، ج، د) لتسهيل الإشارة إليها.</div>
+  </header>
+  <div id="groups"></div>
+  <section class="ask">
+    <h2>للاختيار</h2>
+    <ol>
+      <li>أي تنويعة أو اثنتين تريد الوصول بها للنسخة النهائية؟</li>
+      <li>هل تفضّل الرمز عربيًا صريحًا (الهاء)، أم شكلًا مجردًا (المدار والقوس)، أم دمجهما؟</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+const GLYPH = {"uni0647@700": {"d": "M241.375 -2.75Q150.375 -2.75 99.0 53.75Q47.625 110.25 46.875 206.125Q46.5 258.25 62.8125 305.0Q79.125 351.75 108.3125 388.125Q137.5 424.5 176.5625 445.1875Q215.625 465.875 260.375 465.875Q303.875 465.875 340.9375 445.0Q378 424.125 405.3125 388.25Q432.625 352.375 447.9375 307.0625Q463.25 261.75 463 212.875Q462.75 138.5 435.875 90.6875Q409 42.875 364.6875 20.0625Q320.375 -2.75 267 -2.75ZM246.375 153.75H269.25Q304.375 153.75 324.6875 170.5Q345 187.25 344.25 220.125Q343.5 263 318.8125 290.6875Q294.125 318.375 257.375 318.375Q231.875 318.375 211.75 304.0625Q191.625 289.75 180.5 267.5Q169.375 245.25 169.375 220.375Q169.375 187.875 190.4375 170.8125Q211.5 153.75 246.375 153.75Z", "c": [[46.5, -2.75, 463.25, 465.875], [169.375, 153.75, 345, 318.375]]}, "uniFEEB@700": {"d": "M456.875 -8.75Q406.625 -8.75 352.4375 5.9375Q298.25 20.625 246.125 49.875Q221.5 26.75 190.75 14.75Q160 2.75 113.8125 -1.75Q67.625 -6.25 -5 -6.25Q-20 -6.25 -20 8.75V131.875Q-20 161.875 8.75 161.875Q50.75 161.875 80.8125 163.75Q110.875 165.625 137.125 168.25Q121.75 181 107.75 199.4375Q93.75 217.875 84.875 241.8125Q76 265.75 75.625 293.375Q75.625 339.5 98.625 376.3125Q121.625 413.125 163.375 434.5625Q205.125 456 260 456Q272.25 456 284.875 454.0Q297.5 452 309.25 448.625L306.875 405.625L208.75 470.875Q199 477.75 198.9375 487.375Q198.875 497 203.875 504.625L254.75 581Q265.25 596.375 277.0 595.625Q288.75 594.875 302 586.125L539.625 425.625Q611 378 647.0625 328.5Q683.125 279 683.125 215.375Q683.125 152.125 654.25 101.3125Q625.375 50.5 574.375 20.875Q523.375 -8.75 456.875 -8.75ZM256 198.5Q289.75 218.625 306.6875 239.625Q323.625 260.625 323.625 284Q323.625 313.375 305.375 332.375Q287.125 351.375 256.625 351.375Q227.875 351.375 207.25 333.5625Q186.625 315.75 186.625 286.375Q186.625 258.5 204.4375 238.375Q222.25 218.25 256 198.5ZM460.375 140.125Q497.625 140.75 517.5625 161.0Q537.5 181.25 536.25 212.5Q535.625 236.375 517.9375 259.4375Q500.25 282.5 463.75 304.875L350.375 377.125L379.875 392.5Q405.25 366 416.5 343.5Q427.75 321 427.75 298.5Q427.75 258.875 411.75 225.75Q395.75 192.625 360.125 164.625Q377.25 156.75 392.625 151.0Q408 145.25 424.8125 142.6875Q441.625 140.125 460.375 140.125Z", "c": [[-20, -8.75, 683.125, 596.375], [186.625, 198.5, 323.625, 351.375], [350.375, 140.125, 537.5, 392.5]]}, "uni0647@800": {"d": "M247.1875 -3.875Q150.1875 -3.875 96.0 56.375Q41.8125 116.625 41.4375 220.5625Q41.25 273.625 57.65625 322.25Q74.0625 370.875 103.90625 409.3125Q133.75 447.75 174.78125 469.84375Q215.8125 491.9375 264.6875 491.9375Q311.9375 491.9375 350.96875 469.75Q390 447.5625 418.15625 409.625Q446.3125 371.6875 461.71875 324.03125Q477.125 276.375 476.5 225.4375Q475.875 145.25 446.9375 94.34375Q418 43.4375 371.34375 19.78125Q324.6875 -3.875 270 -3.875ZM252.1875 180.375H271.125Q302.6875 180.375 321.59375 193.75Q340.5 207.125 340.125 236.0625Q339.75 270.5 318.15625 295.09375Q296.5625 319.6875 261.6875 319.6875Q238.4375 319.6875 220.375 307.53125Q202.3125 295.375 192.5 276.5Q182.6875 257.625 182.6875 236.6875Q182.6875 207.9375 201.96875 194.15625Q221.25 180.375 252.1875 180.375Z", "c": [[41.25, -3.875, 477.125, 491.9375], [182.6875, 180.375, 340.5, 319.6875]]}, "uniFEEB@800": {"d": "M458.9375 -6.875Q408.3125 -6.875 353.46875 7.71875Q298.625 22.3125 244.0625 51.9375Q222.25 26.375 191.875 13.625Q161.5 0.875 114.65625 -3.625Q67.8125 -8.125 -5 -8.125Q-20 -8.125 -20 6.875V160.9375Q-20 190.9375 8.375 190.9375Q41.375 190.9375 68.15625 191.875Q94.9375 192.8125 120.0625 194.125Q106.375 206.5 94.625 224.46875Q82.875 242.4375 75.6875 265.15625Q68.5 287.875 68.3125 312.6875Q68.3125 358.25 90.5625 395.90625Q112.8125 433.5625 154.9375 456.03125Q197.0625 478.5 255.5 478.5Q268.125 478.5 280.9375 476.5Q293.75 474.5 306.625 471.3125L304.4375 420.8125L205.375 486.4375Q194.5 493.875 194.71875 504.4375Q194.9375 515 199.9375 522.8125L261.875 617Q273.125 633.6875 286.0 633.3125Q298.875 632.9375 314 623.0625L550.3125 467.8125Q626 418.5 665.53125 364.5Q705.0625 310.5 705.0625 240.6875Q705.0625 171.0625 673.375 114.90625Q641.6875 58.75 586.1875 25.9375Q530.6875 -6.875 458.9375 -6.875ZM253 226.25Q281.875 244.3125 296.09375 261.5625Q310.3125 278.8125 310.3125 299Q310.3125 323.6875 294.6875 340.4375Q279.0625 357.1875 253.8125 357.1875Q228.4375 357.1875 211.375 341.53125Q194.3125 325.875 194.3125 301.1875Q194.3125 278.75 208.46875 261.4375Q222.625 244.125 253 226.25ZM461.6875 169.5625Q496.3125 170.375 515.03125 189.5Q533.75 208.625 532.125 237.25Q531.3125 258.6875 512.96875 281.46875Q494.625 304.25 457.375 326.4375L342.6875 397.5625L375.9375 414.25Q405.625 385.5 418.0 363.0Q430.375 340.5 430.375 318.75Q430.375 281.9375 416.625 249.375Q402.875 216.8125 371.5625 191.8125Q386.625 184.875 401.0625 179.5Q415.5 174.125 430.90625 171.84375Q446.3125 169.5625 461.6875 169.5625Z", "c": [[-20, -8.125, 705.0625, 633.6875], [194.3125, 226.25, 310.3125, 357.1875], [342.6875, 169.5625, 533.75, 414.25]]}};
+let GN = 0;
+const grad = c => { const id = 'lg' + (++GN); return [id, `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:${c.g1}"/><stop offset="1" style="stop-color:${c.g2}"/></linearGradient></defs>`]; };
+const pt = (deg, r, cx = 50, cy = 50) => [+(cx + r * Math.cos(deg * Math.PI / 180)).toFixed(2), +(cy + r * Math.sin(deg * Math.PI / 180)).toFixed(2)];
+const arc = (a0, a1, r, cx = 50, cy = 50) => { const [x0, y0] = pt(a0, r, cx, cy), [x1, y1] = pt(a1, r, cx, cy); return `M${x0} ${y0} A${r} ${r} 0 ${(a1 - a0) % 360 > 180 ? 1 : 0} 1 ${x1} ${y1}`; };
+const dot = (x, y, r, c, cut = 3.5) => `<circle cx="${x}" cy="${y}" r="${r + cut}" fill="${c.bg}"/><circle cx="${x}" cy="${y}" r="${r}" fill="${c.ac}"/>`;
+// Place a Rubik glyph (font units, y up) centred at (cx, cy) with width w; returns [svg, map(x,y)]
+function glyph(key, cx, cy, w, fill) {
+  const g = GLYPH[key], b = g.c[0], s = w / (b[2] - b[0]);
+  const tx = cx - (b[0] + b[2]) / 2 * s, ty = cy + (b[1] + b[3]) / 2 * s;
+  const map = (x, y) => [+(tx + x * s).toFixed(2), +(ty - y * s).toFixed(2)];
+  return [`<path transform="translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${s.toFixed(4)} ${(-s).toFixed(4)})" d="${g.d}" fill="${fill}"/>`, map, s, g.c];
+}
+
+const SYM = {
+  // A. Orbit dot
+  a1: c => `<circle cx="50" cy="50" r="27" fill="none" stroke="${c.fg}" stroke-width="11"/>${dot(...pt(-45, 27), 10, c)}`,
+  a2: c => `<circle cx="50" cy="50" r="38" fill="none" stroke="${c.fg}" stroke-width="1.6" stroke-dasharray="0.1 6" stroke-linecap="round" opacity="${c.mono ? 1 : .6}"/><circle cx="50" cy="50" r="23" fill="none" stroke="${c.fg}" stroke-width="9"/>${dot(...pt(-45, 38), 8, c, 0)}`,
+  a3: c => `<path d="${arc(-20, 290, 27)}" fill="none" stroke="${c.fg}" stroke-width="10" stroke-linecap="round"/><circle cx="${pt(-45, 27)[0]}" cy="${pt(-45, 27)[1]}" r="8.5" fill="${c.ac}"/>`,
+  a4: c => `<circle cx="50" cy="50" r="27" fill="none" stroke="${c.fg}" stroke-width="9"/>${dot(...pt(-45, 27), 9, c)}${dot(...pt(135, 27), 4.5, { ...c, ac: c.g2 }, 3)}`,
+  // B. Progress arc
+  b1: c => { const [id, d] = grad(c); return `${d}<path d="${arc(-90, 180, 28)}" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round"/>${dot(22, 50, 8.5, c)}`; },
+  b2: c => { const [id, d] = grad(c); const e = pt(150, 28); return `${d}<circle cx="50" cy="50" r="28" fill="none" stroke="${c.fg}" stroke-width="2.5" opacity="${c.mono ? .5 : .25}"/><path d="${arc(-90, 150, 28)}" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round"/><circle cx="50" cy="22" r="5.5" fill="${c.g2}" stroke="${c.bg}" stroke-width="2.5"/>${dot(...e, 8.5, c)}`; },
+  b3: c => { const [id, d] = grad(c); return `${d}<path d="${arc(150, 330, 28)}" fill="none" stroke="url(#${id})" stroke-width="15" stroke-linecap="round"/>${dot(...pt(330, 28), 9, c, 3)}`; },
+  b4: c => { const [id, d] = grad(c); let p = ''; const N = 60; for (let i = 0; i <= N; i++) { const t = i / N, a = 90 + t * 300, r = 12 + t * 22; const [x, y] = pt(a, r); p += (i ? ' L' : 'M') + x + ' ' + y; } const e = pt(390, 34); return `${d}<path d="${p}" fill="none" stroke="url(#${id})" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>${dot(...e, 8, c)}`; },
+  // C. Haa (Rubik initial form)
+  c1: c => { const [g, m] = glyph('uniFEEB@700', 48, 52, 68, c.fg); const [x, y] = m(600, 760); return g + `<circle cx="${x}" cy="${y}" r="8" fill="${c.ac}"/>`; },
+  c2: c => { const [g, m, s, cs] = glyph('uniFEEB@800', 50, 50, 70, c.fg); const k = cs[2]; const [x0, y0] = m(k[0], k[3]), [x1, y1] = m(k[2], k[1]); return g + `<ellipse cx="${(x0 + x1) / 2}" cy="${(y0 + y1) / 2}" rx="${(x1 - x0) / 2 * .62}" ry="${(y1 - y0) / 2 * .62}" fill="${c.ac}"/>`; },
+  c3: c => { const [g, m] = glyph('uniFEEB@700', 56, 44, 48, c.fg); const [x, y] = m(-10, 40); return g + `<path d="M${x + 1} ${y} C ${x - 22} ${y + 2}, ${x - 16} ${y + 30}, 52 ${y + 28} C 74 ${y + 27}, 86 ${y + 14}, 86 ${y - 2}" fill="none" stroke="${c.fg}" stroke-width="7" stroke-linecap="round"/>${dot(86, y - 4, 7, c, 0)}`; },
+  c4: c => { const [g] = glyph('uni0647@700', 50, 51, 40, c.fg); return `<circle cx="50" cy="50" r="36" fill="none" stroke="${c.fg}" stroke-width="4.5" opacity="${c.mono ? 1 : .55}"/>${g}${dot(...pt(-45, 36), 7.5, c)}`; },
+  // D. Combinations
+  d1: c => { const [id, d] = grad(c); const [g] = glyph('uniFEEB@700', 51, 51, 42, c.fg); return `${d}<path d="${arc(-90, 180, 37)}" fill="none" stroke="url(#${id})" stroke-width="7" stroke-linecap="round"/>${dot(13, 50, 7, c)}${g}`; },
+  d2: c => { const [g, m] = glyph('uni0647@800', 50, 50, 62, c.fg); const [x, y] = m(430, 430); return g + dot(x, y, 9.5, c); }
+};
+
+const GROUPS = [
+  { id: 'a', name: 'أ. نقطة على المدار', from: 'من الفكرة 1', note: 'الحلقة والنقطة الدافئة، بأوزان ومواضع مختلفة للنقطة.', items: [
+    ['a1', 'أثقل', 'حلقة أعرض ونقطة أكبر تقطعها. حضور أقوى على الشاشة الرئيسية.'],
+    ['a2', 'قمر صناعي', 'النقطة خارج الحلقة على مدار منقّط خفيف: تدور حولها لا عليها.'],
+    ['a3', 'النقطة تكمل الحلقة', 'الحلقة مفتوحة والنقطة تسد الفراغ: البداية هي ما يكمل الدائرة.'],
+    ['a4', 'بداية واستمرار', 'نقطة دافئة للبداية، ونقطة نعناعية صغيرة مقابلها للاستمرار.']
+  ]},
+  { id: 'b', name: 'ب. قوس التقدّم', from: 'من الفكرة 11', note: 'القوس المتدرّج من الواجهة، بأطوال وسماكات مختلفة.', items: [
+    ['b1', 'الأصل', 'ثلاثة أرباع المدار، والنقطة الدافئة عند نهاية القوس.'],
+    ['b2', 'بمحطة بداية', 'مسار رفيع كامل، والقوس يبدأ من محطة نعناعية وينتهي بالنقطة الدافئة.'],
+    ['b3', 'مذنّب', 'نصف مدار سميك يندفع للأعلى، والنقطة تقوده. الأكثر حيوية.'],
+    ['b4', 'حلزون', 'القوس يتّسع وهو يدور: يبدأ صغيرًا ويكبر. «ابدأ بحركة، واستمر».']
+  ]},
+  { id: 'c', name: 'ج. هاء Rubik', from: 'من الفكرة 16', note: 'حرف «هـ» في أول الكلمة من خط التطبيق نفسه. يُرسم يدويًا بعد الاختيار.', items: [
+    ['c1', 'هاء ونقطة', 'الحرف بالوزن 700 والنقطة الدافئة فوقه كأنها بداية الحركة.'],
+    ['c2', 'قلب الهاء', 'النقطة الدافئة تملأ العين الكبيرة للحرف: الهمّة في قلب الكلمة.'],
+    ['c3', 'كشيدة مدارية', 'الكشيدة تمتد وتلتف تحت الحرف كمدار، وتنتهي بالنقطة الدافئة.'],
+    ['c4', 'هاء في مدار', 'الهاء المفردة داخل حلقة رفيعة، والنقطة الدافئة على الحلقة.']
+  ]},
+  { id: 'd', name: 'د. دمج', from: 'بين الأفكار', note: 'محاولتان لجمع الحرف مع لغة المدار في رمز واحد.', items: [
+    ['d1', 'هاء داخل قوس التقدّم', 'الفكرة 16 داخل الفكرة 11: الحرف العربي، وحوله القوس المتدرّج.'],
+    ['d2', 'الهاء هي المدار', 'الهاء المفردة في Rubik دائرية أصلًا، فتصير هي الحلقة والنقطة الدافئة تقطعها: الفكرة 1 مكتوبة بحرف.']
+  ]}
+];
+
+const DARK = { fg: '#EEF3FF', ac: '#F2A65A', bg: '#14213D', g1: '#6CB4E8', g2: '#7FD8BE' };
+const LIGHT = { fg: '#14213D', ac: '#F2A65A', bg: '#FFFFFF', g1: '#3D4FA3', g2: '#2A8CA6' };
+const svg = (k, c) => `<svg viewBox="0 0 100 100" aria-hidden="true">${SYM[k](c)}</svg>`;
+const icon = (k, c, inset = 18) => { const sc = (100 - 2 * inset) / 100; return `<svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="${c.bg}"/><g transform="translate(${inset} ${inset}) scale(${sc})">${SYM[k](c)}</g></svg>`; };
+
+function card(gid, [k, name, idea], i) {
+  const monoC = { fg: 'currentColor', ac: 'currentColor', bg: 'var(--surface)', g1: 'currentColor', g2: 'currentColor', mono: true };
+  const small = [48, 32, 20].map(sz => `<span class="s"><span class="t" style="width:${sz}px;height:${sz}px;border-radius:${sz * .23}px">${icon(k, DARK)}</span>${sz}</span>`).join('');
+  const label = { a: 'أ', b: 'ب', c: 'ج', d: 'د' }[gid] + (i + 1);
+  return `<article class="card">
+    <div class="head"><h2>${label}. ${name}</h2></div>
+    <div class="show">
+      <span class="tile dark">${icon(k, DARK)}</span>
+      <span class="tile light">${icon(k, LIGHT)}</span>
+      <span class="tile circle" title="قناع Android الدائري">${icon(k, DARK, 24)}</span>
+      <span class="lock">${svg(k, { fg: 'currentColor', ac: '#F2A65A', bg: 'var(--surface)', g1: 'var(--g1)', g2: 'var(--g2)' })}<span class="words"><span class="ar">هِمّة</span><span class="en">HIMMA</span></span></span>
+    </div>
+    <div class="small">${small}<span class="s mono">${svg(k, monoC)}بلون واحد</span></div>
+    <dl><dt>الفكرة</dt><dd>${idea}</dd></dl>
+  </article>`;
+}
+document.getElementById('groups').outerHTML = GROUPS.map(g => `<section class="group"><h2>${g.name} <small style="font-size:14px;color:var(--muted);font-weight:500">${g.from}</small></h2><p>${g.note}</p><div class="grid">${g.items.map((it, i) => card(g.id, it, i)).join('')}</div></section>`).join('');
+</script>
