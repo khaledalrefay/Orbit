@@ -1,0 +1,13 @@
+{
+  "$description": "Himma corner radius, option 'soft', approved 2026-10-20. Values in dp. Buttons are rounded rectangles on 'md', not pills. Reference prototype: brand/exploration/round-4/foundations.html.",
+  "radius": {
+    "xs":   { "value": 4,   "use": "small progress bars" },
+    "sm":   { "value": 8,   "use": "linked step squares, habit check box" },
+    "tile": { "value": 10,  "use": "40 dp rounded-square icon tile and icon buttons" },
+    "md":   { "value": 12,  "use": "buttons, inputs, inner blocks" },
+    "lg":   { "value": 16,  "use": "cards" },
+    "xl":   { "value": 20,  "use": "today's session card, bottom sheet" },
+    "full": { "value": 999, "use": "switch track, navigation indicator, chips" }
+  },
+  "button": "md"
+}

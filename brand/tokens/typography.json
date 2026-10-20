@@ -1,0 +1,23 @@
+{
+  "$description": "Himma type scale, option 'compact', approved 2026-10-20. Rubik for Arabic and Latin with the same values. Size in sp (scales with the system text size), lineHeight as a multiplier (Flutter TextStyle.height). 'material' is the suggested M3 TextTheme slot. Reference prototype: brand/exploration/round-4/foundations.html.",
+  "fontFamily": "Rubik",
+  "role": {
+    "timer":   { "size": 48, "weight": 500, "lineHeight": 1.1,  "features": ["tnum"], "material": "displayMedium", "use": "timer digits and large counters" },
+    "display": { "size": 24, "weight": 700, "lineHeight": 1.3,  "material": "headlineSmall", "use": "screen title: Today, Focus" },
+    "titleLg": { "size": 19, "weight": 700, "lineHeight": 1.35, "material": "titleLarge", "use": "today's session card, exercise name" },
+    "title":   { "size": 16, "weight": 600, "lineHeight": 1.4,  "material": "titleMedium", "use": "section headers: Weekly plan, Habits today" },
+    "body":    { "size": 14, "weight": 400, "strongWeight": 500, "lineHeight": 1.55, "material": "bodyMedium", "use": "habit names, lists, explanations. Names use strongWeight" },
+    "button":  { "size": 14, "weight": 500, "lineHeight": 1.3,  "material": "labelLarge", "use": "button text" },
+    "caption": { "size": 12, "weight": 400, "lineHeight": 1.5,  "material": "bodySmall", "use": "details and small counters, in the muted color" },
+    "label":   { "size": 11, "weight": 500, "lineHeight": 1.4,  "material": "labelSmall", "use": "bottom navigation and step names" }
+  },
+  "textScale": {
+    "max": 2.0,
+    "caps": {
+      "timer": 1.2,
+      "navLabel": 1.3,
+      "stepLabel": 1.3
+    },
+    "note": "All text follows the system text size up to 200%, except timer digits (up to 120%) and the labels under bottom-navigation icons and step squares (up to 130%)."
+  }
+}

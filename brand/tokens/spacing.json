@@ -1,0 +1,19 @@
+{
+  "$description": "Himma spacing, option 'compact', approved 2026-10-20. Values in dp on a 4 dp base unit. Reference prototype: brand/exploration/round-4/foundations.html.",
+  "base": 4,
+  "scale": [4, 8, 12, 16, 20, 24, 32],
+  "layout": {
+    "screenGutter": 16,
+    "sectionGap": 20,
+    "cardGap": 8,
+    "cardPadding": 12,
+    "rowGap": 8,
+    "inlineGap": 8
+  },
+  "size": {
+    "buttonHeight": 40,
+    "iconButton": 44,
+    "iconTile": 40,
+    "minTouchTarget": 48
+  }
+}
