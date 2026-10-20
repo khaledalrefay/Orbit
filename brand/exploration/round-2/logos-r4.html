@@ -126,21 +126,21 @@ function ribbon(P, w) {
 const noise = i => (Math.sin(i * 12.9898) * 43758.5453) % 1;
 const taper = (t, a = .08, b = .12) => Math.min(1, t / a, (1 - t) / b);
 
-// Free-hand Haa: starts at the top, loops around the eye, crosses its own stroke, then runs into the bowl and the connecting tail
-const HAA_D = 'M44 20 C54 26 64 34 62 46 C60 56 50 64 42 64 C33 64 29 56 31 49 C33 42 42 39 49 43 C58 48 66 56 76 58 C86 61 86 76 74 80 C62 84 46 78 32 77 L18 77';
-const HAA_START = [44, 20], HAA_END = [18, 77];
+// Free-hand Haa traced from the user's sketch: short stem rises into a wide arch, falls into the bottom, loops the eye, crosses itself, then runs out as the tail
+const HAA_D = 'M49.8 46.3 C48.8 39.5 53.2 30.6 61.0 26.2 C66.9 24.3 75.7 28.7 81.1 39.0 C85.5 47.3 88.0 58.1 84.1 64.5 C78.7 72.8 66.9 74.7 59.1 74.3 C53.2 73.8 49.3 69.8 48.8 63.0 C48.3 55.1 52.2 48.3 58.1 47.3 C64.0 46.3 68.4 52.2 67.9 58.1 C67.4 64.0 61.0 69.8 55.1 72.3 C47.3 74.3 29.7 72.3 12.0 64.9';
+const HAA_START = [49.8, 46.3], HAA_END = [12.0, 64.9];
 
 const SYM = {
   a1: c => `<circle cx="50" cy="50" r="27" fill="none" stroke="${c.fg}" stroke-width="11"/>${dot(...pt(-45, 27), 10, c)}`,
   b1: c => { const [id, d] = grad(c); return `${d}<path d="${arc(-90, 180, 28)}" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round"/>${dot(22, 50, 8.5, c)}`; },
   // Free Haa in the spiral line
-  f1: c => { const [id, d] = grad(c); return `${d}<path d="${HAA_D}" fill="none" stroke="url(#${id})" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>${dot(...HAA_START, 7, c)}`; },
-  f2: c => { const [id, d] = grad(c); return `${d}<path d="${HAA_D}" fill="none" stroke="url(#${id})" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>${dot(HAA_END[0] - 2, HAA_END[1], 6.5, c)}`; },
-  f3: c => { const [id, d] = grad(c); const P = sample(HAA_D); return `${d}<path d="${ribbon(P, t => lerp(4, 11, Math.min(1, t * 1.6)) * taper(t, .02, .1))}" fill="url(#${id})"/>${dot(...HAA_START, 6.5, c)}`; },
+  f1: c => { const [id, d] = grad(c); return `${d}<path d="${HAA_D}" fill="none" stroke="url(#${id})" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>${dot(...HAA_START, 5, c, 0)}`; },
+  f2: c => { const [id, d] = grad(c); return `${d}<path d="${HAA_D}" fill="none" stroke="url(#${id})" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>${dot(HAA_END[0] - 2, HAA_END[1] - 1, 6, c)}`; },
+  f3: c => { const [id, d] = grad(c); const P = sample(HAA_D); return `${d}<path d="${ribbon(P, t => lerp(4, 11, Math.min(1, t * 1.6)) * taper(t, .02, .1))}" fill="url(#${id})"/>${dot(...HAA_START, 5, c, 0)}`; },
   // Brush and pens
-  p1: c => { const P = sample(HAA_D, 40); const nib = -35 * Math.PI / 180; return `<path d="${ribbon(P, (t, dir) => lerp(2.2, 12, Math.abs(Math.sin(dir - nib))) * taper(t, .02, .06))}" fill="${c.fg}"/>${dot(HAA_START[0] + 4, HAA_START[1] - 8, 6, c, 2.5)}`; },
-  p2: c => { const P = sample(HAA_D, 40); return `<path d="${ribbon(P, (t, dir, i) => (9 + 3 * Math.sin(t * 9)) * taper(t, .1, .2) * (1 + .18 * noise(i)))}" fill="${c.fg}"/>${dot(HAA_END[0] - 4, HAA_END[1] + 1, 5.5, c, 2.5)}`; },
-  p3: c => { const P = sample(HAA_D, 40); return `<path d="${ribbon(P, (t, dir) => lerp(1.6, 11, Math.max(0, Math.sin(dir))) * taper(t, .03, .08))}" fill="${c.fg}"/>${dot(...HAA_START, 5.5, c, 2.5)}`; },
+  p1: c => { const P = sample(HAA_D, 40); const nib = -35 * Math.PI / 180; return `<path d="${ribbon(P, (t, dir) => lerp(2.2, 12, Math.abs(Math.sin(dir - nib))) * taper(t, .02, .06))}" fill="${c.fg}"/>${dot(...HAA_START, 4.5, c, 0)}`; },
+  p2: c => { const P = sample(HAA_D, 40); return `<path d="${ribbon(P, (t, dir, i) => (9 + 3 * Math.sin(t * 9)) * taper(t, .1, .2) * (1 + .18 * noise(i)))}" fill="${c.fg}"/>${dot(HAA_END[0] - 3, HAA_END[1] - 1, 5.5, c, 2.5)}`; },
+  p3: c => { const P = sample(HAA_D, 40); return `<path d="${ribbon(P, (t, dir) => lerp(1.6, 11, Math.max(0, Math.sin(dir))) * taper(t, .03, .08))}" fill="${c.fg}"/>${dot(...HAA_START, 4.5, c, 0)}`; },
   // Single-line shapes
   s1: c => { const [id, d] = grad(c); const P = []; for (let i = 0; i <= 160; i++) { const t = i / 160, a = -60 + t * 320, r = 29 + 2.2 * Math.sin(t * 7) - 3 * t; P.push(pt(a, r)); } const e = P[P.length - 1]; return `${d}<path d="${ribbon(P, t => lerp(13, 4, t) * taper(t, .03, .04))}" fill="url(#${id})"/>${dot(...pt(-78, 31), 7.5, c, 0)}`; },
   s2: c => { const [id, d] = grad(c); const P = []; for (let i = 0; i <= 200; i++) { const t = i / 200 * 2 * Math.PI, s = 1 + Math.sin(t) ** 2; P.push([50 + 36 * Math.cos(t) / s, 50 + 36 * Math.sin(t) * Math.cos(t) / s]); } const k = P[25]; return `${d}<path d="${line(P)} Z" fill="none" stroke="url(#${id})" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>${dot(k[0], k[1], 7, c)}`; },
@@ -150,7 +150,7 @@ const SYM = {
 
 const GROUPS = [
   { name: 'اختياراتك حتى الآن', note: 'للمقارنة فقط.', items: [['a1', 'أ1. نقطة على المدار، أثقل', 'حلقة عريضة ونقطة دافئة تقطعها.'], ['b1', 'ب1. قوس التقدّم', 'ثلاثة أرباع المدار المتدرّج، والنقطة عند نهايته.']] },
-  { name: 'هاء حرّة بخط الحلزون', note: 'الحرف يبدأ من الأعلى، ينزل ويلتف حول نفسه فيرسم العين، ثم يتقاطع مع خطه ويستمر إلى البطن والكشيدة. شكله العام من «هـ» في Rubik، مرسوم بخط حر متدرّج اللون كالحلزون.', items: [
+  { name: 'هاء حرّة بخط الحلزون', note: 'مأخوذة من رسمتك: يبدأ القلم من الأعلى، يصعد في قوس واسع وينزل من اليمين، ثم يلتف حول نفسه فيرسم العين، ويتقاطع مع خطه، ويستمر في الكشيدة إلى اليسار. بخط حر متدرّج اللون كالحلزون.', items: [
     ['f1', 'هـ1. هاء متدرّجة، والنقطة حيث يبدأ القلم', 'خط واحد متدرّج بسماكة ثابتة، والنقطة الدافئة في رأس الحرف: لحظة البداية.'],
     ['f2', 'هـ2. أرفع، والنقطة في نهاية الكشيدة', 'خط أرفع وأخف، والنقطة الدافئة حيث ينتهي الحرف ويتابع: الاستمرار.'],
     ['f3', 'هـ3. يزداد سماكة', 'الخط يبدأ رفيعًا ويثقل كلما تقدّم، كالحلزون المتسمّك لكن بشكل الهاء.']
