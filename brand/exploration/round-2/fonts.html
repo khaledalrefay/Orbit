@@ -1,0 +1,608 @@
+<title>خطوط همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Readex+Pro:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: intro, license table, side-by-side specimens of the five candidates, a type scale, then font/digit/mode switches driving the same app screens. Phone fonts come from --ph-* variables on the screen grid. */
+:root {
+  --bg: #f4f5f7; --surface: #ffffff; --fg: #1c2230; --muted: #5d6576; --line: #dfe2e8; --chip: #eceef3; --focus: #3d63d6;
+  --f-body: "IBM Plex Sans Arabic", "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #10141c; --surface: #191e28; --fg: #e8eaf0; --muted: #9aa2b3; --line: #2c3240; --chip: #252a35; --focus: #8aa6ff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #10141c; --surface: #191e28; --fg: #e8eaf0; --muted: #9aa2b3; --line: #2c3240; --chip: #252a35; --focus: #8aa6ff; color-scheme: dark; }
+
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 56px;
+}
+.wrap { max-width: 1240px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+.intro { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 900px) { .intro { grid-template-columns: 1fr; } }
+.intro-text { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; text-wrap: balance; }
+.intro p { margin: 0; color: var(--muted); max-width: 64ch; }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+
+.rules { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.rules h2 { margin: 0; font-size: 17px; }
+.rule { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; font-size: 14px; }
+.rule svg { width: 40px; height: 40px; }
+.rule b { display: block; }
+.rule span { color: var(--muted); font-size: 13px; }
+.sw-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.sw { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.sw i { height: 26px; border-radius: 6px; background: var(--c); border: 1px solid rgb(0 0 0 / .08); }
+.sw b { font-family: var(--f-mono); font-size: 10px; font-weight: 500; color: var(--muted); direction: ltr; text-align: right; overflow-wrap: anywhere; }
+.sw small { font-size: 11px; color: var(--muted); line-height: 1.3; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--chip); border-radius: 18px; padding: 3px; gap: 2px; }
+.seg button { font: inherit; font-size: 13.5px; border: 0; background: transparent; color: var(--fg); padding: 5px 16px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / .12); font-weight: 600; }
+.seg button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.toolbar .hint { font-size: 13px; color: var(--muted); }
+
+.screens { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 32px 20px; justify-items: center; }
+.screens.both { grid-template-columns: repeat(auto-fill, minmax(min(660px, 100%), 1fr)); }
+.shot { display: flex; flex-direction: column; gap: 10px; align-items: center; min-width: 0; width: 100%; }
+.shot .pair { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; width: 100%; }
+.cap { text-align: center; max-width: 320px; }
+.cap b { display: block; font-size: 15px; }
+.cap span { font-size: 13px; color: var(--muted); }
+
+/* ---------- Phone tokens ---------- */
+.phone.light {
+  --p-bg:#F3F6FA; --p-surface:#FFFFFF; --p-surface2:#E9EEF6; --p-ink:#14213D; --p-muted:#5A6785; --p-line:#DCE3EE;
+  --p-primary:#3D4FA3; --p-on-primary:#FFFFFF; --p-warm:#F2A65A; --p-on-warm:#1B1406; --p-warm-text:#A5561A;
+  --p-done:#2E9C82; --p-on-done:#FFFFFF; --p-miss:#C2563F; --p-g1:#3D4FA3; --p-g2:#4FB3C8; --p-arc1:#6CB4E8;
+  --p-hero:#14213D; --p-hero-ink:#EEF3FF; --p-hero-muted:#AEBBDA; --p-ring:#2B3A66; --p-arc:#7FD8BE; --p-track:#DCE3EE;
+  --p-frame:#D3DBE8; --p-wall:linear-gradient(160deg,#C9D6EA,#E9D9C8);
+  --h1:#3E8FD6; --h2:#2E9C82; --h3:#6A5FD0; --h4:#3D4FA3; --h5:#E0705A; --h6:#C77A2E;
+}
+.phone.dark {
+  --p-bg:#0B1222; --p-surface:#141E36; --p-surface2:#1C2844; --p-ink:#E8EEFB; --p-muted:#93A0BE; --p-line:#24314F;
+  --p-primary:#8C9BF2; --p-on-primary:#0B1222; --p-warm:#F2A65A; --p-on-warm:#1B1406; --p-warm-text:#F2A65A;
+  --p-done:#7FD8BE; --p-on-done:#0B1222; --p-miss:#F08A72; --p-g1:#8C9BF2; --p-g2:#7FD8BE; --p-arc1:#6CB4E8;
+  --p-hero:#1B2B55; --p-hero-ink:#EEF3FF; --p-hero-muted:#A9B6D6; --p-ring:#2E3F70; --p-arc:#7FD8BE; --p-track:#24314F;
+  --p-frame:#2A3550; --p-wall:linear-gradient(160deg,#1B2440,#3A2C2A);
+  --h1:#6CB4E8; --h2:#7FD8BE; --h3:#A99BF5; --h4:#8C9BF2; --h5:#F48E78; --h6:#F2A65A;
+}
+
+.phone {
+  width: 320px; max-width: 100%; background: var(--p-bg); color: var(--p-ink);
+  font-family: var(--ph-ar, "IBM Plex Sans Arabic"), sans-serif; font-size: 13.5px; line-height: 1.5;
+  border-radius: 34px; border: 6px solid var(--p-frame); overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 12px 32px rgb(0 0 0 / .08); min-height: 660px;
+}
+.phone[lang="en"] { font-family: var(--ph-en, "IBM Plex Sans"), sans-serif; }
+.num { font-variant-numeric: tabular-nums; }
+.status { display: flex; justify-content: space-between; padding: 10px 22px 0; font-size: 12px; font-weight: 600; direction: ltr; }
+.status i { display: inline-flex; gap: 4px; }
+.status i b { width: 14px; height: 8px; border-radius: 2px; background: currentColor; opacity: .8; }
+.body { display: flex; flex-direction: column; gap: 12px; padding: 12px 16px 16px; flex: 1; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.top .sub { font-size: 12px; color: var(--p-muted); }
+.top h3 { margin: 0; font-size: 25px; line-height: 1.25; font-weight: 700; }
+.bar { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; gap: 8px; }
+.bar h3 { margin: 0; text-align: center; font-size: 16px; font-weight: 600; }
+.ib { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--p-line); background: var(--p-surface); color: var(--p-ink); display: grid; place-items: center; padding: 0; }
+.ib svg { width: 18px; height: 18px; }
+.ib.flat { border-color: transparent; background: transparent; }
+button { cursor: default; }
+.ib:focus-visible, .cta:focus-visible, .ghost:focus-visible, .chip:focus-visible { outline: 2px solid var(--p-primary); outline-offset: 2px; }
+
+/* Hero: Orbit navy, Hybrid's wider radius */
+.hero { position: relative; overflow: hidden; background: var(--p-hero); color: var(--p-hero-ink); border-radius: 22px; padding: 16px; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.hero .txt { display: flex; flex-direction: column; gap: 2px; position: relative; z-index: 1; min-width: 0; }
+.hero .lbl { font-size: 12px; color: var(--p-hero-muted); }
+.hero .ttl { font-size: 19px; font-weight: 700; line-height: 1.35; }
+.hero .meta { font-size: 12.5px; color: var(--p-hero-muted); }
+.hero > svg.art { position: relative; z-index: 1; width: 84px; height: 84px; }
+.cta { margin-top: 10px; align-self: flex-start; font: inherit; font-weight: 600; font-size: 13.5px; border: 0; background: var(--p-warm); color: var(--p-on-warm); border-radius: 999px; padding: 7px 18px; }
+.ghost { font: inherit; font-size: 12.5px; font-weight: 600; background: var(--p-surface2); color: var(--p-ink); border: 0; border-radius: 999px; padding: 7px 14px; white-space: nowrap; }
+
+.card { background: var(--p-surface); border: 1px solid var(--p-line); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.rh { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.rh h4 { margin: 0; font-size: 14px; font-weight: 600; }
+.rh span { font-size: 12px; color: var(--p-muted); }
+
+.week { display: grid; grid-template-columns: repeat(7, 1fr); position: relative; }
+.week::before { content: ""; position: absolute; inset-inline: 7.14%; top: 33px; height: 2px; background: var(--p-line); border-radius: 1px; }
+.week .wfill { position: absolute; inset-inline-start: 7.14%; width: 42.86%; top: 32px; height: 4px; border-radius: 2px; background: linear-gradient(to left, var(--p-g1), var(--p-g2)); }
+.phone[dir="ltr"] .week .wfill { background: linear-gradient(to right, var(--p-g1), var(--p-g2)); }
+.day { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; color: var(--p-muted); position: relative; }
+.day .mk { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+.day .mk::after { content: ""; border-radius: 50%; }
+.day.done .mk { background: var(--p-done); color: var(--p-on-done); box-shadow: 0 0 0 3px var(--p-surface); }
+.day.done .mk::after { display: none; }
+.day.today { color: var(--p-ink); font-weight: 700; }
+.day.today .mk::after { width: 13px; height: 13px; background: var(--p-warm); box-shadow: 0 0 0 5px color-mix(in srgb, var(--p-warm) 28%, transparent); }
+.day.plan .mk::after { width: 9px; height: 9px; background: var(--p-surface); box-shadow: 0 0 0 2px var(--p-muted); }
+.day.rest .mk::after { width: 4px; height: 4px; background: var(--p-muted); opacity: .5; }
+.day .mk svg { width: 12px; height: 12px; }
+
+.sec { font-size: 11px; color: var(--p-muted); letter-spacing: .02em; }
+.habit { display: grid; grid-template-columns: 34px 1fr 32px; gap: 10px; align-items: center; }
+.ic { width: 34px; height: 34px; border-radius: 11px; background: color-mix(in srgb, var(--hc) 20%, transparent); color: var(--hc); display: grid; place-items: center; }
+.ic svg { width: 18px; height: 18px; }
+.nm { display: flex; flex-direction: column; min-width: 0; }
+.nm b { font-weight: 600; font-size: 13.5px; }
+.nm small { font-size: 11.5px; color: var(--p-muted); }
+.chk { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; justify-self: end; position: relative; }
+.chk.done { background: var(--hc); color: var(--p-bg); }
+.chk.todo { border: 2px solid var(--p-line); }
+.chk.miss { border: 2px solid var(--p-miss); color: var(--p-miss); }
+.chk svg { width: 14px; height: 14px; }
+.chk svg.ring { width: 30px; height: 30px; position: absolute; inset: 0; }
+.chk.qty span { font-size: 15px; font-weight: 700; color: var(--hc); line-height: 1; }
+
+.tabs { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--p-line); background: var(--p-surface); padding: 8px 4px 12px; margin-top: auto; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10.5px; color: var(--p-muted); }
+.tab svg { width: 20px; height: 20px; }
+.tab .pill { border-radius: 999px; padding: 2px 14px; display: grid; place-items: center; }
+.tab.on { color: var(--p-primary); font-weight: 700; }
+.tab.on .pill { background: color-mix(in srgb, var(--p-primary) 16%, transparent); }
+
+/* Player */
+.segs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.segs i { height: 4px; border-radius: 2px; background: var(--p-line); position: relative; overflow: hidden; }
+.segs i.d { background: var(--p-done); }
+.segs i.c::after { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 60%; background: var(--p-warm); }
+.illus { border-radius: 22px; background: var(--p-surface); border: 1px dashed var(--p-line); height: 168px; display: grid; place-items: center; position: relative; overflow: hidden; }
+.illus .ph { font-size: 11.5px; color: var(--p-muted); text-align: center; position: absolute; bottom: 10px; inset-inline: 0; }
+.illus svg.fig { width: 120px; height: 120px; }
+.ex { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+.ex h4 { margin: 0; font-size: 21px; font-weight: 700; }
+.ex small { color: var(--p-muted); font-size: 12.5px; }
+.ex svg { width: 92px; height: 92px; }
+.tip { font-size: 12.5px; background: var(--p-surface2); border-radius: 14px; padding: 9px 12px; }
+.tip b { color: var(--p-primary); font-weight: 600; }
+.ctrls { display: flex; justify-content: center; align-items: center; gap: 22px; }
+.ctrls .ib { width: 46px; height: 46px; }
+.big { width: 64px; height: 64px; border-radius: 50%; border: 0; background: var(--p-warm); color: var(--p-on-warm); display: grid; place-items: center; }
+.big svg { width: 26px; height: 26px; }
+.nextup { position: relative; overflow: hidden; border-radius: 18px; background: var(--p-surface); border: 1px solid var(--p-line); padding: 10px 14px; display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; }
+.nextup span:first-child { color: var(--p-muted); }
+.nextup b { font-weight: 600; position: relative; z-index: 1; }
+
+/* Habits list */
+.dstrip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.ds { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--p-muted); padding: 4px 0 6px; border-radius: 14px; }
+.ds.on { background: var(--p-surface); color: var(--p-ink); font-weight: 700; box-shadow: inset 0 0 0 1px var(--p-line); }
+.ds svg { width: 26px; height: 26px; }
+.fab { position: absolute; inset-inline-start: 18px; bottom: 74px; width: 50px; height: 50px; border-radius: 16px; border: 0; background: var(--p-primary); color: var(--p-on-primary); display: grid; place-items: center; box-shadow: 0 6px 16px rgb(0 0 0 / .18); }
+.fab svg { width: 22px; height: 22px; }
+.rel { position: relative; }
+
+/* Habit detail */
+.hd { display: flex; align-items: center; gap: 12px; }
+.hd .ic { width: 48px; height: 48px; border-radius: 15px; }
+.hd .ic svg { width: 24px; height: 24px; }
+.hd b { font-size: 19px; display: block; }
+.hd small { color: var(--p-muted); font-size: 12px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat { background: var(--p-surface); border: 1px solid var(--p-line); border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; }
+.stat b { font-size: 21px; font-weight: 700; line-height: 1.2; }
+.stat b small { font-size: 12px; font-weight: 500; color: var(--p-muted); }
+.stat span { font-size: 11.5px; color: var(--p-muted); }
+.goal { display: flex; flex-direction: column; gap: 6px; }
+.goal .track { height: 4px; border-radius: 2px; background: var(--p-track); position: relative; margin-block: 8px 2px; }
+.goal .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 64%; border-radius: 2px; background: linear-gradient(to left, var(--p-g1), var(--p-g2)); }
+.goal .ms { position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%; transform: translate(50%, -50%); background: var(--p-surface); box-shadow: 0 0 0 2px var(--p-g2); }
+.goal .ms.ahead { box-shadow: 0 0 0 2px var(--p-line); }
+.goal .dot { position: absolute; top: 50%; inset-inline-start: 64%; width: 13px; height: 13px; border-radius: 50%; background: var(--p-warm); transform: translate(50%, -50%); box-shadow: 0 0 0 5px color-mix(in srgb, var(--p-warm) 28%, transparent); }
+.goal .msl { position: relative; height: 14px; font-size: 10.5px; color: var(--p-muted); }
+.goal .msl span { position: absolute; transform: translateX(50%); }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 11.5px; }
+.cal .h { color: var(--p-muted); font-size: 10.5px; }
+.cal span { height: 30px; display: grid; place-items: center; border-radius: 50%; }
+.cal .d { background: var(--hc); color: var(--p-bg); font-weight: 600; }
+.cal .m { box-shadow: inset 0 0 0 1.5px var(--p-miss); color: var(--p-miss); }
+.cal .t { box-shadow: 0 0 0 2px var(--p-warm); }
+.cal .f { color: var(--p-muted); opacity: .6; }
+.legend { display: flex; gap: 12px; font-size: 11px; color: var(--p-muted); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-inline-end: 4px; vertical-align: middle; }
+
+/* Programs */
+.lv { display: flex; gap: 5px; margin-top: 6px; }
+.lv i { width: 18px; height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--p-hero-ink) 25%, transparent); }
+.lv i.on { background: var(--p-arc); }
+.chips { display: flex; gap: 6px; overflow: hidden; }
+.chip { font: inherit; font-size: 12px; border: 1px solid var(--p-line); background: var(--p-surface); color: var(--p-ink); border-radius: 999px; padding: 4px 12px; white-space: nowrap; }
+.chip.on { background: var(--p-primary); color: var(--p-on-primary); border-color: var(--p-primary); }
+.prog { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding-block: 2px; }
+.prog .ic { width: 44px; height: 44px; border-radius: 14px; }
+.prog .ic svg { width: 22px; height: 22px; }
+.prog .cat { font-size: 11px; color: var(--hc); font-weight: 600; filter: saturate(.9); }
+.prog .dur { font-size: 12px; color: var(--p-muted); text-align: end; }
+.sep { height: 1px; background: var(--p-line); }
+
+/* Focus */
+.fname { align-self: center; font-size: 12.5px; background: var(--p-surface); border: 1px solid var(--p-line); border-radius: 999px; padding: 3px 14px; }
+.timer { align-self: center; width: 236px; height: 236px; position: relative; }
+.timer svg { width: 100%; height: 100%; }
+.timer .c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.timer .c b { font-family: var(--ph-num, "IBM Plex Mono"), monospace; font-variant-numeric: tabular-nums; font-size: 44px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; direction: ltr; }
+.timer .c span { font-size: 12px; color: var(--p-muted); }
+.rounds { display: flex; justify-content: center; gap: 8px; }
+.rounds i { width: 9px; height: 9px; border-radius: 50%; background: var(--p-line); }
+.rounds i.d { background: var(--p-done); }
+.rounds i.c { background: var(--p-warm); }
+.fctrl { display: flex; justify-content: center; gap: 10px; }
+.fctrl .cta { margin: 0; background: var(--p-primary); color: var(--p-on-primary); }
+.brk { position: relative; overflow: hidden; }
+.brk .opts { display: flex; gap: 8px; position: relative; z-index: 1; }
+.brk .opts span { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 4px 14px; background: var(--p-surface2); }
+.brk .opts span:first-child { background: color-mix(in srgb, var(--p-done) 22%, transparent); }
+.brk .rh { position: relative; z-index: 1; }
+
+/* Widget home screen */
+.home { background: var(--p-wall); flex: 1; padding: 16px 14px 20px; display: flex; flex-direction: column; gap: 14px; }
+.home .clock { text-align: center; color: #fff; text-shadow: 0 1px 6px rgb(0 0 0 / .25); }
+.home .clock b { display: block; font-family: "IBM Plex Sans", sans-serif; font-size: 50px; font-weight: 300; line-height: 1.1; direction: ltr; }
+.home .clock span { font-size: 13px; }
+.w { background: color-mix(in srgb, var(--p-surface) 92%, transparent); border-radius: 22px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; color: var(--p-ink); box-shadow: 0 4px 14px rgb(0 0 0 / .12); }
+.w .wh { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.w .wh b { font-size: 13px; }
+.w .wh span { color: var(--p-muted); }
+.wrow { display: grid; grid-template-columns: 26px 1fr 28px; gap: 8px; align-items: center; font-size: 12.5px; }
+.wrow .ic { width: 26px; height: 26px; border-radius: 8px; }
+.wrow .ic svg { width: 14px; height: 14px; }
+.wrow .chk { width: 26px; height: 26px; }
+.wrow .chk svg.ring { width: 26px; height: 26px; }
+.wsmall { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.wsmall .w { aspect-ratio: 1; max-width: 100%; justify-content: space-between; }
+.wsmall .w.hero-w { background: var(--p-hero); color: var(--p-hero-ink); position: relative; overflow: hidden; }
+.wsmall .w.hero-w small { color: var(--p-hero-muted); }
+.wring { width: 44px; height: 44px; }
+.wsmall .w b.t { font-family: var(--ph-num, "IBM Plex Mono"), monospace; font-variant-numeric: tabular-nums; font-size: 22px; direction: ltr; text-align: end; }
+.wsmall .w .go { align-self: flex-start; font-size: 11.5px; font-weight: 600; background: var(--p-warm); color: var(--p-on-warm); border-radius: 999px; padding: 3px 12px; position: relative; z-index: 1; }
+.apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding-inline: 8px; margin-top: auto; }
+.apps i { aspect-ratio: 1; border-radius: 14px; background: rgb(255 255 255 / .35); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .arc { stroke-dasharray: 100 100; animation: draw 1.4s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes draw { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+  .halo { transform-box: fill-box; transform-origin: center; animation: halo 2.8s ease-in-out infinite; }
+  @keyframes halo { 0%, 100% { transform: scale(1); opacity: .28; } 50% { transform: scale(1.35); opacity: .12; } }
+  .day.today .mk::after, .goal .dot { animation: halo-shadow 2.8s ease-in-out infinite; }
+  @keyframes halo-shadow { 50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--p-warm) 10%, transparent); } }
+}
+
+.lic, .scale { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tw { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.lic th, .lic td, .scale th, .scale td { text-align: start; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.lic th, .scale th { font-weight: 600; color: var(--muted); font-size: 12.5px; }
+.lic tr:last-child td, .scale tr:last-child td { border-bottom: 0; }
+.lic a { color: var(--focus); }
+.ok { color: #2e8a57; font-weight: 600; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ok { color: #6fd39a; } }
+:root[data-theme="dark"] .ok { color: #6fd39a; }
+.specs { display: flex; flex-direction: column; gap: 12px; }
+.spec { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 16px; align-items: center; }
+@media (max-width: 760px) { .spec { grid-template-columns: 1fr; gap: 8px; } }
+.spec .who b { display: block; font-size: 15px; }
+.spec .who span { font-size: 12.5px; color: var(--muted); }
+.spec .who .new { display: inline-block; margin-top: 4px; font-size: 11.5px; background: var(--chip); border-radius: 999px; padding: 1px 10px; color: var(--fg); }
+.spec .smp { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.spec .smp .h { font-size: 26px; font-weight: 700; line-height: 1.4; }
+.spec .smp .p { font-size: 15px; line-height: 1.7; color: var(--muted); }
+.spec .smp .e { font-size: 15px; direction: ltr; text-align: left; }
+.spec .smp .n { font-size: 14px; font-variant-numeric: tabular-nums; }
+.spec.on { box-shadow: 0 0 0 2px var(--focus); }
+.secs { display: flex; flex-direction: column; gap: 14px; }
+.secs h2 { margin: 0; font-size: 20px; }
+.secs > p { margin: 0; color: var(--muted); max-width: 72ch; }
+.scale td.s { font-family: var(--ph-ar); }
+.scale td.m { font-family: var(--f-mono); direction: ltr; text-align: end; font-size: 12.5px; color: var(--muted); }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header class="secs">
+    <div class="eyebrow">همة · المرحلة 2 · القرار 3 من 6</div>
+    <h1>الخطوط</h1>
+    <p>5 خيارات على نفس الشاشات بالهوية المعتمدة. كلها متاحة على Google Fonts برخصة SIL OFL، وتدعم العربية واللاتينية، فيمكن تضمينها في التطبيق مجانًا. أضفت Noto Kufi Arabic لأن أشكاله الهندسية قريبة من دوائر المدار.</p>
+    <div class="notice"><strong>مقترح للاعتماد، لا شيء معتمد بعد.</strong> الأحجام مبدئية، وتُثبَّت مع سُلّم الطباعة في توثيق نظام التصميم.</div>
+  </header>
+
+  <section class="secs">
+    <h2>التوفّر والرخصة</h2>
+    <div class="tw"><table class="lic">
+      <thead><tr><th>الخط</th><th>الرخصة</th><th>العربية واللاتينية</th><th>الأوزان</th><th>ملاحظة</th></tr></thead>
+      <tbody>
+        <tr><td>IBM Plex Sans Arabic + IBM Plex Sans</td><td class="ok">OFL</td><td>عائلتان متطابقتان التصميم</td><td>100 إلى 700</td><td>تقني ومنظم، والأقرب لروح Orbit. مرشّح في خطة المرحلة</td></tr>
+        <tr><td>Readex Pro</td><td class="ok">OFL</td><td>خط واحد للاثنين</td><td>متغيّر 160 إلى 700</td><td>عصري وأعرض قليلًا، وواضح في الأحجام الصغيرة</td></tr>
+        <tr><td>Rubik</td><td class="ok">OFL</td><td>خط واحد للاثنين</td><td>متغيّر 300 إلى 900</td><td>زوايا مستديرة قليلًا، ودود وقريب من لمسات Hybrid</td></tr>
+        <tr><td>Tajawal</td><td class="ok">OFL</td><td>عربي أساسًا، واللاتيني محدود</td><td>200 إلى 900، بلا 600</td><td>خط حركة. لا وزن 600، فالعناوين الوسطى تقفز إلى 700</td></tr>
+        <tr><td>Noto Kufi Arabic <span style="color:var(--muted)">(إضافة)</span></td><td class="ok">OFL</td><td>عربي كوفي مع لاتيني</td><td>متغيّر 100 إلى 900</td><td>هندسي ومنتظم، أكثر شخصية، وأعرض في النص الطويل</td></tr>
+        <tr><td>IBM Plex Mono <span style="color:var(--muted)">(أرقام المؤقت)</span></td><td class="ok">OFL</td><td>لاتيني</td><td>100 إلى 700</td><td>أرقام بعرض ثابت لا تهتز مع العدّ</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="secs">
+    <h2>مقارنة مباشرة</h2>
+    <p>نفس النصوص بكل خط. اضغط على خط لتراه في الشاشات أسفل الصفحة.</p>
+    <div class="specs" id="specs"></div>
+  </section>
+
+  <section class="secs">
+    <h2>سُلّم طباعة مبدئي</h2>
+    <p>بالخط المختار حاليًا. الأحجام بوحدة sp في Flutter، وارتفاع السطر أكبر قليلًا من المعتاد لراحة الحروف العربية.</p>
+    <div class="tw"><table class="scale" id="scale"></table></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="الخط" id="seg-font"></div>
+    <div class="seg" role="group" aria-label="أرقام المؤقت" id="seg-num">
+      <button type="button" id="n-mono" data-n="mono" aria-pressed="true">أرقام Plex Mono</button>
+      <button type="button" id="n-same" data-n="same" aria-pressed="false">أرقام الخط نفسه</button>
+    </div>
+    <div class="seg" role="group" aria-label="الوضع" id="seg-mode">
+      <button type="button" id="m-light" data-m="light" aria-pressed="true">فاتح</button>
+      <button type="button" id="m-dark" data-m="dark" aria-pressed="false">غامق</button>
+    </div>
+  </div>
+
+  <div class="screens" id="screens"></div>
+</div>
+
+<script>
+const S = (p, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${p}</svg>`;
+const I = {
+  check: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>',
+  x: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>',
+  settings: S('<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>'),
+  close: S('<path d="M6 6l12 12M18 6L6 18"/>'),
+  list: S('<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>'),
+  back: S('<path d="M9 6l6 6-6 6"/>'),
+  backL: S('<path d="M15 6l-6 6 6 6"/>'),
+  more: S('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'),
+  plus: S('<path d="M12 5v14M5 12h14"/>'),
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.5"/><rect x="13.5" y="5" width="4" height="14" rx="1.5"/></svg>',
+  prev: S('<path d="M9 6l6 6-6 6"/>'),
+  next: S('<path d="M15 6l-6 6 6 6"/>'),
+  water: S('<path d="M12 3.5c3 4 6 7.2 6 10.5a6 6 0 0 1-12 0c0-3.3 3-6.5 6-10.5z"/>'),
+  book: S('<path d="M4 5.5c3-1 5.5-1 8 .8 2.5-1.8 5-1.8 8-.8V19c-3-1-5.5-1-8 .8-2.5-1.8-5-1.8-8-.8z"/><path d="M12 6.3V19.8"/>'),
+  walk: S('<circle cx="13" cy="4.5" r="1.8"/><path d="M10 21l2-6 3 3v3M12 15l1-5 3 3h3M13 10l-4 1-2 3"/>'),
+  moon: S('<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/>'),
+  pill: S('<rect x="3.5" y="9" width="17" height="6" rx="3" transform="rotate(-35 12 12)"/><path d="M9.5 8.5l5 7"/>'),
+  pen: S('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>'),
+  stretch: S('<circle cx="12" cy="4.5" r="1.8"/><path d="M5 9l7 1.5L19 9M12 10.5V15l-3 6M12 15l3 6"/>'),
+  strength: S('<path d="M3 12h2M19 12h2M7 8v8M17 8v8M5 10v4M19 10v4M7 12h10"/>'),
+  cardio: S('<path d="M3 12h4l2-4 3 8 2-4h7"/>'),
+  general: S('<circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.5"/>'),
+  today: S('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/>'),
+  programs: S('<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>'),
+  habits: S('<circle cx="12" cy="12" r="8"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>'),
+  focus: S('<circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M10 3h4"/>'),
+  progress: S('<path d="M5 19V13M10 19V8M15 19v-5M20 19V5"/>')
+};
+
+const status = () => `<div class="status"><span class="num">9:41</span><i><b></b><b></b></i></div>`;
+const TABS = { ar: ['اليوم','البرامج','العادات','التركيز','التقدّم'], en: ['Today','Programs','Habits','Focus','Progress'] };
+const tabs = (on, lang = 'ar') => `<nav class="tabs">${['today','programs','habits','focus','progress'].map((k, i) => `<span class="tab${i === on ? ' on' : ''}"><span class="pill">${I[k]}</span>${TABS[lang][i]}</span>`).join('')}</nav>`;
+const ringSvg = (p, size, r, sw, col, track) => {
+  const c = 2 * Math.PI * r, cx = size / 2;
+  return `<svg class="ring" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${track}" stroke-width="${sw}"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 ${cx} ${cx})"/></svg>`;
+};
+// Segmented ring for quantitative habits: n parts, k filled
+const segRing = (n, k, size, r, sw, col, track) => {
+  const c = 2 * Math.PI * r, cx = size / 2, gap = Math.max(1.6, c * .025), seg = c / n - gap;
+  const filled = Array(k).fill(`${seg.toFixed(2)} ${gap.toFixed(2)}`).join(' ') + ` 0 ${c.toFixed(2)}`;
+  return `<svg class="ring" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${track}" stroke-width="${sw}" stroke-dasharray="${seg.toFixed(2)} ${gap.toFixed(2)}" transform="rotate(-90 ${cx} ${cx})"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${col}" stroke-width="${sw}" stroke-dasharray="${filled}" transform="rotate(-90 ${cx} ${cx})"/></svg>`;
+};
+// Orbit: faint dotted outer path, thin track, gradient progress arc, station nodes, warm "you are here" dot with a breathing halo
+let gid = 0;
+function orbit(o) {
+  const { size, r, sw, p, label = '', sub = '', nodes = [], outerNodes = [], ink = 'var(--p-hero-ink)', fs = 15, track = 'var(--p-ring)', c1 = 'var(--p-arc1)', c2 = 'var(--p-arc)', base = 'var(--p-hero)', cls = 'art', outer = true, mono = false } = o;
+  const id = 'og' + (++gid), cx = size / 2, ro = r + sw * 1.9;
+  const pt = (f, rr) => { const a = (-90 + 360 * f) * Math.PI / 180; return [(cx + rr * Math.cos(a)).toFixed(1), (cx + rr * Math.sin(a)).toFixed(1)]; };
+  const [x, y] = pt(p, r);
+  let s = `<svg class="${cls}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:${c1}"/><stop offset="1" style="stop-color:${c2}"/></linearGradient></defs>`;
+  if (outer) s += `<circle cx="${cx}" cy="${cx}" r="${ro}" fill="none" style="stroke:${track}" stroke-width="1.2" stroke-dasharray="0.5 5" stroke-linecap="round"/>`;
+  s += `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" style="stroke:${track}" stroke-width="${Math.max(1.5, sw * .4)}"/>`;
+  if (p > 0) s += `<path class="arc" pathLength="100" d="M${cx} ${cx - r} A${r} ${r} 0 ${p > .5 ? 1 : 0} 1 ${x} ${y}" fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round"/>`;
+  const node = (f, rr, done, rad) => { const [nx, ny] = pt(f, rr); return `<circle cx="${nx}" cy="${ny}" r="${rad}" style="fill:${done ? c2 : base};stroke:${done ? base : track}" stroke-width="${done ? 1.5 : 1.8}"/>`; };
+  nodes.forEach(n => { s += node(n.at, r, n.done, sw * .62); });
+  outerNodes.forEach(n => { s += n.now ? (() => { const [nx, ny] = pt(n.at, ro); return `<circle cx="${nx}" cy="${ny}" r="3.4" style="fill:var(--p-warm)"/>`; })() : node(n.at, ro, n.done, 3.4); });
+  s += `<circle class="halo" cx="${x}" cy="${y}" r="${sw * 2.3}" style="fill:var(--p-warm)" opacity=".28"/><circle cx="${x}" cy="${y}" r="${sw * 1.15}" style="fill:var(--p-warm);stroke:${base}" stroke-width="1.5"/>`;
+  if (label) s += `<text x="${cx}" y="${cx + fs * .35}" text-anchor="middle" font-size="${fs}" font-weight="${mono ? 600 : 700}" style="fill:${ink};font-family:${mono ? 'var(--ph-num), monospace' : 'inherit'};font-variant-numeric:tabular-nums">${label}</text>`;
+  return s + sub + '</svg>';
+}
+const weekOrbit = () => orbit({ size: 84, r: 30, sw: 5, p: 1 / 3, label: '1/3', nodes: [{ at: 0, done: true }, { at: 2 / 3 }] });
+const habit = (icon, name, meta, hc, state) => {
+  let c;
+  if (state === 'done') c = `<span class="chk done">${I.check}</span>`;
+  else if (state === 'miss') c = `<span class="chk miss">${I.x}</span>`;
+  else if (state === 'qty') c = `<span class="chk qty">${segRing(8, 3, 30, 12.5, 3, `var(--${hc})`, 'var(--p-line)')}<span>+</span></span>`;
+  else c = `<span class="chk todo"></span>`;
+  return `<div class="habit" style="--hc:var(--${hc})"><span class="ic">${I[icon]}</span><span class="nm"><b>${name}</b><small class="num">${meta}</small></span>${c}</div>`;
+};
+
+/* ---------- Screens ---------- */
+const T = {
+  ar: { date: 'الثلاثاء، 20 أكتوبر', today: 'اليوم', sess: 'جلسة اليوم', prog: 'تمدّد ومرونة', meta: 'المستوى 2 · 20 دقيقة · 6 تمارين', start: 'ابدأ الجلسة', plan: 'خطة الأسبوع', planN: '1 من 3 جلسات', days: ['س','ح','ن','ث','ر','خ','ج'], habits: 'عادات اليوم', habN: '2 من 4', mor: 'صباح', noon: 'ظهر', eve: 'مساء', water: 'شرب الماء', waterM: '3 من 8 كاسات', read: 'القراءة', readM: '10 صفحات', walk: 'مشي قصير', walkM: '15 دقيقة', sleep: 'النوم قبل 11', sleepM: 'يوم 4 من 21', focus: 'التركيز', focusM: 'جولات اليوم: 2 · 50 دقيقة', brk: 'استراحة تمدّد الآن', settings: 'الإعدادات' },
+  en: { date: 'Tuesday, October 20', today: 'Today', sess: "Today's session", prog: 'Stretch & Mobility', meta: 'Level 2 · 20 min · 6 exercises', start: 'Start session', plan: 'Weekly plan', planN: '1 of 3 sessions', days: ['S','S','M','T','W','T','F'], habits: "Today's habits", habN: '2 of 4', mor: 'Morning', noon: 'Afternoon', eve: 'Evening', water: 'Drink water', waterM: '3 of 8 glasses', read: 'Reading', readM: '10 pages', walk: 'Short walk', walkM: '15 min', sleep: 'Sleep before 11', sleepM: 'Day 4 of 21', focus: 'Focus', focusM: 'Rounds today: 2 · 50 min', brk: 'Stretch break now', settings: 'Settings' }
+};
+
+function scrToday(mode, lang = 'ar') {
+  const t = T[lang];
+  const st = ['done','rest','rest','today','rest','plan','rest'];
+  const week = t.days.map((d, i) => `<span class="day ${st[i]}"><span>${d}</span><span class="mk">${st[i] === 'done' ? I.check : ''}</span></span>`).join('');
+  return `<div class="phone ${mode}" lang="${lang}" dir="${lang === 'ar' ? 'rtl' : 'ltr'}">${status()}<div class="body">
+    <div class="top"><div><div class="sub">${t.date}</div><h3>${t.today}</h3></div><button class="ib" type="button" aria-label="${t.settings}">${I.settings}</button></div>
+    <section class="hero"><div class="txt"><span class="lbl">${t.sess}</span><span class="ttl">${t.prog}</span><span class="meta num">${t.meta}</span><button class="cta" type="button">${t.start}</button></div>${weekOrbit()}</section>
+    <section class="card"><div class="rh"><h4>${t.plan}</h4><span class="num">${t.planN}</span></div><div class="week"><i class="wfill"></i>${week}</div></section>
+    <section class="card"><div class="rh"><h4>${t.habits}</h4><span class="num">${t.habN}</span></div>
+      <div class="sec">${t.mor}</div>${habit('water', t.water, t.waterM, 'h1', 'qty')}${habit('book', t.read, t.readM, 'h4', 'done')}
+      <div class="sec">${t.noon}</div>${habit('walk', t.walk, t.walkM, 'h2', 'done')}
+      <div class="sec">${t.eve}</div>${habit('moon', t.sleep, t.sleepM, 'h3', 'todo')}
+    </section>
+    <section class="card" style="flex-direction:row;justify-content:space-between;align-items:center"><div class="nm"><b>${t.focus}</b><small class="num">${t.focusM}</small></div><button class="ghost" type="button">${t.brk}</button></section>
+  </div>${tabs(0, lang)}</div>`;
+}
+
+function scrPlayer(mode) {
+  const fig = `<svg class="fig" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--p-line)" stroke-width="1.5" stroke-dasharray="3 5"/><g fill="none" stroke="var(--p-muted)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="60" cy="30" r="9"/><path d="M60 40v34M60 74l-12 26M60 74l12 26"/><path d="M60 48c-10-6-20-4-26 4M60 48c10-6 20-4 26 4"/></g><path d="M28 40 a10 10 0 1 1 6 12" fill="none" stroke="var(--p-warm)" stroke-width="2.5" stroke-linecap="round"/><path d="M92 40 a10 10 0 1 0 -6 12" fill="none" stroke="var(--p-warm)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+  const tr = orbit({ size: 92, r: 34, sw: 6, p: .4, label: '00:18', mono: true, fs: 16, track: 'var(--p-line)', c1: 'var(--p-g1)', c2: 'var(--p-g2)', base: 'var(--p-bg)', ink: 'var(--p-ink)', outerNodes: [{ at: 0, done: true }, { at: 1 / 3, now: true }, { at: 2 / 3 }] });
+  return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="body">
+    <div class="bar"><button class="ib flat" type="button" aria-label="إغلاق">${I.close}</button><h3 class="num">تمرين 3 من 6</h3><button class="ib flat" type="button" aria-label="قائمة التمارين">${I.list}</button></div>
+    <div class="segs"><i class="d"></i><i class="d"></i><i class="c"></i><i></i><i></i><i></i></div>
+    <div class="illus">${fig}<span class="ph">رسم التمرين: الأسلوب يُحسم لاحقًا</span></div>
+    <div class="ex"><div><h4>لف الكتفين</h4><small class="num">المجموعة 2 من 3 · 30 ثانية</small></div>${tr}</div>
+    <div class="tip"><b>تلميح:</b> حركة بطيئة، والكتفان بعيدان عن الأذنين.</div>
+    <div class="ctrls"><button class="ib" type="button" aria-label="السابق">${I.prev}</button><button class="big" type="button" aria-label="إيقاف مؤقت">${I.pause}</button><button class="ib" type="button" aria-label="التالي">${I.next}</button></div>
+    <div class="nextup"><span>التالي</span><b class="num">تمدّد الرقبة الجانبي · 30 ثانية</b></div>
+  </div></div>`;
+}
+
+function scrHabits(mode) {
+  const days = [['س',1],['ح',.75],['ن',1],['ث',.5,1],['ر',0],['خ',0],['ج',0]];
+  const strip = days.map(([d, p, on]) => `<span class="ds${on ? ' on' : ''}"><span>${d}</span>${p >= 1 ? `<svg viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="var(--p-done)"/><path d="M8.5 13.5l3 3 6-6.5" fill="none" stroke="var(--p-on-done)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>` : ringSvg(p, 26, 10.5, 2.5, 'var(--p-done)', 'var(--p-line)')}<span class="num">${[17,18,19,20,21,22,23][days.findIndex(x => x[0] === d)]}</span></span>`).join('');
+  return `<div class="phone ${mode} rel" dir="rtl" lang="ar">${status()}<div class="body">
+    <div class="top"><div><div class="sub">أكتوبر 2026</div><h3>العادات</h3></div><button class="ib" type="button" aria-label="الإعدادات">${I.settings}</button></div>
+    <div class="dstrip">${strip}</div>
+    <section class="card"><div class="rh"><h4>صباح</h4><span class="num">2 من 3</span></div>
+      ${habit('water', 'شرب الماء', '3 من 8 كاسات', 'h1', 'qty')}${habit('book', 'القراءة', '10 صفحات · 6 أيام متتالية', 'h4', 'done')}${habit('pill', 'فيتامين د', 'كل يوم', 'h6', 'done')}
+    </section>
+    <section class="card"><div class="rh"><h4>ظهر</h4><span class="num">1 من 1</span></div>${habit('walk', 'مشي قصير', '15 دقيقة', 'h2', 'done')}</section>
+    <section class="card"><div class="rh"><h4>مساء</h4><span class="num">0 من 2</span></div>${habit('moon', 'النوم قبل 11', 'يوم 4 من 21', 'h3', 'todo')}${habit('pen', 'تدوين اليوم', 'الأحد والثلاثاء والخميس', 'h5', 'todo')}</section>
+  </div><button class="fab" type="button" aria-label="إضافة عادة">${I.plus}</button>${tabs(2)}</div>`;
+}
+
+function scrHabit(mode) {
+  const done = new Set([1,2,3,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20]);
+  const heads = ['س','ح','ن','ث','ر','خ','ج'].map(d => `<span class="h">${d}</span>`).join('');
+  let cells = '<span></span>'.repeat(5);
+  for (let d = 1; d <= 31; d++) {
+    let c = '';
+    if (done.has(d)) c = 'd'; else if (d === 14) c = 'm'; else if (d > 20) c = 'f';
+    if (d === 20) c += ' t';
+    cells += `<span class="${c} num">${d}</span>`;
+  }
+  return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="body" style="--hc:var(--h4)">
+    <div class="bar"><button class="ib flat" type="button" aria-label="رجوع">${I.back}</button><h3>العادة</h3><button class="ib flat" type="button" aria-label="المزيد">${I.more}</button></div>
+    <div class="hd"><span class="ic">${I.book}</span><div><b>القراءة</b><small class="num">10 صفحات · كل يوم · صباح</small></div></div>
+    <div class="stats">
+      <div class="stat"><b class="num">6 <small>أيام</small></b><span>أيام متتالية</span></div>
+      <div class="stat"><b class="num">12 <small>يومًا</small></b><span>أطول سلسلة</span></div>
+      <div class="stat"><b class="num">90%</b><span>نسبة الإنجاز هذا الشهر</span></div>
+      <div class="stat"><b class="num">64 <small>يومًا</small></b><span>المجموع</span></div>
+    </div>
+    <section class="card goal"><div class="rh"><h4>هدف 100 يوم</h4><span class="num">64 من 100</span></div><div class="track"><span class="fill"></span><span class="ms" style="inset-inline-start:21%"></span><span class="ms" style="inset-inline-start:50%"></span><span class="ms ahead" style="inset-inline-start:100%"></span><span class="dot"></span></div><div class="msl num"><span style="inset-inline-start:21%">21</span><span style="inset-inline-start:50%">50</span><span style="inset-inline-start:100%">100</span></div></section>
+    <section class="card"><div class="rh"><h4>أكتوبر 2026</h4><span>‹ ›</span></div><div class="cal">${heads}${cells}</div>
+      <div class="legend"><span><i style="background:var(--hc)"></i>أُنجزت</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--p-miss)"></i>لم تُنجز</span><span><i style="box-shadow:0 0 0 2px var(--p-warm)"></i>اليوم</span></div>
+    </section>
+  </div></div>`;
+}
+
+function scrPrograms(mode) {
+  const prog = (icon, hc, name, cat, levels, dur) => `<div class="prog" style="--hc:var(--${hc})"><span class="ic">${I[icon]}</span><span class="nm"><b>${name}</b><span class="cat">${cat}</span><small class="num">${levels}</small></span><span class="dur num">${dur}</span></div>`;
+  return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="body">
+    <div class="top"><div><div class="sub">مكتبة البرامج</div><h3>البرامج</h3></div><button class="ib" type="button" aria-label="الإعدادات">${I.settings}</button></div>
+    <section class="hero"><div class="txt"><span class="lbl">برنامجك الحالي</span><span class="ttl">حركة</span><span class="meta num">تمدّد ومرونة · 3 أيام بالأسبوع</span><span class="lv" aria-label="المستوى 2 من 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="meta num" style="margin-top:2px">المستوى 2 من 5</span></div>${weekOrbit()}</section>
+    <div class="chips"><button class="chip on" type="button">الكل</button><button class="chip" type="button">تمدّد ومرونة</button><button class="chip" type="button">بناء وقوة</button><button class="chip" type="button">هوائي</button><button class="chip" type="button">عام</button></div>
+    <section class="card">
+      ${prog('general', 'h1', 'أساس', 'عام', '3 مستويات · بدون أدوات', '15 د')}<div class="sep"></div>
+      ${prog('strength', 'h3', 'قوة', 'بناء وقوة', '5 مستويات · كرسي', '25 د')}<div class="sep"></div>
+      ${prog('cardio', 'h6', 'دائري', 'هوائي', '3 مستويات · بدون أدوات', '15 د')}<div class="sep"></div>
+      ${prog('stretch', 'h2', 'مكتب مرن', 'تمدّد ومرونة', '3 مستويات · بجانب المكتب', '10 د')}
+    </section>
+  </div>${tabs(1)}</div>`;
+}
+
+function scrFocus(mode) {
+  const ring = orbit({ size: 236, r: 96, sw: 9, p: .45, cls: '', track: 'var(--p-line)', c1: 'var(--p-g1)', c2: 'var(--p-g2)', base: 'var(--p-bg)', outerNodes: [{ at: 0, done: true }, { at: .25, now: true }, { at: .5 }, { at: .75 }] });
+  return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="body">
+    <div class="top"><div><div class="sub">بومودورو</div><h3>التركيز</h3></div><button class="ib" type="button" aria-label="الإعدادات">${I.settings}</button></div>
+    <span class="fname">كتابة التقرير</span>
+    <div class="timer">${ring}<div class="c"><b>13:40</b><span class="num">جولة تركيز 2 من 4</span></div></div>
+    <div class="fctrl"><button class="cta" type="button">إيقاف مؤقت</button><button class="ghost" type="button">تخطٍّ</button></div>
+    <section class="card brk"><div class="rh"><h4>الاستراحة القادمة</h4><span class="num">5 دقائق</span></div><div class="opts"><span>تحرّك</span><span>ارتاح</span></div></section>
+  </div>${tabs(3)}</div>`;
+}
+
+function scrWidget(mode) {
+  const row = (icon, name, hc, state) => {
+    let c = state === 'done' ? `<span class="chk done">${I.check}</span>` : state === 'qty' ? `<span class="chk qty">${segRing(8, 3, 26, 10.5, 2.6, `var(--${hc})`, 'var(--p-line)')}<span>+</span></span>` : `<span class="chk todo"></span>`;
+    return `<div class="wrow" style="--hc:var(--${hc})"><span class="ic">${I[icon]}</span><span>${name}</span>${c}</div>`;
+  };
+  return `<div class="phone ${mode}" dir="rtl" lang="ar">${status()}<div class="home">
+    <div class="clock"><b class="num">9:41</b><span>الثلاثاء، 20 أكتوبر</span></div>
+    <div class="w"><div class="wh"><b>عادات اليوم</b><span class="num">2 من 4</span></div>
+      ${row('water', 'شرب الماء', 'h1', 'qty')}${row('book', 'القراءة', 'h4', 'done')}${row('walk', 'مشي قصير', 'h2', 'done')}${row('moon', 'النوم قبل 11', 'h3', 'todo')}
+    </div>
+    <div class="wsmall">
+      <div class="w hero-w"><small style="position:relative">جلسة اليوم</small><b style="position:relative;font-size:14px">تمدّد ومرونة</b><small class="num" style="position:relative">20 دقيقة</small><span class="go">ابدأ</span></div>
+      <div class="w"><div class="wh"><b>التركيز</b></div>${orbit({ size: 44, r: 15, sw: 4, p: .45, cls: 'wring', outer: false, track: 'var(--p-line)', c1: 'var(--p-g1)', c2: 'var(--p-g2)', base: 'var(--p-surface)' })}<b class="t num">13:40</b><small style="color:var(--p-muted);font-size:11px" class="num">جولة 2 من 4</small></div>
+    </div>
+    <div class="apps"><i></i><i></i><i></i><i></i></div>
+  </div></div>`;
+}
+
+const SCREENS = [
+  ['اليوم', 'العناوين، وبطاقة الجلسة، وأسماء العادات.', scrToday],
+  ['مشغّل الجلسة', 'اسم التمرين الكبير، والتلميح، والأرقام.', scrPlayer],
+  ['قائمة العادات', 'نصوص صغيرة كثيرة: الأقسام والتفاصيل.', scrHabits],
+  ['مؤقت التركيز', 'أرقام المؤقت الكبيرة.', scrFocus],
+  ['Today (English)', 'اللاتيني من نفس الخط.', (m) => scrToday(m, 'en')]
+];
+const FONTS = [
+  { id: 'plex', name: 'IBM Plex Sans Arabic', sub: 'مع IBM Plex Sans', ar: "'IBM Plex Sans Arabic'", en: "'IBM Plex Sans'" },
+  { id: 'readex', name: 'Readex Pro', sub: 'خط واحد للعربي واللاتيني', ar: "'Readex Pro'", en: "'Readex Pro'" },
+  { id: 'rubik', name: 'Rubik', sub: 'خط واحد للعربي واللاتيني', ar: "'Rubik'", en: "'Rubik'" },
+  { id: 'tajawal', name: 'Tajawal', sub: 'خط حركة', ar: "'Tajawal'", en: "'Tajawal'" },
+  { id: 'kufi', name: 'Noto Kufi Arabic', sub: 'كوفي هندسي', ar: "'Noto Kufi Arabic'", en: "'Noto Kufi Arabic'", added: true }
+];
+const SCALE = [
+  ['عنوان المؤقت', 'أرقام فقط', 44, 600, 1.1, '13:40'],
+  ['عنوان الشاشة', 'اليوم، البرامج', 25, 700, 1.3, 'اليوم'],
+  ['عنوان كبير', 'اسم التمرين', 21, 700, 1.35, 'لف الكتفين'],
+  ['عنوان البطاقة', 'بطاقة الجلسة', 19, 700, 1.35, 'تمدّد ومرونة'],
+  ['عنوان قسم', 'عادات اليوم', 14, 600, 1.45, 'عادات اليوم'],
+  ['نص', 'أسماء العادات والأزرار', 13.5, 500, 1.5, 'شرب الماء'],
+  ['نص ثانوي', 'التفاصيل والوصف', 12.5, 400, 1.55, 'المستوى 2 · 20 دقيقة · 6 تمارين'],
+  ['تسمية صغيرة', 'القائمة السفلية والأيام', 11, 500, 1.4, 'التقدّم · ث · 3 من 8']
+];
+const st = { font: 'plex', num: 'mono', mode: 'light' };
+try { Object.assign(st, JSON.parse(localStorage.getItem('himma-fonts') || '{}')); } catch (e) {}
+if (!FONTS.some(f => f.id === st.font)) st.font = 'plex';
+
+document.getElementById('seg-font').innerHTML = FONTS.map(f => `<button type="button" id="f-${f.id}" data-f="${f.id}" aria-pressed="false" style="font-family:${f.ar}">${f.name.replace(' Sans Arabic', '')}</button>`).join('');
+document.getElementById('specs').innerHTML = FONTS.map(f => `<button type="button" class="spec" data-f="${f.id}" style="font:inherit;color:inherit;text-align:start;cursor:pointer">
+  <span class="who"><b>${f.name}</b><span>${f.sub}</span>${f.added ? '<br><span class="new">إضافة مقترحة</span>' : ''}</span>
+  <span class="smp" style="font-family:${f.ar}">
+    <span class="h">ابدأ بحركة، واستمر بهِمّة.</span>
+    <span class="p">جلسة اليوم جاهزة: 20 دقيقة. تمدّد خفيف للرقبة والكتفين بعد يوم جلوس طويل.</span>
+    <span class="e" style="font-family:${f.en}">Start Moving. Keep Going. · Today's session: 20 min</span>
+    <span class="n">13:40 · 3 من 8 كاسات · المستوى 2 من 5 · 90%</span>
+  </span></button>`).join('');
+
+const grid = document.getElementById('screens');
+function render() {
+  const f = FONTS.find(x => x.id === st.font);
+  const num = st.num === 'mono' ? "'IBM Plex Mono'" : f.en;
+  document.documentElement.style.setProperty('--ph-ar', f.ar);
+  document.documentElement.style.setProperty('--ph-en', f.en);
+  document.documentElement.style.setProperty('--ph-num', num);
+  grid.innerHTML = SCREENS.map(([name, desc, fn], i) => `<figure class="shot" style="margin:0">${fn(st.mode)}<figcaption class="cap"><b>${i + 1}. ${name}</b><span>${desc}</span></figcaption></figure>`).join('');
+  document.getElementById('scale').innerHTML = `<thead><tr><th>الدور</th><th>الاستعمال</th><th>عيّنة</th><th>الحجم / الوزن / السطر</th></tr></thead><tbody>${SCALE.map(([n, u, sz, w, lh, t], i) => `<tr><td>${n}</td><td style="color:var(--muted)">${u}</td><td class="s" style="font-size:${sz}px;font-weight:${w};line-height:${lh};${i === 0 ? 'font-family:var(--ph-num);font-variant-numeric:tabular-nums;direction:ltr;text-align:end' : ''}">${t}</td><td class="m">${sz} / ${w} / ${lh}</td></tr>`).join('')}</tbody>`;
+  document.querySelectorAll('#seg-font button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === st.font)));
+  document.querySelectorAll('#seg-num button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.n === st.num)));
+  document.querySelectorAll('#seg-mode button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === st.mode)));
+  document.querySelectorAll('.spec').forEach(b => b.classList.toggle('on', b.dataset.f === st.font));
+  try { localStorage.setItem('himma-fonts', JSON.stringify(st)); } catch (e) {}
+}
+document.querySelectorAll('[data-f]').forEach(b => b.addEventListener('click', () => { st.font = b.dataset.f; render(); }));
+document.querySelectorAll('#seg-num button').forEach(b => b.addEventListener('click', () => { st.num = b.dataset.n; render(); }));
+document.querySelectorAll('#seg-mode button').forEach(b => b.addEventListener('click', () => { st.mode = b.dataset.m; render(); }));
+render();
+</script>
