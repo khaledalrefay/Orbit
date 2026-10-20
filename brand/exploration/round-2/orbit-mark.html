@@ -1,0 +1,236 @@
+<title>رمز نقطة على المدار</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: intro, a panel of improvement switches with two presets, a before/after pair, then the improved mark across icon shapes, sizes, home screen, monochrome and lockups. Every drawing re-renders from the switches. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --fg: #14213D; --muted: #5A6785; --line: #DCE3EE; --chip: #E9EEF6; --focus: #3D4FA3;
+  --navy: #14213D;
+  --f: "Rubik", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
+.wrap { max-width: 1120px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 10px; max-width: 74ch; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; font-weight: 700; }
+h2 { margin: 0; font-size: 19px; font-weight: 600; }
+header p, section > p { margin: 0; color: var(--muted); max-width: 72ch; }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+section { display: flex; flex-direction: column; gap: 14px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Switches */
+.toggles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; }
+@media (max-width: 720px) { .toggles { grid-template-columns: 1fr; } }
+.tg { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; cursor: pointer; padding: 6px 8px; border-radius: 10px; }
+.tg:has(input:checked) { background: var(--chip); }
+.tg input { margin: 4px 0 0; width: 18px; height: 18px; accent-color: var(--focus); }
+.tg b { display: block; font-weight: 600; font-size: 14.5px; }
+.tg span { color: var(--muted); font-size: 13px; line-height: 1.55; }
+.presets { display: flex; gap: 8px; flex-wrap: wrap; }
+.presets button { font: inherit; font-size: 13.5px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); border-radius: 999px; padding: 4px 14px; cursor: pointer; }
+.presets button:focus-visible, .tg input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Before / after */
+.ba { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 640px) { .ba { grid-template-columns: 1fr; } }
+.ba figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.ba .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ba .pair span { aspect-ratio: 1; border-radius: 22%; overflow: hidden; display: block; max-width: 100%; }
+.ba .pair span.l { box-shadow: inset 0 0 0 1px #DCE3EE; }
+.ba svg { width: 100%; height: 100%; display: block; }
+.ba figcaption { font-weight: 600; }
+
+/* Shapes and sizes */
+.shapes { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-end; }
+.shape { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+.shape i { display: block; width: 112px; height: 112px; overflow: hidden; }
+.shape i svg { width: 100%; height: 100%; display: block; }
+.sizes { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-end; }
+.sz { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.sz i { display: block; overflow: hidden; }
+.sz i svg { width: 100%; height: 100%; display: block; }
+.sz.tag i { box-shadow: 0 0 0 2px var(--focus); }
+
+/* Home screen */
+.homes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 640px) { .homes { grid-template-columns: 1fr; } }
+.home { border-radius: 22px; padding: 22px 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 10px; }
+.home.d { background: linear-gradient(160deg, #1B2440, #3A2C2A); }
+.home.l { background: linear-gradient(160deg, #C9D6EA, #E9D9C8); }
+.app { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; }
+.home.d .app { color: #fff; }
+.home.l .app { color: #1b2235; }
+.app i { width: 54px; height: 54px; border-radius: 13px; overflow: hidden; display: block; }
+.app i svg { width: 100%; height: 100%; display: block; }
+.app i.ph { background: rgb(255 255 255 / .28); }
+.home.l .app i.ph { background: rgb(255 255 255 / .55); }
+.bar { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: 12px; direction: ltr; justify-content: flex-start; opacity: .9; }
+.home.d .bar { color: #fff; }
+.bar i { width: 16px; height: 16px; display: block; }
+.bar i svg { width: 100%; height: 100%; display: block; }
+
+/* Mono + lockups */
+.row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.monos span { width: 72px; height: 72px; border-radius: 16px; display: grid; place-items: center; }
+.monos svg { width: 70%; height: 70%; }
+.lockups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 720px) { .lockups { grid-template-columns: 1fr; } }
+.lk { border-radius: 16px; padding: 22px; display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 130px; }
+.lk.l { background: #FFFFFF; color: #14213D; box-shadow: inset 0 0 0 1px #DCE3EE; }
+.lk.d { background: var(--navy); color: #EEF3FF; }
+.lk svg { width: 50px; height: 50px; flex: none; }
+.lk .w { display: flex; flex-direction: column; line-height: 1.1; }
+.lk .ar { font-size: 44px; font-weight: 700; }
+.lk .en { font-size: 14px; font-weight: 500; letter-spacing: .14em; opacity: .7; direction: ltr; text-align: right; }
+.lk.stack { flex-direction: column; gap: 10px; }
+.lk.stack svg { width: 64px; height: 64px; }
+.lk.stack .w { align-items: center; }
+.lk.stack .en { text-align: center; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.ask ol { margin: 6px 0 0; padding-inline-start: 1.3em; }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="eyebrow">همة · المرحلة 2 · القرار 4 من 6 · الرمز المختار</div>
+    <h1>نقطة على المدار: التحسينات</h1>
+    <p>كل تحسين مفتاح مستقل. شغّل ما يعجبك وأطفئ ما لا يعجبك، وكل الرسومات في الصفحة تتحدّث مباشرة: الأيقونة بأشكالها، والمقاسات، والشاشة الرئيسية، والنسخة أحادية اللون، والرمز مع الاسم.</p>
+    <div class="notice"><strong>للقرار الأخير.</strong> المفاتيح تبدأ وكل التحسينات مفعّلة. زر «الحالي» يرجع للرمز كما هو.</div>
+  </header>
+
+  <section class="panel" aria-label="التحسينات">
+    <div class="toggles" id="toggles"></div>
+    <div class="presets">
+      <button type="button" id="p-all">كل التحسينات</button>
+      <button type="button" id="p-none">الحالي (بلا تحسينات)</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>قبل وبعد</h2>
+    <div class="ba" id="ba"></div>
+  </section>
+
+  <section>
+    <h2>أيقونة التطبيق</h2>
+    <p>المربع المستدير لـ iOS، والدائرة والمربع المستدير قليلًا لأقنعة Android، والنسخة الفاتحة.</p>
+    <div class="shapes" id="shapes"></div>
+  </section>
+
+  <section>
+    <h2>المقاسات</h2>
+    <p>المقاسات المؤطّرة (24 وأقل) تستعمل النسخة الصغيرة إن كان مفتاحها مفعّلًا.</p>
+    <div class="sizes" id="sizes"></div>
+  </section>
+
+  <section>
+    <h2>على الشاشة الرئيسية</h2>
+    <div class="homes" id="homes"></div>
+  </section>
+
+  <section>
+    <h2>بلون واحد</h2>
+    <p>لأيقونة Android أحادية اللون، وأيقونة iOS المصبوغة، والإشعارات.</p>
+    <div class="row monos" id="monos"></div>
+  </section>
+
+  <section>
+    <h2>الرمز مع الاسم</h2>
+    <p>ارتفاع الحلقة بارتفاع حروف «هِمّة» بخط Rubik، والمسافة بينهما ثابتة.</p>
+    <div class="lockups" id="lockups"></div>
+  </section>
+
+  <section class="ask">
+    <h2>للقرار</h2>
+    <ol>
+      <li>أي التحسينات تبقى؟</li>
+      <li>بعدها أجهّز الملفات النهائية في <code>brand/</code>: SVG للرمز والرمز مع الاسم والنسخة أحادية اللون، وأيقونات Android و iOS.</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+const OPTS = [
+  ['conic', 'تدرّج يدور مع الحلقة', 'بدل التدرّج القُطري: فاتح عند النقطة ويخفت كلما ابتعد عنها، كأثر حركة خلفها.'],
+  ['small', 'نسخة للمقاسات الصغيرة', 'في 24 وأقل: لون واحد، وحلقة أسمك، وفراغ أوسع حول النقطة.'],
+  ['glow', 'توهّج خفيف خلف الحلقة', 'إضاءة شبه خفية في خلفية الأيقونة تعطيها عمقًا، بلا نيون.'],
+  ['dot', 'نقطة أصغر', 'قطر النقطة مرة ونصف سماكة الحلقة بدل الضعف: رمز أرشق.'],
+  ['high', 'نقطة أعلى قليلًا', 'تنتقل النقطة من 45 إلى 60 درجة، فتوحي بحركة صاعدة.']
+];
+const st = { conic: true, small: true, glow: true, dot: true, high: true };
+try { Object.assign(st, JSON.parse(localStorage.getItem('himma-orbit-mark') || '{}')); } catch (e) {}
+
+const DARK = { bg: '#14213D', near: '#7FD8BE', far: '#6CB4E8', g1: '#6CB4E8', g2: '#7FD8BE', ac: '#F2A65A', glow: '#6CB4E8', solid: '#7FD8BE' };
+const LIGHT = { bg: '#FFFFFF', near: '#2A8CA6', far: '#3D4FA3', g1: '#3D4FA3', g2: '#2A8CA6', ac: '#F2A65A', glow: '#6CB4E8', solid: '#2A8CA6' };
+let GN = 0;
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, t) => { const A = hex(a), B = hex(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
+const P = (deg, r) => [50 + r * Math.cos(deg * Math.PI / 180), 50 + r * Math.sin(deg * Math.PI / 180)];
+
+// The mark, drawn in a 100x100 box. o = options, c = colours, small = use the small-size version
+function mark(o, c, { small = false, mono = null } = {}) {
+  const useSmall = small && o.small;
+  const R = 27, sw = useSmall ? 14 : 11, ang = o.high ? -60 : -45;
+  const dr = useSmall ? 10.5 : (o.dot ? sw * .75 : 10), cut = useSmall ? 5.5 : 3.5;
+  const [dx, dy] = P(ang, R);
+  let s = '';
+  if (mono) {
+    s += `<circle cx="50" cy="50" r="${R}" fill="none" stroke="${mono}" stroke-width="${sw}"/>`;
+  } else if (useSmall) {
+    s += `<circle cx="50" cy="50" r="${R}" fill="none" stroke="${c.solid}" stroke-width="${sw}"/>`;
+  } else if (o.conic) {
+    // Ring as short arcs coloured from the dot (near) backwards around the circle (far), fading slightly
+    // Opaque segments (the fade is mixed into the colour, not opacity) so overlaps leave no seams
+    const N = 180;
+    for (let i = 0; i < N; i++) {
+      const t = i / N, a0 = ang - t * 360 + .6, a1 = ang - (i + 1) / N * 360 - .6;
+      const [x0, y0] = P(a0, R), [x1, y1] = P(a1, R);
+      const col = mix(mix(c.near, c.far, Math.min(1, t * 1.15)), c.bg, .32 * t);
+      s += `<path d="M${x0.toFixed(2)} ${y0.toFixed(2)} A${R} ${R} 0 0 0 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke="${col}" stroke-width="${sw}"/>`;
+    }
+  } else {
+    const id = 'g' + (++GN);
+    s += `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c.g1}"/><stop offset="1" stop-color="${c.g2}"/></linearGradient></defs><circle cx="50" cy="50" r="${R}" fill="none" stroke="url(#${id})" stroke-width="${sw}"/>`;
+  }
+  s += `<circle cx="${dx.toFixed(2)}" cy="${dy.toFixed(2)}" r="${dr + cut}" fill="${mono ? 'var(--cut, #fff)' : c.bg}"/>`;
+  s += `<circle cx="${dx.toFixed(2)}" cy="${dy.toFixed(2)}" r="${dr}" fill="${mono || c.ac}"/>`;
+  return s;
+}
+// App icon: background, optional glow, mark scaled into the safe zone
+function icon(o, c, { inset = 18, small = false, shape = 'square' } = {}) {
+  const sc = (100 - 2 * inset) / 100;
+  let bg = `<rect width="100" height="100" fill="${c.bg}"/>`;
+  if (o.glow && c.bg !== '#FFFFFF' && !(small && o.small)) { const id = 'r' + (++GN); bg += `<defs><radialGradient id="${id}" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="${c.glow}" stop-opacity=".22"/><stop offset=".55" stop-color="${c.glow}" stop-opacity=".07"/><stop offset="1" stop-color="${c.glow}" stop-opacity="0"/></radialGradient></defs><rect width="100" height="100" fill="url(#${id})"/>`; }
+  const clip = shape === 'circle' ? 'circle(50% at 50% 50%)' : shape === 'squircle' ? 'inset(0 round 30%)' : shape === 'android' ? 'inset(0 round 18%)' : 'inset(0 round 22.4%)';
+  return `<svg viewBox="0 0 100 100" aria-hidden="true" style="clip-path:${clip}">${bg}<g transform="translate(${inset} ${inset}) scale(${sc})">${mark(o, c, { small })}</g></svg>`;
+}
+const NONE = { conic: false, small: false, glow: false, dot: false, high: false };
+
+function render() {
+  document.querySelectorAll('#toggles input').forEach(i => { i.checked = !!st[i.dataset.k]; });
+  document.getElementById('ba').innerHTML = [['الحالي', NONE], ['مع التحسينات المختارة', st]].map(([n, o]) => `<figure><figcaption>${n}</figcaption><div class="pair"><span>${icon(o, DARK)}</span><span class="l">${icon(o, LIGHT)}</span></div></figure>`).join('');
+  document.getElementById('shapes').innerHTML = [['iOS', 'square', DARK], ['Android دائرة', 'circle', DARK], ['Android مربع مستدير', 'android', DARK], ['فاتح', 'square', LIGHT]].map(([n, sh, c]) => `<span class="shape"><i style="${c === LIGHT ? 'box-shadow:inset 0 0 0 1px #DCE3EE;border-radius:22.4%' : ''}">${icon(st, c, { shape: sh, inset: sh === 'circle' ? 24 : 18 })}</i>${n}</span>`).join('');
+  document.getElementById('sizes').innerHTML = [120, 72, 48, 32, 24, 20, 16].map(z => `<span class="sz${z <= 24 ? ' tag' : ''}"><i style="width:${z}px;height:${z}px;border-radius:${z * .224}px">${icon(st, DARK, { small: z <= 24, inset: z <= 24 ? 14 : 18 })}</i>${z}</span>`).join('');
+  const home = (cls, c) => `<div class="home ${cls}"><span class="bar"><i><svg viewBox="0 0 100 100">${mark(st, c, { small: true, mono: cls === 'd' ? '#fff' : '#1b2235' }).replace(/var\(--cut, #fff\)/g, 'transparent')}</svg></i>جولة التركيز: 13:40</span>${['', '', 'همة', ''].map(n => n ? `<span class="app"><i>${icon(st, DARK)}</i>${n}</span>` : `<span class="app"><i class="ph"></i>&nbsp;</span>`).join('')}${['', '', '', ''].map(() => `<span class="app"><i class="ph"></i>&nbsp;</span>`).join('')}</div>`;
+  document.getElementById('homes').innerHTML = home('d', DARK) + home('l', LIGHT);
+  document.getElementById('monos').innerHTML = [['#14213D', '#FFFFFF'], ['#FFFFFF', '#14213D'], ['#5A6785', '#E9EEF6'], ['#F2A65A', '#14213D']].map(([fg, bg]) => `<span style="background:${bg};--cut:${bg};${bg === '#FFFFFF' ? 'box-shadow:inset 0 0 0 1px #DCE3EE' : ''}"><svg viewBox="0 0 100 100" aria-hidden="true">${mark(st, DARK, { mono: fg })}</svg></span>`).join('');
+  const lk = (cls, c, stack) => `<div class="lk ${cls}${stack ? ' stack' : ''}"><svg viewBox="12 12 76 76" aria-hidden="true">${mark(st, c)}</svg><span class="w"><span class="ar">هِمّة</span><span class="en">HIMMA</span></span></div>`;
+  document.getElementById('lockups').innerHTML = lk('l', LIGHT) + lk('d', DARK) + lk('l', LIGHT, true) + lk('d', DARK, true);
+  try { localStorage.setItem('himma-orbit-mark', JSON.stringify(st)); } catch (e) {}
+}
+document.getElementById('toggles').innerHTML = OPTS.map(([k, n, d]) => `<label class="tg"><input type="checkbox" id="t-${k}" data-k="${k}"><span><b>${n}</b>${d}</span></label>`).join('');
+document.querySelectorAll('#toggles input').forEach(i => i.addEventListener('change', () => { st[i.dataset.k] = i.checked; render(); }));
+document.getElementById('p-all').addEventListener('click', () => { OPTS.forEach(([k]) => st[k] = true); render(); });
+document.getElementById('p-none').addEventListener('click', () => { OPTS.forEach(([k]) => st[k] = false); render(); });
+render();
+</script>
