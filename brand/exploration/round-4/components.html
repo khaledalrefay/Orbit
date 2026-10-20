@@ -1,0 +1,540 @@
+<title>مكوّنات همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..700&display=swap">
+<style>
+/* Layout: one dark page built only from approved tokens (compact type and spacing, soft radius, Phosphor regular).
+   A sticky bar holds the four open choices (elevation, secondary button, press feedback, list style) and every
+   specimen below follows them. Each component shows its states in columns: normal, pressed, disabled, focus.
+   Everything is also live: press, tab, toggle and drag work. */
+:root {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --surface3: #233152; --line: #24314F; --dots: #4A5C8C;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222; --warm: #F2A65A; --on-warm: #1B1406;
+  --hero: #1B2B55; --hero-ink: #EEF3FF; --hero-muted: #A9B6D6; --hero-ring: #2E3F70; --ring: #2E3F70;
+  --arc1: #6CB4E8; --arc2: #7FD8BE; --done: #7FD8BE; --error: #F08A72; --frame: #2A3550;
+  --h-sky: #6CB4E8; --h-violet: #B09CF5; --h-green: #7FD39A; --h-rose: #F28FA8; --h-teal: #7FD8BE;
+  --rxs: 4px; --rsm: 8px; --rtile: 10px; --rmd: 12px; --rlg: 16px; --rxl: 20px;
+  --ease: cubic-bezier(.22,1,.36,1); --ds: 200ms;
+  --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
+  /* elevation, set by the chosen option below */
+  --e1-bg: var(--surface); --e1-bd: 1px solid var(--line); --e1-sh: none;
+  --e2-bg: var(--surface2); --e2-bd: 1px solid var(--line); --e2-sh: none;
+  --e3-bg: var(--surface2); --e3-bd: 1px solid var(--line); --e3-sh: none;
+  color-scheme: dark;
+}
+:root[data-elev="surface"] {
+  --e1-bd: 1px solid transparent; --e2-bd: 1px solid transparent; --e3-bd: 1px solid transparent; --e3-bg: var(--surface3);
+}
+:root[data-elev="float"] {
+  --e2-bd: 1px solid transparent; --e2-sh: 0 -2px 10px rgb(0 0 0 / .35), 0 -12px 32px rgb(0 0 0 / .35);
+  --e3-bd: 1px solid transparent; --e3-sh: 0 8px 20px rgb(0 0 0 / .45), 0 20px 48px rgb(0 0 0 / .4);
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--arc1); }
+svg.i { width: 24px; height: 24px; display: block; flex: none; fill: currentColor; }
+
+/* ---- Page chrome ---- */
+.hd { padding-block: 40px 16px; display: grid; gap: 12px; }
+.eyebrow { color: var(--muted); font-size: 13px; }
+.hd h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; line-height: 1.25; }
+.hd p { color: var(--muted); max-width: 78ch; }
+.note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.note i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); flex: none; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.grp { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.grp > span { font-size: 13px; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--surface2); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 9px; cursor: pointer; font-size: 13.5px; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); font-weight: 500; }
+.seg button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.toc { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; }
+.toc a { color: var(--muted); text-decoration: none; }
+.toc a:hover { color: var(--ink); }
+.sec { padding-block: 36px 8px; display: grid; gap: 14px; align-content: start; }
+.sec h2 { font-size: 22px; font-weight: 600; }
+.sec > p { color: var(--muted); max-width: 78ch; }
+.pick { font-size: 13px; color: var(--warm); }
+.stage { background: var(--bg); border: 1px dashed var(--line); border-radius: 20px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.tw { overflow-x: auto; }
+.states { display: grid; grid-template-columns: 112px repeat(4, minmax(120px, 1fr)); gap: 14px 12px; align-items: center; min-width: 640px; }
+.states > .h { font-size: 12px; color: var(--muted); }
+.states > .rl { font-size: 13px; color: var(--muted); }
+.states > .c { display: flex; justify-content: center; min-width: 0; }
+.duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.lbl { font-size: 12px; color: var(--muted); }
+
+/* ---- Type roles (approved compact scale) ---- */
+.t-display { font-size: 24px; font-weight: 700; line-height: 1.3; }
+.t-titleLg { font-size: 19px; font-weight: 700; line-height: 1.35; }
+.t-title { font-size: 16px; font-weight: 600; line-height: 1.4; }
+.t-body { font-size: 14px; font-weight: 400; line-height: 1.55; }
+.t-strong { font-size: 14px; font-weight: 500; line-height: 1.55; }
+.t-caption { font-size: 12px; font-weight: 400; line-height: 1.5; color: var(--muted); }
+.t-label { font-size: 11px; font-weight: 500; line-height: 1.4; }
+
+/* ---- Press and focus (shared) ---- */
+.pr { position: relative; overflow: hidden; transition: transform var(--ds) var(--ease); -webkit-tap-highlight-color: transparent; }
+.pr::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity var(--ds) linear; pointer-events: none; }
+.pr:active:not(:disabled)::after, .pr.is-pressed::after { opacity: .12; }
+:root[data-press="scale"] .pr:active:not(:disabled), :root[data-press="scale"] .pr.is-pressed { transform: scale(.97); }
+:focus { outline: none; }
+:focus-visible, .is-focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ---- Buttons ---- */
+.b { min-height: 40px; padding-inline: 16px; border-radius: var(--rmd); border: 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; line-height: 1.3; cursor: pointer; white-space: nowrap; background: none; }
+.b svg.i { width: 18px; height: 18px; }
+.b.start { background: var(--warm); color: var(--on-warm); }
+.b.pri { background: var(--primary); color: var(--on-primary); }
+.b.alt { color: var(--ink); border: 1.5px solid var(--dots); }
+:root[data-sec="tonal"] .b.alt { border-color: transparent; background: color-mix(in srgb, var(--primary) 16%, transparent); }
+.b.txt { color: var(--primary); padding-inline: 12px; }
+.b.full { width: 100%; }
+.b:disabled { cursor: default; }
+.b.start:disabled, .b.pri:disabled, :root[data-sec="tonal"] .b.alt:disabled { background: color-mix(in srgb, var(--ink) 12%, transparent); color: color-mix(in srgb, var(--ink) 38%, transparent); }
+.b.alt:disabled { border-color: color-mix(in srgb, var(--ink) 12%, transparent); color: color-mix(in srgb, var(--ink) 38%, transparent); }
+.b.txt:disabled { color: color-mix(in srgb, var(--ink) 38%, transparent); }
+.ib { width: 44px; height: 44px; border-radius: var(--rtile); display: grid; place-items: center; padding: 0; cursor: pointer; flex: none; color: var(--ink); background: none; border: 1px solid transparent; }
+.ib.out { background: var(--surface); border-color: var(--line); }
+.ib.fill { background: var(--primary); color: var(--on-primary); }
+.ib:disabled { color: color-mix(in srgb, var(--ink) 38%, transparent); cursor: default; }
+.ib.fill:disabled { background: color-mix(in srgb, var(--ink) 12%, transparent); }
+.ib.out:disabled { border-color: color-mix(in srgb, var(--ink) 12%, transparent); background: none; }
+
+/* ---- Surfaces ---- */
+.e1 { background: var(--e1-bg); border: var(--e1-bd); box-shadow: var(--e1-sh); }
+.e2 { background: var(--e2-bg); border: var(--e2-bd); box-shadow: var(--e2-sh); }
+.e3 { background: var(--e3-bg); border: var(--e3-bd); box-shadow: var(--e3-sh); }
+.levels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.lv { border-radius: var(--rlg); min-height: 96px; padding: 12px; display: grid; align-content: space-between; gap: 6px; }
+.lv b { font-size: 14px; font-weight: 500; }
+.lv span { font-size: 12px; color: var(--muted); }
+.lv.e0 { background: var(--bg); border: 1px dashed var(--line); }
+.card { border-radius: var(--rlg); padding: 12px; display: grid; gap: 8px; min-width: 0; text-align: start; width: 100%; }
+button.card { cursor: pointer; }
+.card .rowx { display: flex; align-items: center; gap: 10px; }
+.card .rowx > div { flex: 1; min-width: 0; display: grid; }
+.tile { width: 40px; height: 40px; border-radius: var(--rtile); display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--hc, var(--primary)) 18%, transparent); color: var(--hc, var(--primary)); }
+.tile svg.i { width: 22px; height: 22px; }
+.tile.n { --hc: var(--ink); background: var(--surface2); }
+.hero { background: var(--hero); color: var(--hero-ink); border-radius: var(--rxl); padding: 12px; display: grid; gap: 8px; }
+.hero .t-caption { color: var(--hero-muted); }
+.hero .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.b.onhero { background: color-mix(in srgb, var(--hero-ink) 14%, transparent); color: var(--hero-ink); }
+
+/* ---- Habit row ---- */
+.hrow { display: flex; align-items: center; gap: 10px; border-radius: var(--rmd); padding: 4px; margin: -4px; text-align: start; border: 0; background: none; width: calc(100% + 8px); cursor: pointer; }
+.hrow .nm { flex: 1; min-width: 0; display: grid; }
+.hctl { width: 44px; height: 44px; display: grid; place-items: center; flex: none; color: var(--hc); border-radius: var(--rmd); }
+.cb { width: 28px; height: 28px; border-radius: var(--rsm); border: 2px solid var(--dots); display: grid; place-items: center; }
+.cb svg.i { width: 18px; height: 18px; }
+.cb.on { background: var(--hc); border-color: var(--hc); color: var(--bg); }
+.cb.miss { border-color: var(--error); background: color-mix(in srgb, var(--error) 16%, transparent); color: var(--error); }
+.hlist { display: grid; gap: 8px; }
+.hlist > * + * { border-top: 1px solid var(--line); padding-top: 8px; }
+
+/* ---- Lists ---- */
+.list { display: grid; }
+.list .sh { font-size: 12px; color: var(--muted); padding: 12px 12px 6px; font-weight: 500; }
+.lrow { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 12px; border: 0; background: none; width: 100%; text-align: start; cursor: pointer; }
+.lrow .nm { flex: 1; min-width: 0; display: grid; }
+.lrow .val { font-size: 12px; color: var(--muted); }
+.lrow .chev { color: var(--muted); width: 18px; height: 18px; }
+.lrow.danger { color: var(--error); }
+.lrow:disabled { cursor: default; opacity: .38; }
+.lgroup { border-radius: var(--rlg); overflow: hidden; }
+.lgroup .lrow + .lrow, .lgroup .lrow + .lsw { box-shadow: inset 0 1px 0 var(--line); }
+.lsw { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 12px; }
+.lsw .nm { flex: 1; min-width: 0; display: grid; }
+:root[data-list="full"] .lgroup { border-radius: 0; background: none; border: 0; box-shadow: none; border-block: 1px solid var(--line); }
+:root[data-list="full"] .list .sh { padding-inline: 0; }
+:root[data-list="full"] .lrow, :root[data-list="full"] .lsw { padding-inline: 0; }
+:root[data-list="full"] .lgroup .lrow .tile, :root[data-list="full"] .lgroup .lsw .tile { background: none; width: 28px; }
+.lrow.is-focus, .lrow:focus-visible { outline-offset: -2px; }
+
+/* ---- Switch ---- */
+.sw { width: 52px; height: 32px; border-radius: 999px; border: 2px solid var(--dots); background: var(--surface2); position: relative; cursor: pointer; padding: 0; flex: none; transition: background var(--ds) linear, border-color var(--ds) linear; }
+.sw::before { content: ""; position: absolute; top: 50%; inset-inline-start: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--muted); transform: translateY(-50%); transition: all var(--ds) var(--ease); }
+.sw[aria-checked="true"] { background: var(--primary); border-color: var(--primary); }
+.sw[aria-checked="true"]::before { inset-inline-start: 22px; width: 24px; height: 24px; background: var(--on-primary); }
+.sw:active:not(:disabled)::before, .sw.is-pressed::before { width: 28px; height: 28px; inset-inline-start: 2px; }
+.sw[aria-checked="true"]:active:not(:disabled)::before, .sw[aria-checked="true"].is-pressed::before { inset-inline-start: 18px; }
+.sw:disabled { opacity: .38; cursor: default; }
+
+/* ---- Slider ---- */
+.sld { display: grid; gap: 4px; width: 100%; max-width: 280px; }
+.sld .top { display: flex; justify-content: space-between; gap: 8px; }
+.rng { -webkit-appearance: none; appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; margin: 0; direction: rtl; }
+.rng::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to left, var(--primary) var(--p), var(--dots) var(--p)); }
+.rng::-moz-range-track { height: 4px; border-radius: 2px; background: var(--dots); }
+.rng::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--primary); }
+.rng::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -8px; border-radius: 50%; background: var(--primary); border: 0; box-shadow: 0 0 0 var(--halo, 0px) color-mix(in srgb, var(--primary) 18%, transparent); transition: box-shadow var(--ds) var(--ease); }
+.rng::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--primary); border: 0; box-shadow: 0 0 0 var(--halo, 0px) color-mix(in srgb, var(--primary) 18%, transparent); }
+.rng:active, .rng.is-pressed { --halo: 10px; }
+.rng:focus-visible, .rng.is-focus { outline: none; --halo: 4px; }
+.rng:focus-visible::-webkit-slider-thumb, .rng.is-focus::-webkit-slider-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary); }
+.rng:disabled { opacity: .38; cursor: default; }
+
+/* ---- Stepper ---- */
+.stp { display: grid; gap: 4px; }
+.stpc { display: inline-flex; align-items: center; gap: 4px; background: var(--surface2); border-radius: var(--rmd); padding: 2px; }
+.stpc .ib { width: 40px; height: 40px; color: var(--primary); }
+.stpc .ib:disabled { color: color-mix(in srgb, var(--ink) 38%, transparent); }
+.stpc output { min-width: 84px; text-align: center; font-size: 16px; font-weight: 600; }
+.stpc output small { font-size: 12px; font-weight: 400; color: var(--muted); margin-inline-start: 4px; }
+
+/* ---- Field ---- */
+.fld { display: grid; gap: 6px; width: 100%; max-width: 260px; }
+.fld label { font-size: 12px; color: var(--muted); font-weight: 500; }
+.fld input { height: 44px; border-radius: var(--rmd); border: 1.5px solid var(--dots); background: var(--bg); padding-inline: 12px; font-size: 14px; outline: none; width: 100%; }
+.fld input::placeholder { color: var(--muted); }
+.fld input:focus, .fld input.is-focus { border: 2px solid var(--primary); padding-inline: 11.5px; }
+.fld.err input { border-color: var(--error); }
+.fld .help { font-size: 12px; color: var(--muted); }
+.fld.err .help { color: var(--error); }
+.fld input:disabled { opacity: .38; }
+
+/* ---- Phone strips ---- */
+.ph { width: 360px; max-width: 100%; margin-inline: auto; background: var(--bg); border: 6px solid var(--frame); border-radius: 38px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+.ph .stb { display: flex; justify-content: space-between; padding: 10px 24px 2px; font-size: 12px; font-weight: 500; direction: ltr; }
+.ph .scr { padding: 8px 16px 20px; display: flex; flex-direction: column; gap: 20px; }
+.ptop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ptop > div { display: grid; min-width: 0; }
+.ptop .acts { display: flex; gap: 8px; }
+.appbar { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 8px; padding: 4px 8px 8px; border-bottom: 1px solid var(--line); }
+.appbar .t-title { text-align: center; }
+.tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 8px 4px 14px; background: var(--e1-bg); border-top: 1px solid var(--line); }
+.tab { display: grid; justify-items: center; gap: 4px; color: var(--muted); border: 0; background: none; padding: 0; cursor: pointer; border-radius: var(--rmd); }
+.tab .pill { width: 56px; height: 30px; border-radius: 999px; display: grid; place-items: center; position: relative; overflow: hidden; }
+.tab .pill::after { content: ""; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity var(--ds) linear; }
+.tab:active .pill::after, .tab.is-pressed .pill::after { opacity: .12; }
+.tab.on { color: var(--ink); }
+.tab.on .pill { background: color-mix(in srgb, var(--primary) 18%, transparent); color: var(--primary); }
+.dim { position: absolute; inset: 0; background: rgb(0 0 0 / .55); }
+.sheet { position: absolute; inset-inline: 0; bottom: 0; border-radius: var(--rxl) var(--rxl) 0 0; padding: 8px 16px 20px; display: grid; gap: 12px; }
+.grab { width: 36px; height: 4px; border-radius: 2px; background: var(--dots); justify-self: center; }
+.sheet .shh { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sheet ol { margin: 0; padding-inline-start: 20px; display: grid; gap: 4px; font-size: 14px; line-height: 1.55; }
+.safety { display: flex; gap: 8px; align-items: flex-start; background: color-mix(in srgb, var(--ink) 6%, transparent); border-radius: var(--rmd); padding: 8px 10px; }
+.safety svg.i { width: 18px; height: 18px; color: var(--muted); margin-top: 1px; }
+.dialog { position: absolute; inset-inline: 24px; top: 50%; transform: translateY(-50%); border-radius: var(--rxl); padding: 16px; display: grid; gap: 8px; }
+.dialog .acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+
+/* ---- Progress ---- */
+.steps { display: flex; align-items: flex-start; }
+.steps .it { flex: none; display: grid; justify-items: center; gap: 4px; min-width: 52px; }
+.steps .sq { width: 30px; height: 30px; border-radius: var(--rsm); border: 1.5px solid var(--dots); background: var(--surface); display: grid; place-items: center; color: var(--muted); position: relative; overflow: hidden; font-size: 12px; font-weight: 600; }
+.steps .sq .fl { position: absolute; inset-block: 0; inset-inline-start: 0; background: color-mix(in srgb, var(--arc2) 28%, transparent); }
+.steps .sq span { position: relative; display: grid; }
+.steps .sq svg.i { width: 16px; height: 16px; }
+.steps .it small { color: var(--muted); }
+.steps .it.done .sq { background: var(--done); border-color: var(--done); color: var(--bg); }
+.steps .it.cur .sq { border-color: var(--warm); color: var(--warm); }
+.steps .it.cur small { color: var(--ink); }
+.steps .cn { flex: 1; height: 3px; border-radius: 2px; background: var(--ring); margin-top: 14px; min-width: 8px; }
+.steps .cn.on { background: var(--done); }
+.rings { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-around; }
+.rings figure { margin: 0; display: grid; justify-items: center; gap: 6px; }
+.rings figcaption { font-size: 12px; color: var(--muted); }
+.halo { transform-box: fill-box; transform-origin: center; animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.4); opacity: .45; } }
+
+/* ---- Empty, loading, error ---- */
+.empty { display: grid; justify-items: center; text-align: center; gap: 8px; padding: 24px 16px; border-radius: var(--rlg); }
+.empty .t-body { color: var(--muted); max-width: 30ch; }
+.empty .b { margin-top: 8px; }
+.etile { width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 16%, transparent); color: var(--primary); }
+.etile svg.i { width: 28px; height: 28px; }
+.etile.err { background: color-mix(in srgb, var(--error) 16%, transparent); color: var(--error); }
+.sk { background: var(--surface2); border-radius: var(--rsm); }
+.skrow { display: flex; align-items: center; gap: 10px; }
+.skrow > div { flex: 1; display: grid; gap: 6px; }
+
+/* ---- Decide ---- */
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px; display: grid; gap: 12px; }
+.qs ol { margin: 0; padding-inline-start: 20px; display: grid; gap: 10px; font-size: 14.5px; }
+.qs li span { display: block; color: var(--muted); font-size: 13.5px; }
+.rec { border-inline-start: 3px solid var(--warm); padding-inline-start: 12px; display: grid; gap: 6px; }
+.rec p { color: var(--muted); font-size: 14px; }
+.foot { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) { .halo { animation: none; } .pr, .sw::before { transition: none; } }
+@media (max-width: 900px) { .duo, .trio { grid-template-columns: minmax(0, 1fr); } .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+
+<header class="wrap hd">
+  <span class="eyebrow">هِمّة · المرحلة 2 · القرار 6: نظام التصميم · الجولة 4 · المكوّنات</span>
+  <h1>المكوّنات الأساسية والارتفاع</h1>
+  <p>كل مكوّن بحالاته الأربع: عادي، ومضغوط، ومعطّل، وتركيز لوحة المفاتيح. مبنية على المعتمد فقط: الطباعة والمسافات المضغوطة، والزوايا المعتدلة، وأيقونات Phosphor، والألوان والحركة. الأسئلة المفتوحة أربعة، في الشريط العلوي، وكل الصفحة تتبعها. كل شيء يعمل أيضًا: اضغط، وانتقل بـ Tab، وبدّل، واسحب.</p>
+  <span class="note"><i></i>مرجع استكشافي حتى تعتمده. الوضع الغامق فقط، والفاتح للاعتماد النهائي.</span>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="grp"><span>الارتفاع</span><div class="seg" id="segElev" role="group" aria-label="الارتفاع"><button type="button" id="el-border" data-v="border">حدود</button><button type="button" id="el-surface" data-v="surface">سطوح</button><button type="button" id="el-float" data-v="float">حدود وظل للعائم</button></div></div>
+    <div class="grp"><span>الزر الثانوي</span><div class="seg" id="segSec" role="group" aria-label="الزر الثانوي"><button type="button" id="sc-outline" data-v="outline">إطار</button><button type="button" id="sc-tonal" data-v="tonal">ممتلئ خفيف</button></div></div>
+    <div class="grp"><span>الضغط</span><div class="seg" id="segPress" role="group" aria-label="شكل الضغط"><button type="button" id="pr-layer" data-v="layer">طبقة لون</button><button type="button" id="pr-scale" data-v="scale">طبقة وتصغير</button></div></div>
+    <div class="grp"><span>القوائم</span><div class="seg" id="segList" role="group" aria-label="شكل القوائم"><button type="button" id="ls-card" data-v="card">داخل بطاقة</button><button type="button" id="ls-full" data-v="full">بعرض الشاشة</button></div></div>
+    <div class="grp"><span>الحالة الفارغة</span><div class="seg" id="segEmpty" role="group" aria-label="الحالة الفارغة"><button type="button" id="em-tile" data-v="tile">مربع أيقونة</button><button type="button" id="em-orbit" data-v="orbit">مدار</button></div></div>
+  </div>
+</div>
+
+<main>
+  <div class="wrap" style="padding-top:16px"><nav class="toc" aria-label="الأقسام"><a href="#buttons">الأزرار</a><a href="#elev">الارتفاع والبطاقات</a><a href="#habit">صف العادة</a><a href="#lists">القوائم</a><a href="#inputs">عناصر الإدخال</a><a href="#header">عنوان الصفحة والقائمة</a><a href="#sheet">النوافذ</a><a href="#progress">التقدّم</a><a href="#empty">الفارغة والتحميل والخطأ</a><a href="#decide">للقرار</a></nav></div>
+
+  <section class="wrap sec" id="buttons">
+    <h2>1. الأزرار</h2>
+    <p>زر البدء مشمشي، وهو وحده يحمل الدافئ (قاعدة اللون المعتمدة). الأساسي نيلي لباقي الأفعال المهمة، والثانوي للبديل، والنصّي للأقل أهمية. ارتفاع 40 ومنطقة لمس 48. المعطّل بنسبة 38% كما في Material.</p>
+    <p class="pick" data-for="sec"></p>
+    <div class="stage tw"><div class="states" id="btnStates"></div></div>
+  </section>
+
+  <section class="wrap sec" id="elev">
+    <h2>2. الارتفاع والبطاقات</h2>
+    <p>أربع درجات: الخلفية، والبطاقة، والعائم (النافذة السفلية والقوائم المنبثقة)، والحوار. في الغامق الظل ضعيف الأثر، فالسؤال: هل نفصل بالحدود، أو بسطوح أفتح، أو بالحدود للبطاقات والظل للعائم فقط.</p>
+    <p class="pick" data-for="elev"></p>
+    <div class="stage">
+      <div class="levels">
+        <div class="lv e0"><b>0 · الخلفية</b><span>الشاشة نفسها</span></div>
+        <div class="lv e1"><b>1 · بطاقة</b><span>البطاقات والقوائم والقائمة السفلية</span></div>
+        <div class="lv e2"><b>2 · عائم</b><span>النافذة السفلية، والقوائم المنبثقة</span></div>
+        <div class="lv e3"><b>3 · حوار</b><span>التأكيد، والتنبيه داخل التطبيق</span></div>
+      </div>
+      <div class="tw"><div class="states" id="cardStates"></div></div>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="habit">
+    <h2>3. صف العادة</h2>
+    <p>الضغط على الصف يفتح صفحة العادة، والضغط على الأداة في الطرف يسجّل. «لم تُنجز» بلون الخطأ وعلامة ×، بلا تأنيب في النص.</p>
+    <div class="duo">
+      <div class="stage"><span class="lbl">الحالات</span><div class="card e1"><div class="hlist" id="habitKinds"></div></div></div>
+      <div class="stage tw"><span class="lbl">حالات التفاعل</span><div class="states" id="habitStates" style="grid-template-columns: 112px repeat(2, minmax(250px, 1fr)); min-width: 640px"></div></div>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="lists">
+    <h2>4. القوائم</h2>
+    <p>صف تنقّل بقيمة وسهم، وصف بمفتاح تبديل، وصف خطِر. القائمة إما مجموعة داخل بطاقة، أو بعرض الشاشة بخطوط فاصلة.</p>
+    <p class="pick" data-for="list"></p>
+    <div class="duo">
+      <div class="stage"><span class="lbl">صفحة الإعدادات</span><div id="settingsList"></div></div>
+      <div class="stage tw"><span class="lbl">حالات الصف</span><div class="states" id="listStates" style="grid-template-columns: 112px minmax(240px, 1fr); min-width: 380px"></div></div>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="inputs">
+    <h2>5. عناصر الإدخال</h2>
+    <p>مفتاح التبديل على نمط Material 3: المؤشر يكبر عند التشغيل وعند الضغط. المنزلق والـ stepper لإعدادات المدة، والـ stepper حين تهمّ القيمة الدقيقة (مثل الاستراحة). الحقل باسم فوقه، لا اسم عائم.</p>
+    <div class="stage tw"><div class="states" id="inputStates"></div></div>
+  </section>
+
+  <section class="wrap sec" id="header">
+    <h2>6. عنوان الصفحة والقائمة السفلية</h2>
+    <p>عنوان كبير للأقسام الخمسة، وشريط صغير برجوع للصفحات الداخلية ولما بعد التمرير. القائمة السفلية: الأيقونة النشطة ممتلئة فوق كبسولة.</p>
+    <div class="trio" id="headers"></div>
+  </section>
+
+  <section class="wrap sec" id="sheet">
+    <h2>7. النافذة السفلية والحوار</h2>
+    <p>النافذة السفلية للشروح (شرح تمرين هنا) وللاختيارات القصيرة. الحوار للتأكيد قبل فعل لا يُتراجع عنه فقط. كلاهما يتبع درجة الارتفاع المختارة.</p>
+    <div class="duo" id="sheets"></div>
+  </section>
+
+  <section class="wrap sec" id="progress">
+    <h2>8. التقدّم (معتمد في القرار 5)</h2>
+    <p>للمرجع مع الأساس الجديد: الخطوات الموصولة بحالاتها، والحلقات بمقاساتها الثلاثة.</p>
+    <div class="duo">
+      <div class="stage"><span class="lbl">الخطوات الموصولة: منجزة، وحالية تمتلئ، وقادمة</span><div class="card e1" id="stepsBox"></div></div>
+      <div class="stage"><span class="lbl">الحلقات</span><div class="rings" id="rings"></div></div>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="empty">
+    <h2>9. الحالة الفارغة والتحميل والخطأ</h2>
+    <p>التحميل هياكل ثابتة بلا لمعان متحرّك، لأن قواعد الحركة تسمح بحركتين مستمرتين فقط (الهالة والمؤقت). البيانات محلية فالتحميل نادر. الخطأ يقول ما حدث وما الحل، بلا اعتذار.</p>
+    <p class="pick" data-for="empty"></p>
+    <div class="trio" id="emptyBox"></div>
+  </section>
+
+  <section class="wrap sec qs" id="decide">
+    <h2>10. المطلوب للقرار</h2>
+    <div class="box">
+      <ol>
+        <li>الارتفاع: حدود، أو سطوح، أو حدود للبطاقات وظل للعائم.</li>
+        <li>الزر الثانوي: إطار، أو ممتلئ خفيف.</li>
+        <li>شكل الضغط: طبقة لون، أو طبقة مع تصغير خفيف (97%، 200 مللي ثانية).</li>
+        <li>القوائم: داخل بطاقة، أو بعرض الشاشة.</li>
+        <li>الحالة الفارغة: مربع أيقونة، أو المدار من الشعار.</li>
+        <li>الباقي كما هو، أو ملاحظاتك عليه: الحالات الأربع، والمفتاح، والمنزلق، والـ stepper، والحقل، والعنوان، والنافذة، والحوار، والتحميل والخطأ.</li>
+      </ol>
+      <div class="rec">
+        <b>اقتراحي: حدود وظل للعائم، والثانوي بإطار، والضغط بطبقة وتصغير، والقوائم داخل بطاقة، والفارغة بالمدار.</b>
+        <p>الحدود تُبقي البطاقات كما في كل النماذج السابقة، والظل يفصل العائم فقط فيبدو فوق الشاشة فعلًا. الإطار يميّز الثانوي على كل السطوح، والممتلئ الخفيف يختفي فوق النافذة السفلية. التصغير الخفيف يعطي الضغط إحساس «ناعمة ومرنة» بلا تأخير. والمدار يربط الحالة الفارغة بالشعار دون رسوم.</p>
+      </div>
+      <p style="color:var(--muted);font-size:14px">بعد هذا: نسخة بالوضعين للاعتماد النهائي، ثم تُكتب القيم في <code>docs/BRAND.md</code> وفي <code>brand/tokens/elevation.json</code>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">الجولة 4 للقرار 6. المعتمد حتى الآن في <code>docs/BRAND.md</code> القسم 3، والأيقونات مضمّنة بـ <code>brand/tools/embed_phosphor.py</code>.</footer>
+
+<script id="icon-data" data-names="house:fill squares-four:fill check-square:fill timer:fill chart-bar:fill gear dots-three plus minus x caret-left caret-right play:fill pause check drop book-open person-simple-walk flower-lotus person-simple-tai-chi info translate circle-half speaker-high bell trash warning-circle arrow-clockwise pencil-simple">
+/* Phosphor 2.1.1 (MIT), embedded by brand/tools/embed_phosphor.py */
+window.PH = {"house":["0 0 256 256","<path d=\"M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z\"/>"],"house:fill":["0 0 256 256","<path d=\"M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z\"/>"],"squares-four":["0 0 256 256","<path d=\"M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z\"/>"],"squares-four:fill":["0 0 256 256","<path d=\"M120,56v48a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40h48A16,16,0,0,1,120,56Zm80-16H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm-96,96H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm96,0H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Z\"/>"],"check-square":["0 0 256 256","<path d=\"M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM224,48V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM208,208V48H48V208H208Z\"/>"],"check-square:fill":["0 0 256 256","<path d=\"M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm-34.34,77.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z\"/>"],"timer":["0 0 256 256","<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>"],"timer:fill":["0 0 256 256","<path d=\"M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm45.66,61.66-40,40a8,8,0,0,1-11.32-11.32l40-40a8,8,0,0,1,11.32,11.32ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z\"/>"],"chart-bar":["0 0 256 256","<path d=\"M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z\"/>"],"chart-bar:fill":["0 0 256 256","<path d=\"M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16h8V136a8,8,0,0,1,8-8H72a8,8,0,0,1,8,8v64H96V88a8,8,0,0,1,8-8h32a8,8,0,0,1,8,8V200h16V40a8,8,0,0,1,8-8h40a8,8,0,0,1,8,8V200h8A8,8,0,0,1,232,208Z\"/>"],"gear":["0 0 256 256","<path d=\"M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z\"/>"],"dots-three":["0 0 256 256","<path d=\"M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z\"/>"],"plus":["0 0 256 256","<path d=\"M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z\"/>"],"minus":["0 0 256 256","<path d=\"M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z\"/>"],"x":["0 0 256 256","<path d=\"M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z\"/>"],"caret-left":["0 0 256 256","<path d=\"M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z\"/>"],"caret-right":["0 0 256 256","<path d=\"M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z\"/>"],"play":["0 0 256 256","<path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"/>"],"play:fill":["0 0 256 256","<path d=\"M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z\"/>"],"pause":["0 0 256 256","<path d=\"M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z\"/>"],"check":["0 0 256 256","<path d=\"M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z\"/>"],"drop":["0 0 256 256","<path d=\"M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75ZM128,216a72.08,72.08,0,0,1-72-72c0-57.23,55.47-105,72-118,16.53,13,72,60.75,72,118A72.08,72.08,0,0,1,128,216Zm55.89-62.66a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z\"/>"],"book-open":["0 0 256 256","<path d=\"M232,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H24a8,8,0,0,0-8,8V200a8,8,0,0,0,8,8H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a8,8,0,0,0,8-8V56A8,8,0,0,0,232,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z\"/>"],"person-simple-walk":["0 0 256 256","<path d=\"M152,80a32,32,0,1,0-32-32A32,32,0,0,0,152,80Zm0-48a16,16,0,1,1-16,16A16,16,0,0,1,152,32Zm64,112a8,8,0,0,1-8,8c-35.31,0-52.95-17.81-67.12-32.12-2.74-2.77-5.36-5.4-8-7.84l-13.43,30.88,37.2,26.57A8,8,0,0,1,160,176v56a8,8,0,0,1-16,0V180.12l-31.07-22.2L79.34,235.19A8,8,0,0,1,72,240a7.84,7.84,0,0,1-3.19-.67,8,8,0,0,1-4.15-10.52l54.08-124.37c-9.31-1.65-20.92,1.2-34.7,8.58a163.88,163.88,0,0,0-30.57,21.77,8,8,0,0,1-10.95-11.66c2.5-2.35,61.69-57.23,98.72-25.08,3.83,3.32,7.48,7,11,10.57C166.19,122.7,179.36,136,208,136A8,8,0,0,1,216,144Z\"/>"],"flower-lotus":["0 0 256 256","<path d=\"M245.83,121.63a15.53,15.53,0,0,0-9.52-7.33,73.51,73.51,0,0,0-22.17-2.22c4-19.85,1-35.55-2.06-44.86a16.15,16.15,0,0,0-18.79-10.88,85.53,85.53,0,0,0-28.55,12.12,94.58,94.58,0,0,0-27.11-33.25,16.05,16.05,0,0,0-19.26,0A94.48,94.48,0,0,0,91.26,68.46,85.53,85.53,0,0,0,62.71,56.34,16.15,16.15,0,0,0,43.92,67.22c-3,9.31-6,25-2.06,44.86a73.51,73.51,0,0,0-22.17,2.22,15.53,15.53,0,0,0-9.52,7.33,16,16,0,0,0-1.6,12.27c3.39,12.57,13.8,36.48,45.33,55.32S113.13,208,128.05,208s42.67,0,74-18.78c31.53-18.84,41.94-42.75,45.33-55.32A16,16,0,0,0,245.83,121.63ZM59.14,72.14a.2.2,0,0,1,.23-.15A70.43,70.43,0,0,1,85.18,83.66,118.65,118.65,0,0,0,80,119.17c0,18.74,3.77,34,9.11,46.28A123.59,123.59,0,0,1,69.57,140C51.55,108.62,55.3,84,59.14,72.14Zm3,103.35C35.47,159.57,26.82,140.05,24,129.7a59.82,59.82,0,0,1,22.5-1.17,129.08,129.08,0,0,0,9.15,19.41,142.28,142.28,0,0,0,34,39.56A114.92,114.92,0,0,1,62.1,175.49ZM128,190.4c-9.33-6.94-32-28.23-32-71.23C96,76.7,118.38,55.24,128,48c9.62,7.26,32,28.72,32,71.19C160,162.17,137.33,183.46,128,190.4ZM170.82,83.66A70.43,70.43,0,0,1,196.63,72a.2.2,0,0,1,.23.15C200.7,84,204.45,108.62,186.43,140a123.32,123.32,0,0,1-19.54,25.48c5.34-12.26,9.11-27.54,9.11-46.28A118.65,118.65,0,0,0,170.82,83.66ZM232,129.72c-2.77,10.25-11.4,29.81-38.09,45.77a114.92,114.92,0,0,1-27.55,12,142.28,142.28,0,0,0,34-39.56,129.08,129.08,0,0,0,9.15-19.41A59.69,59.69,0,0,1,232,129.71Z\"/>"],"person-simple-tai-chi":["0 0 256 256","<path d=\"M128,80A32,32,0,1,0,96,48,32,32,0,0,0,128,80Zm0-48a16,16,0,1,1-16,16A16,16,0,0,1,128,32Zm96,72a8,8,0,0,1-8,8H136v26.72l51.15,21.93A8,8,0,0,1,192,168v48a8,8,0,0,1-16,0V173.28l-46.45-19.91L53.35,222a8,8,0,1,1-10.7-11.9L120,140.44V112H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,104Z\"/>"],"info":["0 0 256 256","<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z\"/>"],"translate":["0 0 256 256","<path d=\"M247.15,212.42l-56-112a8,8,0,0,0-14.31,0l-21.71,43.43A88,88,0,0,1,108,126.93,103.65,103.65,0,0,0,135.69,64H160a8,8,0,0,0,0-16H104V32a8,8,0,0,0-16,0V48H32a8,8,0,0,0,0,16h87.63A87.76,87.76,0,0,1,96,116.35a87.74,87.74,0,0,1-19-31,8,8,0,1,0-15.08,5.34A103.63,103.63,0,0,0,84,127a87.55,87.55,0,0,1-52,17,8,8,0,0,0,0,16,103.46,103.46,0,0,0,64-22.08,104.18,104.18,0,0,0,51.44,21.31l-26.6,53.19a8,8,0,0,0,14.31,7.16L148.94,192h70.11l13.79,27.58A8,8,0,0,0,240,224a8,8,0,0,0,7.15-11.58ZM156.94,176,184,121.89,211.05,176Z\"/>"],"circle-half":["0 0 256 256","<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z\"/>"],"speaker-high":["0 0 256 256","<path d=\"M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z\"/>"],"bell":["0 0 256 256","<path d=\"M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z\"/>"],"trash":["0 0 256 256","<path d=\"M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z\"/>"],"warning-circle":["0 0 256 256","<path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z\"/>"],"arrow-clockwise":["0 0 256 256","<path d=\"M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z\"/>"],"pencil-simple":["0 0 256 256","<path d=\"M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z\"/>"]};
+</script>
+<script>
+document.documentElement.dir = 'rtl'; document.documentElement.lang = 'ar';
+const ic = (name, fill) => { const d = window.PH && window.PH[fill ? name + ':fill' : name]; return d ? `<svg class="i" viewBox="${d[0]}" aria-hidden="true">${d[1]}</svg>` : ''; };
+const $ = id => document.getElementById(id);
+const STATES = ['عادي', 'مضغوط', 'معطّل', 'تركيز'];
+const MODS = ['', ' is-pressed', '', ' is-focus'];
+const dis = i => i === 2 ? ' disabled' : '';
+const head = (cols = STATES) => `<span></span>${cols.map(s => `<span class="h">${s}</span>`).join('')}`;
+const row = (label, make, n = 4) => `<span class="rl">${label}</span>${Array.from({ length: n }, (_, i) => `<span class="c">${make(i)}</span>`).join('')}`;
+
+/* Buttons */
+$('btnStates').innerHTML = head()
+  + row('بدء', i => `<button type="button" class="b start pr${MODS[i]}"${dis(i)}>${ic('play', true)}ابدأ الجلسة</button>`)
+  + row('أساسي', i => `<button type="button" class="b pri pr${MODS[i]}"${dis(i)}>حفظ العادة</button>`)
+  + row('ثانوي', i => `<button type="button" class="b alt pr${MODS[i]}"${dis(i)}>تخطي الجولة</button>`)
+  + row('نصّي', i => `<button type="button" class="b txt pr${MODS[i]}"${dis(i)}>إنهاء</button>`)
+  + row('أيقونة بإطار', i => `<button type="button" class="ib out pr${MODS[i]}"${dis(i)} aria-label="الإعدادات">${ic('gear')}</button>`)
+  + row('أيقونة', i => `<button type="button" class="ib pr${MODS[i]}"${dis(i)} aria-label="المزيد">${ic('dots-three')}</button>`)
+  + row('أيقونة ممتلئة', i => `<button type="button" class="ib fill pr${MODS[i]}"${dis(i)} aria-label="إيقاف مؤقت">${ic('pause')}</button>`);
+
+/* Cards */
+const sessionCard = i => `<div class="hero" style="width:100%"><span class="t-caption">جلسة اليوم</span><span class="t-titleLg">تمدّد ومرونة</span><span class="t-caption num">المستوى 2 · 20 دقيقة</span><div class="acts"><button type="button" class="b start pr${MODS[i]}"${dis(i)}>${ic('play', true)}ابدأ</button></div></div>`;
+const tapCard = i => `<button type="button" class="card e1 pr${MODS[i]}"${dis(i)} style="color:var(--ink)"><span class="rowx"><span class="tile" style="--hc:var(--h-teal)">${ic('person-simple-tai-chi')}</span><div><span class="t-strong">تمدّد ومرونة</span><span class="t-caption num">5 مستويات · 12 جلسة</span></div>${ic('caret-left')}</span></button>`;
+$('cardStates').innerHTML = head() + row('بطاقة تُضغط', tapCard) + row('بطاقة الجلسة', sessionCard);
+
+/* Habit */
+const segRing = (n, k) => {
+  const cx = 20, r = 15, p = [];
+  for (let i = 0; i < n; i++) {
+    const a0 = (-90 + i * 360 / n + 7) * Math.PI / 180, a1 = (-90 + (i + 1) * 360 / n - 7) * Math.PI / 180;
+    p.push(`<path d="M${(cx + r * Math.cos(a0)).toFixed(2)} ${(cx + r * Math.sin(a0)).toFixed(2)}A${r} ${r} 0 0 1 ${(cx + r * Math.cos(a1)).toFixed(2)} ${(cx + r * Math.sin(a1)).toFixed(2)}" fill="none" stroke="${i < k ? 'currentColor' : 'var(--ring)'}" stroke-width="3.5" stroke-linecap="round"/>`);
+  }
+  return `<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">${p.join('')}<text x="20" y="25" text-anchor="middle" font-size="13" font-weight="500" fill="var(--muted)">+</text></svg>`;
+};
+const fullRing = () => `<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="currentColor"/><path d="M13.5 20.5l4.5 4.5 8.5-9" fill="none" stroke="var(--bg)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const habit = (k, name, meta, col, ctl, mods = '', ctlMods = '', disabled = '') => `<div class="hrow pr${mods}" role="button" tabindex="0" style="--hc:${col}"${disabled}><span class="tile">${ic(k)}</span><span class="nm"><span class="t-strong">${name}</span><span class="t-caption num">${meta}</span></span><span class="hctl pr${ctlMods}" role="button" tabindex="0" aria-label="تسجيل">${ctl}</span></div>`;
+$('habitKinds').innerHTML = [
+  habit('book-open', 'قراءة 10 صفحات', 'لم تُسجَّل بعد', 'var(--h-violet)', '<span class="cb"></span>'),
+  habit('person-simple-walk', 'مشي 20 دقيقة', 'أُنجزت · 5 أيام متتالية', 'var(--h-green)', `<span class="cb on">${ic('check')}</span>`),
+  habit('flower-lotus', 'تأمّل 5 دقائق', 'سُجّلت «لم تُنجز» لليوم', 'var(--h-rose)', `<span class="cb miss">${ic('x')}</span>`),
+  habit('drop', 'شرب الماء', '3 من 8 كاسات', 'var(--h-sky)', segRing(8, 3)),
+  habit('drop', 'شرب الماء', 'اكتمل هدف اليوم: 8 كاسات', 'var(--h-sky)', fullRing())
+].join('');
+$('habitStates').innerHTML = head(['الصف', 'أداة التسجيل'])
+  + row('مضغوط', i => `<div style="width:100%">${habit('book-open', 'قراءة 10 صفحات', 'مرة واحدة يوميًا', 'var(--h-violet)', '<span class="cb"></span>', i === 0 ? ' is-pressed' : '', i === 1 ? ' is-pressed' : '')}</div>`, 2)
+  + row('تركيز', i => `<div style="width:100%">${habit('book-open', 'قراءة 10 صفحات', 'مرة واحدة يوميًا', 'var(--h-violet)', '<span class="cb"></span>', i === 0 ? ' is-focus' : '', i === 1 ? ' is-focus' : '')}</div>`, 2)
+  + row('مؤرشفة', i => i ? '<span class="t-caption">لا تسجيل للعادة المؤرشفة</span>' : `<div style="width:100%;opacity:.38">${habit('book-open', 'قراءة 10 صفحات', 'مؤرشفة', 'var(--h-violet)', '<span class="cb"></span>')}</div>`, 2);
+
+/* Lists */
+const swBtn = (on, mods = '', d = '') => `<button type="button" class="sw${mods}" role="switch" aria-checked="${on}" aria-label="تبديل"${d}></button>`;
+const lrow = (icon, name, val, mods = '', d = '') => `<button type="button" class="lrow pr${mods}"${d}><span class="tile n">${ic(icon)}</span><span class="nm"><span class="t-strong">${name}</span></span>${val ? `<span class="val">${val}</span>` : ''}<span class="chev">${ic('caret-left')}</span></button>`;
+$('settingsList').innerHTML = `<div class="list">
+  <span class="sh">عام</span>
+  <div class="lgroup e1">${lrow('translate', 'اللغة', 'العربية')}${lrow('circle-half', 'المظهر', 'حسب النظام')}<div class="lsw"><span class="tile n">${ic('speaker-high')}</span><span class="nm"><span class="t-strong">الأصوات</span><span class="t-caption">نهاية الجولة والخطوة</span></span>${swBtn(true)}</div></div>
+  <span class="sh">التذكيرات</span>
+  <div class="lgroup e1">${lrow('bell', 'تذكير جلسة اليوم', '8:00')}<div class="lsw"><span class="tile n">${ic('drop')}</span><span class="nm"><span class="t-strong">تذكيرات العادات</span></span>${swBtn(false)}</div></div>
+  <span class="sh">البيانات</span>
+  <div class="lgroup e1"><button type="button" class="lrow danger pr"><span class="tile n" style="--hc:var(--error)">${ic('trash')}</span><span class="nm"><span class="t-strong">حذف كل البيانات</span></span></button></div>
+</div>`;
+$('listStates').innerHTML = `<span></span><span class="h">صف التنقّل</span>` + STATES.map((s, i) => `<span class="rl">${s}</span><span class="c"><div class="lgroup e1" style="width:100%">${lrow('translate', 'اللغة', 'العربية', MODS[i], dis(i))}</div></span>`).join('');
+
+/* Inputs */
+const slider = (v, mods = '', d = '') => `<div class="sld"><div class="top"><span class="t-strong">مدة جولة التركيز</span><span class="t-caption num">${v} دقيقة</span></div><input class="rng${mods}" type="range" min="5" max="60" step="5" value="${v}" aria-label="مدة جولة التركيز"${d}></div>`;
+const stepper = (v, i) => `<div class="stp"><span class="t-strong">الاستراحة القصيرة</span><div class="stpc"><button type="button" class="ib pr${i === 1 ? ' is-pressed' : ''}" aria-label="أنقص" data-step="-1"${i === 2 ? ' disabled' : ''}>${ic('minus')}</button><output class="num">${v}<small>دقائق</small></output><button type="button" class="ib pr${i === 3 ? ' is-focus' : ''}" aria-label="زِد" data-step="1">${ic('plus')}</button></div>${i === 2 ? '<span class="t-caption">الحد الأدنى دقيقة واحدة</span>' : ''}</div>`;
+const field = i => `<div class="fld${i === 2 ? '' : ''}"><label for="f${i}">اسم العادة</label><input id="f${i}" type="text" placeholder="مثل: شرب الماء" ${i === 1 ? 'value="قراءة"' : ''}${i === 3 ? ' class="is-focus" value="قراءة 10"' : ''}${dis(i)}><span class="help">حتى 40 حرفًا</span></div>`;
+$('inputStates').innerHTML = head(['عادي', 'مضغوط أو مكتوب', 'معطّل', 'تركيز'])
+  + row('مفتاح مشغّل', i => swBtn(true, MODS[i], dis(i)))
+  + row('مفتاح مطفأ', i => swBtn(false, MODS[i], dis(i)))
+  + row('منزلق', i => slider(25, MODS[i], dis(i)))
+  + row('stepper', i => stepper(i === 2 ? 1 : 5, i))
+  + row('حقل', field)
+  + `<span class="rl">حقل بخطأ</span><span class="c"><div class="fld err"><label for="fe">اسم العادة</label><input id="fe" type="text" value=""><span class="help">اكتب اسمًا للعادة.</span></div></span><span></span><span></span><span></span>`;
+document.querySelectorAll('.rng').forEach(r => { const set = () => { const p = (r.value - r.min) / (r.max - r.min) * 100; r.style.setProperty('--p', p + '%'); const o = r.closest('.sld').querySelector('.num'); if (o) o.textContent = `${r.value} دقيقة`; }; r.addEventListener('input', set); set(); });
+document.addEventListener('click', e => {
+  const s = e.target.closest('.sw'); if (s && !s.disabled) s.setAttribute('aria-checked', String(s.getAttribute('aria-checked') !== 'true'));
+  const st = e.target.closest('[data-step]');
+  if (st && !st.disabled) {
+    const box = st.closest('.stpc'), out = box.querySelector('output'), v = Math.max(1, Math.min(30, parseInt(out.textContent) + +st.dataset.step));
+    out.innerHTML = `${v}<small>${v === 1 ? 'دقيقة' : v <= 10 ? 'دقائق' : 'دقيقة'}</small>`;
+    box.querySelector('[data-step="-1"]').disabled = v <= 1;
+  }
+});
+
+/* Headers and nav */
+const NAV = [['house', 'اليوم'], ['squares-four', 'البرامج'], ['check-square', 'العادات'], ['timer', 'التركيز'], ['chart-bar', 'التقدّم']];
+const tabs = (on, mods = []) => `<nav class="tabs">${NAV.map(([n, l], i) => `<button type="button" class="tab${i === on ? ' on' : ''}${mods[i] || ''}"><span class="pill">${ic(n, i === on)}</span><span class="t-label">${l}</span></button>`).join('')}</nav>`;
+$('headers').innerHTML = `
+  <div class="ph"><div class="stb"><span class="num">9:41</span><span>●●</span></div><div class="scr"><div class="ptop"><div><span class="t-caption">الثلاثاء، 20 أكتوبر</span><span class="t-display">اليوم</span></div><div class="acts"><button type="button" class="ib out pr" aria-label="الإعدادات">${ic('gear')}</button></div></div><span class="lbl">العنوان الكبير: الأقسام الخمسة</span></div>${tabs(0)}</div>
+  <div class="ph"><div class="stb"><span class="num">9:41</span><span>●●</span></div><div class="appbar"><button type="button" class="ib pr" aria-label="رجوع">${ic('caret-right')}</button><span class="t-title">شرب الماء</span><button type="button" class="ib pr" aria-label="تعديل">${ic('pencil-simple')}</button></div><div class="scr"><span class="lbl">الشريط الصغير: صفحة داخلية، أو بعد التمرير. الخط تحته يظهر مع التمرير فقط.</span></div>${tabs(2)}</div>
+  <div class="ph"><div class="stb"><span class="num">9:41</span><span>●●</span></div><div class="scr"><span class="lbl">القائمة السفلية بحالاتها: «البرامج» مضغوطة، و«التركيز» بتركيز لوحة المفاتيح.</span></div>${tabs(0, ['', ' is-pressed', '', ' is-focus'])}</div>`;
+
+/* Sheet and dialog */
+$('sheets').innerHTML = `
+  <div class="ph" style="height:620px"><div class="stb"><span class="num">9:41</span><span>●●</span></div><div class="scr"><div class="ptop"><div><span class="t-caption">التمرين 2 من 6</span><span class="t-display">لف الكتفين</span></div></div></div>
+    <div class="dim"></div>
+    <div class="sheet e2"><span class="grab"></span>
+      <div class="shh"><span class="t-title">طريقة الأداء</span><button type="button" class="ib pr" aria-label="إغلاق">${ic('x')}</button></div>
+      <span class="t-caption num">30 ثانية · 6 تكرارات</span>
+      <ol><li>اجلس مستقيمًا والذراعان بجانب الجسم.</li><li>ارفع الكتفين نحو الأذنين، ثم أرجعهما إلى الخلف.</li><li>أنزلهما ببطء، وكرّر الحركة بإيقاع هادئ.</li></ol>
+      <div class="safety">${ic('info')}<span class="t-caption">توقّف إن شعرت بانزعاج، وتابع بحركة أصغر.</span></div>
+      <button type="button" class="b pri full pr">متابعة</button>
+    </div></div>
+  <div class="ph" style="height:620px"><div class="stb"><span class="num">9:41</span><span>●●</span></div><div class="scr"><div class="ptop"><div><span class="t-caption">العادات</span><span class="t-display">شرب الماء</span></div></div></div>
+    <div class="dim"></div>
+    <div class="dialog e3"><span class="t-title">حذف العادة؟</span><span class="t-body" style="color:var(--muted)">يُحذف سجل «شرب الماء» كاملًا ولا يمكن استرجاعه. الأرشفة تخفيها وتحفظ السجل.</span>
+      <div class="acts"><button type="button" class="b txt pr">أرشفة</button><button type="button" class="b alt pr" style="color:var(--error);border-color:var(--error)">حذف</button></div></div></div>`;
+
+/* Progress */
+$('stepsBox').innerHTML = `<div class="steps">${['الأحد', 'الثلاثاء', 'الخميس'].map((l, i) => `${i ? `<span class="cn${i <= 1 ? ' on' : ''}"></span>` : ''}<div class="it ${i < 1 ? 'done' : i === 1 ? 'cur' : 'up'}"><span class="sq">${i === 1 ? '<i class="fl" style="width:45%"></i>' : ''}<span>${i < 1 ? ic('check') : i + 1}</span></span><small class="t-label">${l}</small></div>`).join('')}</div>`;
+const ring = (size, sw, q, dot) => {
+  const cx = size / 2, r = cx - sw - (dot ? 8 : 2), a = (-90 + 360 * q) * Math.PI / 180, id = 'g' + size;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true" style="overflow:visible"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--arc1)"/><stop offset="1" stop-color="var(--arc2)"/></linearGradient></defs><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="var(--ring)" stroke-width="${sw}"/><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="${sw}" stroke-linecap="round" pathLength="100" stroke-dasharray="${q * 100} 100" transform="rotate(-90 ${cx} ${cx})"/>${dot ? `<g transform="translate(${(cx + r * Math.cos(a)).toFixed(1)} ${(cx + r * Math.sin(a)).toFixed(1)})"><circle r="${dot * 2.1}" fill="var(--warm)" opacity=".22" class="halo"/><circle r="${dot}" fill="var(--warm)" stroke="var(--bg)" stroke-width="2"/></g>` : ''}</svg>`;
+};
+$('rings').innerHTML = `<figure>${ring(160, 8, .45, 7)}<figcaption>المؤقت (236 في الشاشة)</figcaption></figure><figure>${ring(64, 5, 1 / 3, 4.5)}<figcaption>بطاقة الجلسة</figcaption></figure><figure style="color:var(--h-sky)">${segRing(8, 3)}<figcaption>عادة كمّية</figcaption></figure>`;
+
+/* Empty, loading, error */
+const orbit = `<svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="40" fill="none" stroke="var(--dots)" stroke-width="1.5" stroke-dasharray="1 6" stroke-linecap="round"/><circle cx="48" cy="48" r="24" fill="none" stroke="var(--ring)" stroke-width="7"/><circle cx="60" cy="27.2" r="8" fill="var(--bg)"/><circle cx="60" cy="27.2" r="5.5" fill="var(--warm)"/></svg>`;
+function emptyStates(kind) {
+  const art = kind === 'orbit' ? orbit : `<span class="etile">${ic('check-square')}</span>`;
+  return `
+  <div class="stage"><span class="lbl">فارغة: لا عادات بعد</span><div class="empty e1">${art}<span class="t-title">لا عادات بعد</span><span class="t-body">أضف أول عادة، مثل شرب الماء أو القراءة. التسجيل بضغطة واحدة.</span><button type="button" class="b pri pr">${ic('plus')}إضافة عادة</button></div></div>
+  <div class="stage"><span class="lbl">تحميل: هياكل ثابتة</span><div class="card e1">${[0, 1, 2].map(() => `<div class="skrow"><span class="sk" style="width:40px;height:40px;border-radius:var(--rtile)"></span><div><span class="sk" style="height:12px;width:60%"></span><span class="sk" style="height:10px;width:35%"></span></div><span class="sk" style="width:28px;height:28px"></span></div>`).join('')}</div></div>
+  <div class="stage"><span class="lbl">خطأ</span><div class="empty e1"><span class="etile err">${ic('warning-circle')}</span><span class="t-title">تعذّر حفظ التسجيل</span><span class="t-body">لم يُحفظ تسجيل «شرب الماء». أعد المحاولة، والتسجيلات السابقة سليمة.</span><button type="button" class="b alt pr">${ic('arrow-clockwise')}إعادة المحاولة</button></div></div>`;
+}
+
+/* Options */
+const OPT = { elev: 'float', sec: 'outline', press: 'scale', list: 'card', empty: 'orbit' };
+try { Object.assign(OPT, JSON.parse(localStorage.getItem('himma-comp') || '{}')); } catch (e) {}
+const NAMES = {
+  elev: { border: 'حدود: كل الدرجات بخط رفيع، بلا ظل.', surface: 'سطوح: بلا حدود، وكل درجة أفتح من التي تحتها.', float: 'حدود وظل للعائم: البطاقات بحدود، والنافذة والحوار بظل بلا حدود.' },
+  sec: { outline: 'الثانوي بإطار.', tonal: 'الثانوي ممتلئ خفيف بالنيلي.' },
+  list: { card: 'القوائم مجموعات داخل بطاقات.', full: 'القوائم بعرض الشاشة بخطوط فاصلة.' },
+  empty: { tile: 'الفارغة بمربع أيقونة.', orbit: 'الفارغة بالمدار من الشعار.' }
+};
+const segs = { segElev: 'elev', segSec: 'sec', segPress: 'press', segList: 'list', segEmpty: 'empty' };
+Object.entries(segs).forEach(([id, key]) => $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (b) { OPT[key] = b.dataset.v; apply(); } }));
+function apply() {
+  const r = document.documentElement;
+  r.dataset.elev = OPT.elev; r.dataset.sec = OPT.sec; r.dataset.press = OPT.press; r.dataset.list = OPT.list;
+  Object.entries(segs).forEach(([id, key]) => $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === OPT[key]))));
+  document.querySelectorAll('.pick').forEach(p => { p.textContent = 'المعروض الآن: ' + NAMES[p.dataset.for][OPT[p.dataset.for]]; });
+  $('emptyBox').innerHTML = emptyStates(OPT.empty);
+  try { localStorage.setItem('himma-comp', JSON.stringify(OPT)); } catch (e) {}
+}
+apply();
+</script>
