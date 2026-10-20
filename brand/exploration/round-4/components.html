@@ -9,26 +9,43 @@
    specimen below follows them. Each component shows its states in columns: normal, pressed, disabled, focus.
    Everything is also live: press, tab, toggle and drag work. */
 :root {
-  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --surface3: #233152; --line: #24314F; --dots: #4A5C8C;
-  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222; --warm: #F2A65A; --on-warm: #1B1406;
-  --hero: #1B2B55; --hero-ink: #EEF3FF; --hero-muted: #A9B6D6; --hero-ring: #2E3F70; --ring: #2E3F70;
-  --arc1: #6CB4E8; --arc2: #7FD8BE; --done: #7FD8BE; --error: #F08A72; --frame: #2A3550;
-  --h-sky: #6CB4E8; --h-violet: #B09CF5; --h-green: #7FD39A; --h-rose: #F28FA8; --h-teal: #7FD8BE;
+  --bg: #F3F6FA; --surface: #FFFFFF; --surface2: #E9EEF6; --line: #DCE3EE; --dots: #8390AD;
+  --ink: #14213D; --muted: #5A6785; --primary: #3D4FA3; --on-primary: #FFFFFF; --warm: #F2A65A; --on-warm: #1B1406;
+  --hero: #14213D; --hero-ink: #EEF3FF; --hero-muted: #AEBBDA; --ring: #DCE3EE;
+  --arc1: #6CB4E8; --arc2: #7FD8BE; --done: #2E9C82; --error: #B84A34; --frame: #D3DBE8; --code: #2A8CA6;
+  --h-sky: #3E8FD6; --h-violet: #7A5FD0; --h-green: #2E9C5E; --h-rose: #C9506E; --h-teal: #1F948A;
+  --float: var(--surface); --scrim: rgb(20 33 61 / .4);
+  --sh2: 0 -2px 10px rgb(20 33 61 / .08), 0 -12px 32px rgb(20 33 61 / .1);
+  --sh3: 0 8px 20px rgb(20 33 61 / .12), 0 20px 48px rgb(20 33 61 / .14);
   --rxs: 4px; --rsm: 8px; --rtile: 10px; --rmd: 12px; --rlg: 16px; --rxl: 20px;
   --ease: cubic-bezier(.22,1,.36,1); --ds: 200ms;
   --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
-  /* elevation, set by the chosen option below */
+  /* approved elevation: cards and lists with a border, floating layers with a shadow and no border */
   --e1-bg: var(--surface); --e1-bd: 1px solid var(--line); --e1-sh: none;
-  --e2-bg: var(--surface2); --e2-bd: 1px solid var(--line); --e2-sh: none;
-  --e3-bg: var(--surface2); --e3-bd: 1px solid var(--line); --e3-sh: none;
+  --e2-bg: var(--float); --e2-bd: 1px solid transparent; --e2-sh: var(--sh2);
+  --e3-bg: var(--float); --e3-bd: 1px solid transparent; --e3-sh: var(--sh3);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F; --dots: #4A5C8C;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222;
+  --hero: #1B2B55; --hero-muted: #A9B6D6; --ring: #2E3F70; --done: #7FD8BE; --error: #F08A72; --frame: #2A3550; --code: #6CB4E8;
+  --h-sky: #6CB4E8; --h-violet: #B09CF5; --h-green: #7FD39A; --h-rose: #F28FA8; --h-teal: #7FD8BE;
+  --float: var(--surface2); --scrim: rgb(0 0 0 / .55);
+  --sh2: 0 -2px 10px rgb(0 0 0 / .35), 0 -12px 32px rgb(0 0 0 / .35);
+  --sh3: 0 8px 20px rgb(0 0 0 / .45), 0 20px 48px rgb(0 0 0 / .4);
   color-scheme: dark;
+  }
 }
-:root[data-elev="surface"] {
-  --e1-bd: 1px solid transparent; --e2-bd: 1px solid transparent; --e3-bd: 1px solid transparent; --e3-bg: var(--surface3);
-}
-:root[data-elev="float"] {
-  --e2-bd: 1px solid transparent; --e2-sh: 0 -2px 10px rgb(0 0 0 / .35), 0 -12px 32px rgb(0 0 0 / .35);
-  --e3-bd: 1px solid transparent; --e3-sh: 0 8px 20px rgb(0 0 0 / .45), 0 20px 48px rgb(0 0 0 / .4);
+:root[data-theme="dark"] {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F; --dots: #4A5C8C;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222;
+  --hero: #1B2B55; --hero-muted: #A9B6D6; --ring: #2E3F70; --done: #7FD8BE; --error: #F08A72; --frame: #2A3550; --code: #6CB4E8;
+  --h-sky: #6CB4E8; --h-violet: #B09CF5; --h-green: #7FD39A; --h-rose: #F28FA8; --h-teal: #7FD8BE;
+  --float: var(--surface2); --scrim: rgb(0 0 0 / .55);
+  --sh2: 0 -2px 10px rgb(0 0 0 / .35), 0 -12px 32px rgb(0 0 0 / .35);
+  --sh3: 0 8px 20px rgb(0 0 0 / .45), 0 20px 48px rgb(0 0 0 / .4);
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
@@ -38,7 +55,7 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 p { margin: 0; }
 button, input { font: inherit; color: inherit; }
 .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
-code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--arc1); }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--code); }
 svg.i { width: 24px; height: 24px; display: block; flex: none; fill: currentColor; }
 
 /* ---- Page chrome ---- */
@@ -86,7 +103,7 @@ svg.i { width: 24px; height: 24px; display: block; flex: none; fill: currentColo
 .pr { position: relative; overflow: hidden; transition: transform var(--ds) var(--ease); -webkit-tap-highlight-color: transparent; }
 .pr::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity var(--ds) linear; pointer-events: none; }
 .pr:active:not(:disabled)::after, .pr.is-pressed::after { opacity: .12; }
-:root[data-press="scale"] .pr:active:not(:disabled), :root[data-press="scale"] .pr.is-pressed { transform: scale(.97); }
+.pr:active:not(:disabled), .pr.is-pressed { transform: scale(.97); }
 :focus { outline: none; }
 :focus-visible, .is-focus { outline: 2px solid var(--primary); outline-offset: 2px; }
 
@@ -96,11 +113,10 @@ svg.i { width: 24px; height: 24px; display: block; flex: none; fill: currentColo
 .b.start { background: var(--warm); color: var(--on-warm); }
 .b.pri { background: var(--primary); color: var(--on-primary); }
 .b.alt { color: var(--ink); border: 1.5px solid var(--dots); }
-:root[data-sec="tonal"] .b.alt { border-color: transparent; background: color-mix(in srgb, var(--primary) 16%, transparent); }
 .b.txt { color: var(--primary); padding-inline: 12px; }
 .b.full { width: 100%; }
 .b:disabled { cursor: default; }
-.b.start:disabled, .b.pri:disabled, :root[data-sec="tonal"] .b.alt:disabled { background: color-mix(in srgb, var(--ink) 12%, transparent); color: color-mix(in srgb, var(--ink) 38%, transparent); }
+.b.start:disabled, .b.pri:disabled { background: color-mix(in srgb, var(--ink) 12%, transparent); color: color-mix(in srgb, var(--ink) 38%, transparent); }
 .b.alt:disabled { border-color: color-mix(in srgb, var(--ink) 12%, transparent); color: color-mix(in srgb, var(--ink) 38%, transparent); }
 .b.txt:disabled { color: color-mix(in srgb, var(--ink) 38%, transparent); }
 .ib { width: 44px; height: 44px; border-radius: var(--rtile); display: grid; place-items: center; padding: 0; cursor: pointer; flex: none; color: var(--ink); background: none; border: 1px solid transparent; }
@@ -155,10 +171,6 @@ button.card { cursor: pointer; }
 .lgroup .lrow + .lrow, .lgroup .lrow + .lsw { box-shadow: inset 0 1px 0 var(--line); }
 .lsw { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 12px; }
 .lsw .nm { flex: 1; min-width: 0; display: grid; }
-:root[data-list="full"] .lgroup { border-radius: 0; background: none; border: 0; box-shadow: none; border-block: 1px solid var(--line); }
-:root[data-list="full"] .list .sh { padding-inline: 0; }
-:root[data-list="full"] .lrow, :root[data-list="full"] .lsw { padding-inline: 0; }
-:root[data-list="full"] .lgroup .lrow .tile, :root[data-list="full"] .lgroup .lsw .tile { background: none; width: 28px; }
 .lrow.is-focus, .lrow:focus-visible { outline-offset: -2px; }
 
 /* ---- Switch ---- */
@@ -219,7 +231,7 @@ button.card { cursor: pointer; }
 .tab:active .pill::after, .tab.is-pressed .pill::after { opacity: .12; }
 .tab.on { color: var(--ink); }
 .tab.on .pill { background: color-mix(in srgb, var(--primary) 18%, transparent); color: var(--primary); }
-.dim { position: absolute; inset: 0; background: rgb(0 0 0 / .55); }
+.dim { position: absolute; inset: 0; background: var(--scrim); }
 .sheet { position: absolute; inset-inline: 0; bottom: 0; border-radius: var(--rxl) var(--rxl) 0 0; padding: 8px 16px 20px; display: grid; gap: 12px; }
 .grab { width: 36px; height: 4px; border-radius: 2px; background: var(--dots); justify-self: center; }
 .sheet .shh { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -273,18 +285,15 @@ button.card { cursor: pointer; }
 
 <header class="wrap hd">
   <span class="eyebrow">هِمّة · المرحلة 2 · القرار 6: نظام التصميم · الجولة 4 · المكوّنات</span>
-  <h1>المكوّنات الأساسية والارتفاع</h1>
-  <p>كل مكوّن بحالاته الأربع: عادي، ومضغوط، ومعطّل، وتركيز لوحة المفاتيح. مبنية على المعتمد فقط: الطباعة والمسافات المضغوطة، والزوايا المعتدلة، وأيقونات Phosphor، والألوان والحركة. الأسئلة المفتوحة أربعة، في الشريط العلوي، وكل الصفحة تتبعها. كل شيء يعمل أيضًا: اضغط، وانتقل بـ Tab، وبدّل، واسحب.</p>
-  <span class="note"><i></i>مرجع استكشافي حتى تعتمده. الوضع الغامق فقط، والفاتح للاعتماد النهائي.</span>
+  <h1>المكوّنات الأساسية: للاعتماد النهائي</h1>
+  <p>كل مكوّن بحالاته الأربع: عادي، ومضغوط، ومعطّل، وتركيز لوحة المفاتيح. مبنية على المعتمد فقط: الطباعة والمسافات المضغوطة، والزوايا المعتدلة، وأيقونات Phosphor، والألوان والحركة. الخيارات الخمسة محسومة (في الشريط العلوي)، والمطلوب الآن مراجعة كل شيء بالوضعين. كل شيء يعمل أيضًا: اضغط، وانتقل بـ Tab، وبدّل، واسحب.</p>
+  <span class="note"><i></i>غير معتمد حتى تراجعه بالوضعين. بدّل الوضع من الشريط العلوي.</span>
 </header>
 
 <div class="bar">
   <div class="wrap">
-    <div class="grp"><span>الارتفاع</span><div class="seg" id="segElev" role="group" aria-label="الارتفاع"><button type="button" id="el-border" data-v="border">حدود</button><button type="button" id="el-surface" data-v="surface">سطوح</button><button type="button" id="el-float" data-v="float">حدود وظل للعائم</button></div></div>
-    <div class="grp"><span>الزر الثانوي</span><div class="seg" id="segSec" role="group" aria-label="الزر الثانوي"><button type="button" id="sc-outline" data-v="outline">إطار</button><button type="button" id="sc-tonal" data-v="tonal">ممتلئ خفيف</button></div></div>
-    <div class="grp"><span>الضغط</span><div class="seg" id="segPress" role="group" aria-label="شكل الضغط"><button type="button" id="pr-layer" data-v="layer">طبقة لون</button><button type="button" id="pr-scale" data-v="scale">طبقة وتصغير</button></div></div>
-    <div class="grp"><span>القوائم</span><div class="seg" id="segList" role="group" aria-label="شكل القوائم"><button type="button" id="ls-card" data-v="card">داخل بطاقة</button><button type="button" id="ls-full" data-v="full">بعرض الشاشة</button></div></div>
-    <div class="grp"><span>الحالة الفارغة</span><div class="seg" id="segEmpty" role="group" aria-label="الحالة الفارغة"><button type="button" id="em-tile" data-v="tile">مربع أيقونة</button><button type="button" id="em-orbit" data-v="orbit">مدار</button></div></div>
+    <div class="grp"><span>الوضع</span><div class="seg" id="segMode" role="group" aria-label="الوضع"><button type="button" id="m-dark" data-v="dark">غامق</button><button type="button" id="m-light" data-v="light">فاتح</button></div></div>
+    <span class="lbl">المعتمد: حدود للبطاقات وظل للعائم، والثانوي بإطار، والضغط بطبقة وتصغير، والقوائم داخل بطاقة، والفارغة بالمدار.</span>
   </div>
 </div>
 
@@ -294,14 +303,12 @@ button.card { cursor: pointer; }
   <section class="wrap sec" id="buttons">
     <h2>1. الأزرار</h2>
     <p>زر البدء مشمشي، وهو وحده يحمل الدافئ (قاعدة اللون المعتمدة). الأساسي نيلي لباقي الأفعال المهمة، والثانوي للبديل، والنصّي للأقل أهمية. ارتفاع 40 ومنطقة لمس 48. المعطّل بنسبة 38% كما في Material.</p>
-    <p class="pick" data-for="sec"></p>
     <div class="stage tw"><div class="states" id="btnStates"></div></div>
   </section>
 
   <section class="wrap sec" id="elev">
     <h2>2. الارتفاع والبطاقات</h2>
-    <p>أربع درجات: الخلفية، والبطاقة، والعائم (النافذة السفلية والقوائم المنبثقة)، والحوار. في الغامق الظل ضعيف الأثر، فالسؤال: هل نفصل بالحدود، أو بسطوح أفتح، أو بالحدود للبطاقات والظل للعائم فقط.</p>
-    <p class="pick" data-for="elev"></p>
+    <p>أربع درجات: الخلفية، والبطاقة، والعائم (النافذة السفلية والقوائم المنبثقة)، والحوار. البطاقات والقوائم بحدود رفيعة بلا ظل، والعائم والحوار بظل بلا حدود. في الغامق العائم أفتح قليلًا لأن الظل ضعيف الأثر، وفي الفاتح أبيض.</p>
     <div class="stage">
       <div class="levels">
         <div class="lv e0"><b>0 · الخلفية</b><span>الشاشة نفسها</span></div>
@@ -324,8 +331,7 @@ button.card { cursor: pointer; }
 
   <section class="wrap sec" id="lists">
     <h2>4. القوائم</h2>
-    <p>صف تنقّل بقيمة وسهم، وصف بمفتاح تبديل، وصف خطِر. القائمة إما مجموعة داخل بطاقة، أو بعرض الشاشة بخطوط فاصلة.</p>
-    <p class="pick" data-for="list"></p>
+    <p>صف تنقّل بقيمة وسهم، وصف بمفتاح تبديل، وصف خطِر، في مجموعات داخل بطاقات.</p>
     <div class="duo">
       <div class="stage"><span class="lbl">صفحة الإعدادات</span><div id="settingsList"></div></div>
       <div class="stage tw"><span class="lbl">حالات الصف</span><div class="states" id="listStates" style="grid-template-columns: 112px minmax(240px, 1fr); min-width: 380px"></div></div>
@@ -362,26 +368,16 @@ button.card { cursor: pointer; }
   <section class="wrap sec" id="empty">
     <h2>9. الحالة الفارغة والتحميل والخطأ</h2>
     <p>التحميل هياكل ثابتة بلا لمعان متحرّك، لأن قواعد الحركة تسمح بحركتين مستمرتين فقط (الهالة والمؤقت). البيانات محلية فالتحميل نادر. الخطأ يقول ما حدث وما الحل، بلا اعتذار.</p>
-    <p class="pick" data-for="empty"></p>
     <div class="trio" id="emptyBox"></div>
   </section>
 
   <section class="wrap sec qs" id="decide">
-    <h2>10. المطلوب للقرار</h2>
+    <h2>10. للاعتماد النهائي</h2>
     <div class="box">
       <ol>
-        <li>الارتفاع: حدود، أو سطوح، أو حدود للبطاقات وظل للعائم.</li>
-        <li>الزر الثانوي: إطار، أو ممتلئ خفيف.</li>
-        <li>شكل الضغط: طبقة لون، أو طبقة مع تصغير خفيف (97%، 200 مللي ثانية).</li>
-        <li>القوائم: داخل بطاقة، أو بعرض الشاشة.</li>
-        <li>الحالة الفارغة: مربع أيقونة، أو المدار من الشعار.</li>
-        <li>الباقي كما هو، أو ملاحظاتك عليه: الحالات الأربع، والمفتاح، والمنزلق، والـ stepper، والحقل، والعنوان، والنافذة، والحوار، والتحميل والخطأ.</li>
+        <li>راجع الصفحة بالوضعين، الفاتح خصوصًا لأنه جديد هنا.<span>الظل في الفاتح أوضح، والنافذة السفلية والحوار بيضاء فوق الخلفية الرمادية الزرقاء.</span></li>
+        <li>بعد موافقتك: تُكتب المكوّنات في <code>docs/BRAND.md</code>، والارتفاع في <code>brand/tokens/elevation.json</code>، ويُغلق القرار 6 والمرحلة 2 كلها إلا البنود المؤجّلة (رسوم التمارين، والأصوات، وباقي الشاشات).</li>
       </ol>
-      <div class="rec">
-        <b>اقتراحي: حدود وظل للعائم، والثانوي بإطار، والضغط بطبقة وتصغير، والقوائم داخل بطاقة، والفارغة بالمدار.</b>
-        <p>الحدود تُبقي البطاقات كما في كل النماذج السابقة، والظل يفصل العائم فقط فيبدو فوق الشاشة فعلًا. الإطار يميّز الثانوي على كل السطوح، والممتلئ الخفيف يختفي فوق النافذة السفلية. التصغير الخفيف يعطي الضغط إحساس «ناعمة ومرنة» بلا تأخير. والمدار يربط الحالة الفارغة بالشعار دون رسوم.</p>
-      </div>
-      <p style="color:var(--muted);font-size:14px">بعد هذا: نسخة بالوضعين للاعتماد النهائي، ثم تُكتب القيم في <code>docs/BRAND.md</code> وفي <code>brand/tokens/elevation.json</code>.</p>
     </div>
   </section>
 </main>
@@ -517,24 +513,16 @@ function emptyStates(kind) {
   <div class="stage"><span class="lbl">خطأ</span><div class="empty e1"><span class="etile err">${ic('warning-circle')}</span><span class="t-title">تعذّر حفظ التسجيل</span><span class="t-body">لم يُحفظ تسجيل «شرب الماء». أعد المحاولة، والتسجيلات السابقة سليمة.</span><button type="button" class="b alt pr">${ic('arrow-clockwise')}إعادة المحاولة</button></div></div>`;
 }
 
-/* Options */
-const OPT = { elev: 'float', sec: 'outline', press: 'scale', list: 'card', empty: 'orbit' };
-try { Object.assign(OPT, JSON.parse(localStorage.getItem('himma-comp') || '{}')); } catch (e) {}
-const NAMES = {
-  elev: { border: 'حدود: كل الدرجات بخط رفيع، بلا ظل.', surface: 'سطوح: بلا حدود، وكل درجة أفتح من التي تحتها.', float: 'حدود وظل للعائم: البطاقات بحدود، والنافذة والحوار بظل بلا حدود.' },
-  sec: { outline: 'الثانوي بإطار.', tonal: 'الثانوي ممتلئ خفيف بالنيلي.' },
-  list: { card: 'القوائم مجموعات داخل بطاقات.', full: 'القوائم بعرض الشاشة بخطوط فاصلة.' },
-  empty: { tile: 'الفارغة بمربع أيقونة.', orbit: 'الفارغة بالمدار من الشعار.' }
-};
-const segs = { segElev: 'elev', segSec: 'sec', segPress: 'press', segList: 'list', segEmpty: 'empty' };
-Object.entries(segs).forEach(([id, key]) => $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (b) { OPT[key] = b.dataset.v; apply(); } }));
-function apply() {
-  const r = document.documentElement;
-  r.dataset.elev = OPT.elev; r.dataset.sec = OPT.sec; r.dataset.press = OPT.press; r.dataset.list = OPT.list;
-  Object.entries(segs).forEach(([id, key]) => $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === OPT[key]))));
-  document.querySelectorAll('.pick').forEach(p => { p.textContent = 'المعروض الآن: ' + NAMES[p.dataset.for][OPT[p.dataset.for]]; });
-  $('emptyBox').innerHTML = emptyStates(OPT.empty);
-  try { localStorage.setItem('himma-comp', JSON.stringify(OPT)); } catch (e) {}
+/* Mode */
+$('emptyBox').innerHTML = emptyStates('orbit');
+let MODE = null;
+try { MODE = localStorage.getItem('himma-comp-mode'); } catch (e) {}
+const sysDark = () => { try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return true; } };
+function applyMode() {
+  if (MODE) document.documentElement.dataset.theme = MODE; else delete document.documentElement.dataset.theme;
+  const cur = MODE || (sysDark() ? 'dark' : 'light');
+  $('segMode').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === cur)));
 }
-apply();
+$('segMode').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; MODE = b.dataset.v; try { localStorage.setItem('himma-comp-mode', MODE); } catch (e) {} applyMode(); });
+applyMode();
 </script>
