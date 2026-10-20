@@ -1,0 +1,153 @@
+{
+  "$description": "Himma color tokens. Approved 2026-10-20. Single palette, light and dark. Contrast checked against WCAG 2.1 AA (4.5 text, 3 graphics).",
+  "color": {
+    "light": {
+      "bg": "#F3F6FA",
+      "surface": "#FFFFFF",
+      "surface2": "#E9EEF6",
+      "line": "#DCE3EE",
+      "ink": "#14213D",
+      "muted": "#5A6785",
+      "primary": "#3D4FA3",
+      "onPrimary": "#FFFFFF",
+      "warm": "#F2A65A",
+      "warmText": "#A5561A",
+      "onWarm": "#1B1406",
+      "hero": "#14213D",
+      "heroInk": "#EEF3FF",
+      "heroMuted": "#AEBBDA",
+      "heroRing": "#2B3A66",
+      "arcStart": "#6CB4E8",
+      "arcEnd": "#7FD8BE",
+      "orbitStart": "#3D4FA3",
+      "orbitEnd": "#2A8CA6",
+      "success": "#2E9C82",
+      "successText": "#1F7A64",
+      "warning": "#F2C14E",
+      "warningText": "#9A6510",
+      "error": "#B84A34"
+    },
+    "dark": {
+      "bg": "#0B1222",
+      "surface": "#141E36",
+      "surface2": "#1C2844",
+      "line": "#24314F",
+      "ink": "#E8EEFB",
+      "muted": "#93A0BE",
+      "primary": "#8C9BF2",
+      "onPrimary": "#0B1222",
+      "warm": "#F2A65A",
+      "warmText": "#F2A65A",
+      "onWarm": "#1B1406",
+      "hero": "#1B2B55",
+      "heroInk": "#EEF3FF",
+      "heroMuted": "#A9B6D6",
+      "heroRing": "#2E3F70",
+      "arcStart": "#6CB4E8",
+      "arcEnd": "#7FD8BE",
+      "orbitStart": "#8C9BF2",
+      "orbitEnd": "#7FD8BE",
+      "success": "#7FD8BE",
+      "successText": "#7FD8BE",
+      "warning": "#F2C14E",
+      "warningText": "#F2C14E",
+      "error": "#F08A72"
+    }
+  },
+  "category": {
+    "stretch": {
+      "name": "تمدّد ومرونة",
+      "light": "#1F948A",
+      "dark": "#7FD8BE"
+    },
+    "strength": {
+      "name": "بناء وقوة",
+      "light": "#6A5FD0",
+      "dark": "#A99BF5"
+    },
+    "cardio": {
+      "name": "هوائي",
+      "light": "#D2603F",
+      "dark": "#F49A7E"
+    },
+    "general": {
+      "name": "عام",
+      "light": "#3E8FD6",
+      "dark": "#6CB4E8"
+    }
+  },
+  "habit": [
+    {
+      "id": "sky",
+      "name": "سماوي",
+      "light": "#3E8FD6",
+      "dark": "#6CB4E8"
+    },
+    {
+      "id": "indigo",
+      "name": "نيلي",
+      "light": "#4F5FC4",
+      "dark": "#8C9BF2"
+    },
+    {
+      "id": "violet",
+      "name": "بنفسجي",
+      "light": "#7A5FD0",
+      "dark": "#B09CF5"
+    },
+    {
+      "id": "plum",
+      "name": "أرجواني",
+      "light": "#A653B0",
+      "dark": "#D79BE0"
+    },
+    {
+      "id": "rose",
+      "name": "وردي",
+      "light": "#C9506E",
+      "dark": "#F28FA8"
+    },
+    {
+      "id": "coral",
+      "name": "مرجاني",
+      "light": "#D2603F",
+      "dark": "#F49A7E"
+    },
+    {
+      "id": "apricot",
+      "name": "مشمشي",
+      "light": "#C7772A",
+      "dark": "#F2A65A"
+    },
+    {
+      "id": "amber",
+      "name": "عسلي",
+      "light": "#A98516",
+      "dark": "#E9C15A"
+    },
+    {
+      "id": "olive",
+      "name": "زيتوني",
+      "light": "#6E9A2E",
+      "dark": "#B4D77A"
+    },
+    {
+      "id": "green",
+      "name": "أخضر",
+      "light": "#2E9C5E",
+      "dark": "#7FD39A"
+    },
+    {
+      "id": "teal",
+      "name": "نعناعي",
+      "light": "#1F948A",
+      "dark": "#7FD8BE"
+    },
+    {
+      "id": "slate",
+      "name": "رمادي أزرق",
+      "light": "#64748B",
+      "dark": "#A3B1C6"
+    }
+  ]
+}
