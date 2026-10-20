@@ -1,0 +1,22 @@
+{
+  "$description": "Himma motion tokens. Personality 'soft and fluid', approved 2026-10-20. Durations in milliseconds, curves as cubic-bezier control points.",
+  "duration": {
+    "short": 200,
+    "medium": 420,
+    "long": 880
+  },
+  "curve": {
+    "standard": { "bezier": [0.22, 1, 0.36, 1], "flutter": "Curves.easeOutQuint", "use": "default for all movement" },
+    "emphasis": { "bezier": [0.16, 1, 0.3, 1], "flutter": "Curves.easeOutExpo", "use": "completion glow and arrival at a station" },
+    "bootBounce": { "bezier": [0.34, 1.56, 0.64, 1], "flutter": "Curves.easeOutBack", "use": "boot only: the dot dropping onto the ring" }
+  },
+  "halo": {
+    "period": 3200,
+    "scale": 1.4
+  },
+  "boot": {
+    "ringDraw": 1100,
+    "dotDrop": 550,
+    "dotDropStartsAt": 950
+  }
+}
