@@ -1,0 +1,771 @@
+<title>حركة همة: الجولة 1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..700&display=swap">
+<style>
+/* Layout: one dark page. Each section is one element (timer, week plan, habits, boot) shown side by side in the
+   three motion directions, driven by one shared control row so the comparison runs in sync. Dark mode only this round. */
+:root {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222;
+  --warm: #F2A65A; --on-warm: #1B1406; --arc1: #6CB4E8; --arc2: #7FD8BE;
+  --ring: #2E3F70; --dots: #4A5C8C; --icon-bg: #14213D;
+  --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num, .dg, td { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* Header */
+.hd { padding-block: 40px 20px; display: grid; gap: 12px; }
+.eyebrow { color: var(--muted); font-size: 13px; letter-spacing: .02em; }
+.hd h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; }
+.hd p { color: var(--muted); max-width: 68ch; }
+.note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.note i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); }
+
+/* Direction overview */
+.dirs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-block: 8px 24px; }
+.dir { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 20px; display: grid; gap: 10px; align-content: start; }
+.dir h3 { font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+.dir p { color: var(--muted); font-size: 14px; }
+.dir dl { margin: 0; display: grid; gap: 4px; }
+.dir dt { font-size: 12px; color: var(--muted); }
+.dir dd { margin: 0; font-size: 14px; }
+.tag { width: 28px; height: 28px; border-radius: 9px; display: inline-grid; place-items: center; background: var(--surface2); color: var(--primary); font-weight: 600; font-size: 15px; flex: none; }
+.ms { display: flex; gap: 6px; flex-wrap: wrap; }
+.ms span { background: var(--surface2); border-radius: 8px; padding: 2px 8px; font-size: 12px; color: var(--ink); }
+
+/* Sticky bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.bar nav { display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: 13px; }
+.bar nav a { color: var(--muted); text-decoration: none; }
+.bar nav a:hover { color: var(--ink); }
+.bar .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Sections */
+.sec { padding-block: 36px 8px; display: grid; gap: 14px; }
+.sec h2 { font-size: 22px; font-weight: 600; }
+.sec > p { color: var(--muted); max-width: 72ch; }
+.ctls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ctls .sep { width: 1px; height: 24px; background: var(--line); margin-inline: 4px; }
+.ctls small { color: var(--muted); font-size: 12px; }
+.btn { border: 1px solid var(--line); background: var(--surface2); border-radius: 14px; padding: 7px 14px; cursor: pointer; font-size: 14px; }
+.btn:hover { border-color: var(--dots); }
+.btn[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.btn.warm { background: var(--warm); color: var(--on-warm); border-color: var(--warm); font-weight: 500; }
+
+.row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cell { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 18px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.ch { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--muted); }
+.ch b { color: var(--ink); font-weight: 500; }
+
+/* Orbit pieces */
+.orb { display: block; width: 100%; height: auto; overflow: visible; }
+.orb .arcs, .orb .head, .orb .inner { transition: opacity var(--ds) linear; }
+.orb .dim { transition: opacity var(--dm) linear; }
+.orb .pal { transition: opacity var(--dm) linear; }
+.orb.paused .dim { opacity: .32; }
+.orb.fadeout .arcs, .orb.fadeout .head { opacity: 0 !important; }
+.st { stroke-width: 2; transition: fill var(--dm) linear, stroke var(--dm) linear; }
+.st.up { fill: var(--surface); stroke: var(--dots); }
+.st.done { fill: var(--arc2); stroke: var(--surface); }
+.st.cur { fill: var(--warm); stroke: var(--surface); }
+.st.sq.up { fill: none; stroke: var(--dots); }
+.st.sq.done, .st.sq.cur { stroke: none; }
+.pop { transform-box: fill-box; transform-origin: center; }
+.halo { transform-box: fill-box; transform-origin: center; animation: breathe var(--halo) ease-in-out infinite; }
+.halo.soft { animation-name: breathe-soft; }
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: .3; } 50% { transform: scale(var(--hs)); opacity: .1; } }
+@keyframes breathe-soft { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(var(--hs)); opacity: .5; } }
+.orb.paused .halo { animation-play-state: paused; opacity: .15; }
+
+/* Timer */
+.dial { position: relative; width: min(260px, 100%); margin-inline: auto; aspect-ratio: 1; max-width: 100%; }
+.ctr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; pointer-events: none; }
+.dg { font-size: 46px; font-weight: 500; line-height: 1.1; direction: ltr; letter-spacing: -.01em; transition: opacity var(--dm) linear; }
+.lb { font-size: 13px; color: var(--muted); }
+.pills { display: flex; gap: 6px; margin-top: 8px; }
+.pills i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--dots); transition: background var(--dm) linear, border-color var(--dm) linear; }
+.pills i.done { background: var(--arc2); border-color: var(--arc2); }
+.pills i.cur { background: var(--warm); border-color: var(--warm); }
+.dial.paused[data-d="a"] .dg { opacity: .5; }
+.dial.paused[data-d="b"] .dg { animation: fadebreath 2.4s ease-in-out infinite; }
+.dial.paused[data-d="c"] .dg { animation: blink 1.2s steps(2, jump-none) infinite; }
+@keyframes fadebreath { 50% { opacity: .4; } }
+@keyframes blink { 50% { opacity: .35; } }
+.brk { display: grid; gap: 10px; background: var(--surface2); border-radius: 18px; padding: 12px 14px; }
+.brk .q { font-size: 13px; color: var(--muted); }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opt { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 8px; cursor: pointer; font-size: 14px; transition: background var(--ds) linear, border-color var(--ds) linear, color var(--ds) linear; }
+.opt[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.pick { display: flex; gap: 10px; align-items: center; font-size: 14px; min-height: 30px; }
+.pick small { color: var(--muted); display: block; font-size: 12px; }
+.breath { width: 26px; height: 26px; border-radius: 50%; background: color-mix(in srgb, var(--arc1) 35%, transparent); border: 1.5px solid var(--arc1); flex: none; animation: breathbox 8s ease-in-out infinite; }
+@keyframes breathbox { 0%, 100% { transform: scale(.55); } 50% { transform: scale(1); } }
+.sq-ic { width: 30px; height: 30px; border-radius: 10px; background: var(--surface); display: grid; place-items: center; flex: none; color: var(--arc2); }
+.sq-ic svg { width: 18px; height: 18px; }
+
+/* Week card */
+.wk { display: flex; gap: 16px; align-items: center; }
+.wk .dial { width: 132px; flex: none; }
+.wk .dg { font-size: 22px; font-weight: 600; }
+.wt { display: grid; gap: 2px; min-width: 0; }
+.wt h4 { font-size: 16px; font-weight: 600; }
+.wm { color: var(--muted); font-size: 13px; }
+.wd { color: var(--arc2); font-size: 13px; font-weight: 500; transition: opacity var(--dm) linear; }
+
+/* Habits */
+.hb { display: flex; gap: 12px; align-items: center; background: var(--surface2); border-radius: 18px; padding: 10px 12px; }
+.hb .ic { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--hc) 18%, transparent); color: var(--hc); flex: none; }
+.hb .ic svg { width: 20px; height: 20px; }
+.hb .nm { flex: 1; min-width: 0; display: grid; }
+.hb .nm b { font-weight: 500; font-size: 14px; }
+.hb .nm small { color: var(--muted); font-size: 12px; }
+.tap { border: 0; background: none; padding: 0; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; }
+.tap svg { width: 44px; height: 44px; overflow: visible; }
+.tap.cb svg { width: 32px; height: 32px; }
+
+/* Boot */
+.boot { background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--arc1) 14%, transparent), transparent 60%), var(--icon-bg); border-radius: 20px; height: 230px; display: grid; place-content: center; justify-items: center; gap: 12px; overflow: hidden; }
+.boot svg { width: 96px; height: 96px; overflow: visible; }
+.wordm { display: grid; justify-items: center; gap: 0; }
+.wordm b { font-size: 26px; font-weight: 700; line-height: 1.2; }
+.wordm span { font-size: 11px; font-weight: 500; letter-spacing: .22em; color: #A9B6D6; direction: ltr; }
+
+/* Rules and tokens */
+.rules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.rbox { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 20px; display: grid; gap: 10px; align-content: start; }
+.rbox h3 { font-size: 16px; font-weight: 600; }
+.rbox ul { margin: 0; padding-inline-start: 18px; display: grid; gap: 6px; color: var(--ink); font-size: 14px; }
+.rbox .muted { color: var(--muted); font-size: 13px; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+th, td { padding: 10px 14px; text-align: start; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child th, tr:last-child td { border-bottom: 0; }
+thead th { color: var(--ink); font-weight: 600; background: var(--surface2); }
+tbody th { color: var(--muted); font-weight: 400; white-space: nowrap; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--arc1); }
+.foot { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+
+/* Reduced motion (real setting or the page toggle) */
+.rm .halo, .rm .breath, .rm .dial.paused .dg { animation: none !important; }
+.rm .breath { transform: scale(.8); }
+@media (prefers-reduced-motion: reduce) { .halo, .breath { animation: none !important; } }
+
+@media (max-width: 900px) {
+  .row, .dirs, .rules { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+
+<header class="wrap hd">
+  <span class="eyebrow">هِمّة · المرحلة 2 · القرار 5: لغة الحركة والمؤقت · الجولة 1</span>
+  <h1>ثلاث شخصيات للحركة</h1>
+  <p>كل اتجاه يجرّب شخصية حركة، ومعها طريقة مختلفة لرسم المدار والمحطات. العناصر نفسها في الثلاثة: المؤقت، وخطة الأسبوع، وتسجيل العادات، والإقلاع. كل الأزرار تحرّك الاتجاهات الثلاثة معًا للمقارنة.</p>
+  <span class="note"><i></i>مرجع استكشافي غير معتمد. الوضع الغامق فقط في هذه الجولة.</span>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <nav aria-label="الأقسام"><a href="#timer">المؤقت</a><a href="#week">خطة الأسبوع</a><a href="#habits">العادات</a><a href="#boot">الإقلاع</a><a href="#tokens">الأرقام</a></nav>
+    <div class="acts">
+      <button class="btn" id="rmToggle" type="button" aria-pressed="false">تقليل الحركة</button>
+      <button class="btn" id="replayAll" type="button">أعد العرض من البداية</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="wrap dirs" id="dirs" aria-label="الاتجاهات الثلاثة"></section>
+
+  <section class="wrap sec" id="timer">
+    <h2>المؤقت</h2>
+    <p>الوقت يجري أسرع 30 مرة للعرض. جرّب الحالات بالترتيب، ثم اختر «تحرّك» أو «ارتاح» في الاستراحة.</p>
+    <div class="ctls" id="tCtl">
+      <button class="btn" type="button" data-s="focus">تركيز</button>
+      <button class="btn" type="button" data-s="pause">إيقاف مؤقت</button>
+      <button class="btn" type="button" data-s="done">انتهاء الجولة</button>
+      <button class="btn" type="button" data-s="short">استراحة قصيرة</button>
+      <button class="btn" type="button" data-s="long">استراحة طويلة</button>
+    </div>
+    <div class="row" id="tRow"></div>
+  </section>
+
+  <section class="wrap sec" id="week">
+    <h2>خطة الأسبوع: امتلاء القوس والوصول إلى محطة</h2>
+    <p>كل جلسة محطة على المدار. «أنهِ جلسة اليوم» يملأ القوس حتى المحطة التالية، والجلسة الثالثة تُتمّ الأسبوع.</p>
+    <div class="ctls">
+      <button class="btn warm" type="button" id="wNext">أنهِ جلسة اليوم</button>
+      <button class="btn" type="button" id="wReset">أسبوع جديد</button>
+    </div>
+    <div class="row" id="wRow"></div>
+  </section>
+
+  <section class="wrap sec" id="habits">
+    <h2>تسجيل العادات</h2>
+    <p>اضغط الحلقة المقسّمة لإضافة كوب، أو المربع لتسجيل القراءة. كل خلية تعمل وحدها، أو استعمل الأزرار لتسجيل الثلاثة معًا.</p>
+    <div class="ctls">
+      <button class="btn" type="button" id="hAdd">أضف كوبًا في الثلاثة</button>
+      <button class="btn" type="button" id="hFill">أكمل هدف الماء</button>
+      <button class="btn" type="button" id="hCheck">سجّل القراءة في الثلاثة</button>
+      <button class="btn" type="button" id="hReset">صفّر</button>
+    </div>
+    <div class="row" id="hRow"></div>
+  </section>
+
+  <section class="wrap sec" id="boot">
+    <h2>الإقلاع من الرمز</h2>
+    <p>شاشة الإقلاع بخلفية الأيقونة الكحلية. المدة الكاملة أقل من ثانيتين في الاتجاهات الثلاثة.</p>
+    <div class="ctls"><button class="btn" type="button" id="bReplay">أعد الإقلاع</button></div>
+    <div class="row" id="bRow"></div>
+  </section>
+
+  <section class="wrap sec" id="rules">
+    <h2>قواعد مشتركة مقترحة</h2>
+    <p>تنطبق على أي اتجاه نختاره. للنقاش، وغير معتمدة.</p>
+    <div class="rules">
+      <div class="rbox">
+        <h3>متى نحرّك، ومتى لا</h3>
+        <ul>
+          <li>نحرّك لنشرح تغيّر الحالة أو لنؤكّد فعلًا قام به المستخدم، لا للزينة.</li>
+          <li>الحركة المستمرة اثنتان فقط: تنفّس هالة «أنت هنا»، وتقدّم المؤقت.</li>
+          <li>الاحتفال للإنجاز وحده: الوصول إلى محطة، وإتمام الأسبوع، واكتمال عادة.</li>
+          <li>لا حركة تؤخّر المستخدم: كل زر يستجيب أثناء الحركة.</li>
+          <li>ثلاث مدد فقط، ومنحنى أساسي، ومنحنى إبراز للإنجاز.</li>
+        </ul>
+      </div>
+      <div class="rbox">
+        <h3>بديل تقليل الحركة</h3>
+        <ul>
+          <li>لا حركة مكانية: القوس والنقطة يقفزان إلى مكانهما.</li>
+          <li>كل تغيّر يظهر بتلاشٍ سريع، 150 مللي ثانية.</li>
+          <li>الهالة ثابتة، ولا احتفال. يكفي تغيّر اللون والنص.</li>
+          <li>الإقلاع: يظهر الرمز كاملًا بتلاشٍ واحد.</li>
+          <li>المؤقت يبقى يعدّ، والقوس يتحدّث كل ثانية بلا انزلاق.</li>
+        </ul>
+        <p class="muted">يتبع إعداد الجهاز تلقائيًا، وزر «تقليل الحركة» في الأعلى يحاكيه هنا.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="tokens">
+    <h2>الأرقام: المدد والمنحنيات</h2>
+    <p>هذه القيم تصير tokens في Flutter بالمرحلة 4. القصيرة للضغطات والتبديل، والمتوسطة لتغيّر الحالة وامتلاء العادة، والطويلة للقوس والإقلاع.</p>
+    <div class="tbl"><table id="tokTable"></table></div>
+  </section>
+</main>
+
+<footer class="wrap foot">نماذج الجولة 1 للقرار 5. الألوان والخط من القيم المعتمدة في <code>docs/BRAND.md</code>.</footer>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const P = { surface: '#141E36', ring: '#2E3F70', dots: '#4A5C8C', soft: 'rgba(140,155,242,.12)', warm: '#F2A65A', arc1: '#6CB4E8', arc2: '#7FD8BE', primary: '#8C9BF2', navy: '#14213D' };
+let RM = false;
+try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+const DIRS = [
+  { id: 'a', tag: 'أ', name: 'هادئة ودقيقة', orbit: 'outer', ds: 160, dm: 320, dl: 640,
+    ease: 'cubic-bezier(.2,0,0,1)', emph: 'cubic-bezier(.2,0,0,1)', halo: 4000, hs: 1.3,
+    flutter: 'Cubic(0.2, 0, 0, 1)', flutterEmph: 'نفس المنحنى الأساسي',
+    line: 'حركة قصيرة تتباطأ بهدوء حتى تقف، بلا أي ارتداد. تشبه عقرب ساعة دقيقة.',
+    orbitLine: 'مسار رفيع بعلامات كل 5 دقائق، ومدار خارجي منقّط تجلس عليه المحطات. المحطة المنجزة تمتلئ وتطلق تموّجًا واحدًا.',
+    win: 'تموّج رفيع واحد، ثم يدور ضوء خافت حول المدار عند إتمام الأسبوع.' },
+  { id: 'b', tag: 'ب', name: 'ناعمة ومرنة', orbit: 'track', ds: 200, dm: 420, dl: 880,
+    ease: 'cubic-bezier(.22,1,.36,1)', emph: 'cubic-bezier(.16,1,.3,1)', halo: 3200, hs: 1.4,
+    flutter: 'Curves.easeOutQuint', flutterEmph: 'Curves.easeOutExpo',
+    line: 'حركة أطول قليلًا، تنطلق بسرعة ثم تنساب حتى تقف. ليّنة بلا ارتداد.',
+    orbitLine: 'مسار عريض شفاف يحمل القوس مع توهّج خفيف، والمحطات على المسار نفسه. في المؤقت تصير الجولات نقاطًا تحت الوقت.',
+    win: 'توهّج ناعم يتّسع ويخفت عند المحطة، وعند إتمام الأسبوع يتوهّج المدار كله.' },
+  { id: 'c', tag: 'ج', name: 'حيّة بارتداد خفيف', orbit: 'gap', ds: 140, dm: 260, dl: 480,
+    ease: 'cubic-bezier(.2,.8,.2,1)', emph: 'cubic-bezier(.34,1.56,.64,1)', halo: 2400, hs: 1.5,
+    flutter: 'Cubic(0.2, 0.8, 0.2, 1)', flutterEmph: 'Curves.easeOutBack',
+    line: 'حركة أسرع ومباشرة. الإنجاز وحده يرتدّ ارتدادًا صغيرًا ويطلق نثرات قليلة.',
+    orbitLine: 'المدار مقسوم قطعًا بعدد الجولات أو الجلسات، والمحطات مربعات مستديرة في الفواصل. المؤقت يعرض الدورة كاملة، والاستراحة حلقة داخلية.',
+    win: 'المحطة تقفز مع نثرات صغيرة، وعند إتمام الأسبوع تقفز المحطات واحدة بعد أخرى.' }
+];
+
+const el = (t, a = {}, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const h = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const pos = (cx, f, r) => { const a = (-90 + 360 * f) * Math.PI / 180; return [cx + r * Math.cos(a), cx + r * Math.sin(a)]; };
+const anim = (node, frames, opts) => (RM || !node.animate) ? null : node.animate(frames, opts);
+const later = (ms, fn) => setTimeout(fn, RM ? 0 : ms);
+const cellVars = d => `--ds:${RM ? 150 : d.ds}ms;--dm:${RM ? 150 : d.dm}ms;--dl:${d.dl}ms;--halo:${d.halo}ms;--hs:${d.hs}`;
+let gid = 0;
+
+function particles(svg, x, y, color, d, n = 6, dist = 15) {
+  for (let k = 0; k < n; k++) {
+    const a = (k / n) * Math.PI * 2 + .4;
+    const c = el('circle', { cx: x, cy: y, r: 1.9, fill: color }, svg);
+    const a1 = anim(c, [{ transform: 'translate(0,0)', opacity: 1 }, { transform: `translate(${Math.cos(a) * dist}px,${Math.sin(a) * dist}px)`, opacity: 0 }], { duration: d.dl, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    if (a1) a1.onfinish = () => c.remove(); else c.remove();
+  }
+}
+
+/* ---------- Orbit: one renderer, three treatments ---------- */
+function Orbit(d, o) {
+  const { size, r, sw, n } = o, cx = size / 2, u = d.id + (++gid), kind = d.orbit;
+  const svg = el('svg', { viewBox: `0 0 ${size} ${size}`, 'aria-hidden': 'true', class: 'orb' });
+  const defs = el('defs', {}, svg);
+  const grad = (id, a, b) => { const g = el('linearGradient', { id, x1: 0, y1: 0, x2: 1, y2: 1 }, defs); el('stop', { offset: 0, 'stop-color': a }, g); el('stop', { offset: 1, 'stop-color': b }, g); };
+  grad('f' + u, P.arc1, P.arc2); grad('b' + u, P.primary, P.arc1);
+  const ro = r + (o.ro || sw * 2.2);
+  const fs = [...Array(n)].map((_, i) => (i + 1) / n);
+  let mask = {};
+  if (kind === 'gap' && n) {
+    const m = el('mask', { id: 'm' + u, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: size, height: size }, defs);
+    el('rect', { width: size, height: size, fill: '#fff' }, m);
+    fs.forEach(f => { const [x, y] = pos(cx, f, r); el('circle', { cx: x, cy: y, r: o.gap || sw + 4, fill: '#000' }, m); });
+    mask = { mask: `url(#m${u})` };
+  }
+  if (kind === 'track') {
+    const fl = el('filter', { id: 'g' + u, x: '-30%', y: '-30%', width: '160%', height: '160%' }, defs);
+    el('feGaussianBlur', { stdDeviation: sw * .7 }, fl);
+    const rg = el('radialGradient', { id: 'h' + u }, defs);
+    el('stop', { offset: 0, 'stop-color': P.warm, 'stop-opacity': .5 }, rg); el('stop', { offset: 1, 'stop-color': P.warm, 'stop-opacity': 0 }, rg);
+  }
+  if (kind === 'outer') {
+    el('circle', { cx, cy: cx, r: ro, fill: 'none', stroke: P.dots, 'stroke-width': 1.4, 'stroke-dasharray': '0.1 6', 'stroke-linecap': 'round' }, svg);
+    if (o.ticks) for (let i = 0; i < 12; i++) {
+      const [x1, y1] = pos(cx, i / 12, r - 9), [x2, y2] = pos(cx, i / 12, r - (i % 3 ? 13 : 17));
+      el('line', { x1, y1, x2, y2, stroke: P.ring, 'stroke-width': 1.5, 'stroke-linecap': 'round' }, svg);
+    }
+  }
+  const trk = kind === 'track' ? [P.soft, sw + 8] : kind === 'gap' ? [P.ring, 3] : [P.ring, 2];
+  el('circle', { cx, cy: cx, r, fill: 'none', stroke: trk[0], 'stroke-width': trk[1], ...mask }, svg);
+
+  const ag = el('g', { class: 'arcs', ...mask }, svg);
+  const dim = el('g', { class: 'dim' }, ag);
+  const pal = { f: el('g', { class: 'pal' }, dim), b: el('g', { class: 'pal', opacity: 1 }, dim) };
+  pal.b.style.opacity = 0;
+  const arcs = [];
+  const mkArc = (k, parent, rr, w, glow) => {
+    const c = el('circle', { cx, cy: cx, r: rr, fill: 'none', stroke: `url(#${k}${u})`, 'stroke-width': w, 'stroke-linecap': 'round', pathLength: 100, 'stroke-dasharray': '100 100', transform: `rotate(-90 ${cx} ${cx})` }, parent);
+    c.style.strokeDashoffset = 100;
+    if (glow) { c.setAttribute('filter', `url(#g${u})`); c.setAttribute('opacity', '.55'); }
+    return c;
+  };
+  ['f', 'b'].forEach(k => { if (kind === 'track') arcs.push(mkArc(k, pal[k], r, sw, true)); arcs.push(mkArc(k, pal[k], r, sw)); });
+
+  // Inner ring: break progress inside the full-cycle orbit (treatment C)
+  let inner = null, innerArc = null;
+  if (o.inner) {
+    const ri = r - 20;
+    inner = el('g', { class: 'inner' }, svg); inner.style.opacity = 0;
+    el('circle', { cx, cy: cx, r: ri, fill: 'none', stroke: P.ring, 'stroke-width': 2 }, inner);
+    innerArc = mkArc('b', inner, ri, 5);
+  }
+
+  const st = fs.map(f => {
+    if (kind === 'gap') {
+      const [x, y] = pos(cx, f, r), z = o.sq || sw + 4;
+      const g = el('g', { transform: `translate(${x} ${y}) rotate(${360 * f})` }, svg);
+      const s = el('rect', { x: -z / 2, y: -z / 2, width: z, height: z, rx: z * .32, class: 'st sq up pop' }, g);
+      s._x = x; s._y = y; return s;
+    }
+    const rr = kind === 'outer' ? ro : r, [x, y] = pos(cx, f, rr);
+    const s = el('circle', { cx: x, cy: y, r: kind === 'outer' ? (o.stR || 4.6) : sw * .62 + 1.5, class: 'st up pop' }, svg);
+    s._x = x; s._y = y; return s;
+  });
+
+  const head = el('g', { class: 'head' }, svg);
+  head.style.transformBox = 'view-box'; head.style.transformOrigin = `${cx}px ${cx}px`;
+  el('circle', { cx, cy: cx - r, r: kind === 'track' ? sw * 2.6 : sw * 2.2, fill: kind === 'track' ? `url(#h${u})` : P.warm, class: 'halo' + (kind === 'track' ? ' soft' : '') }, head);
+  el('circle', { cx, cy: cx - r, r: kind === 'track' ? sw * .9 : sw * 1.05, fill: P.warm, stroke: P.surface, 'stroke-width': 2 }, head);
+
+  let cur = 0, seq = 0;
+  const apply = (p, tr, list = arcs, withHead = true) => {
+    list.forEach(c => { c.style.transition = tr ? `stroke-dashoffset ${tr}` : 'none'; c.style.strokeDashoffset = 100 - p * 100; });
+    if (withHead) {
+      head.style.transition = (tr ? `transform ${tr}, ` : '') + 'opacity var(--ds) linear';
+      head.style.transform = `rotate(${p * 360}deg)`;
+      ag.style.opacity = p <= .001 ? 0 : 1; cur = p;
+    }
+  };
+  const api = {
+    svg, st, cx,
+    setP(p, how = 'move') {
+      p = Math.max(0, Math.min(1, p)); const my = ++seq;
+      if (RM || how === 'snap') return apply(p, null);
+      if (how === 'tick') return apply(p, '1000ms linear');
+      if (p < cur - .02) {
+        svg.classList.add('fadeout');
+        setTimeout(() => { if (my !== seq) return; apply(p, null); svg.getBoundingClientRect(); svg.classList.remove('fadeout'); }, d.ds + 30);
+        return;
+      }
+      apply(p, `${d.dl}ms ${d.ease}`);
+    },
+    setInner(show, p, how) {
+      if (!inner) return; inner.style.opacity = show ? 1 : 0;
+      const tr = RM || how === 'snap' ? null : how === 'tick' ? '1000ms linear' : `${d.dl}ms ${d.ease}`;
+      apply(show ? p : 0, tr, [innerArc], false);
+    },
+    setPal(k, paused) { pal.f.style.opacity = k === 'b' ? 0 : 1; pal.b.style.opacity = k === 'b' ? 1 : 0; svg.classList.toggle('paused', !!paused); },
+    showHead(v) { head.style.opacity = v ? 1 : 0; },
+    setSt(states) { st.forEach((s, i) => { s.classList.remove('up', 'done', 'cur'); s.classList.add(states[i]); }); },
+    celebrate(i) {
+      const s = st[i]; if (!s || RM) return;
+      if (kind === 'outer') {
+        const c = el('circle', { cx: s._x, cy: s._y, r: 5, fill: 'none', stroke: P.arc2, 'stroke-width': 1.4, class: 'pop' }, svg);
+        const a = anim(c, [{ transform: 'scale(1)', opacity: .9 }, { transform: 'scale(3.4)', opacity: 0 }], { duration: d.dl * 1.4, easing: d.ease });
+        if (a) a.onfinish = () => c.remove();
+      } else if (kind === 'track') {
+        const c = el('circle', { cx: s._x, cy: s._y, r: sw, fill: P.arc2, filter: `url(#g${u})`, class: 'pop' }, svg);
+        const a = anim(c, [{ transform: 'scale(.6)', opacity: .7 }, { transform: 'scale(2.8)', opacity: 0 }], { duration: d.dl * 1.3, easing: d.ease });
+        if (a) a.onfinish = () => c.remove();
+      } else {
+        anim(s, [{ transform: 'scale(.4)' }, { transform: 'scale(1)' }], { duration: d.dm * 1.6, easing: d.emph });
+        particles(svg, s._x, s._y, P.arc2, d, 6, sw + 9);
+      }
+    },
+    complete() {
+      if (RM) return;
+      if (kind === 'outer') {
+        const c = el('circle', { cx, cy: cx, r: ro, fill: 'none', stroke: P.arc2, 'stroke-width': 2.2, 'stroke-linecap': 'round', pathLength: 100, 'stroke-dasharray': '10 90', transform: `rotate(-90 ${cx} ${cx})` }, svg);
+        const a = anim(c, [{ strokeDashoffset: 0, opacity: 0 }, { opacity: 1, offset: .15 }, { opacity: 1, offset: .8 }, { strokeDashoffset: -100, opacity: 0 }], { duration: d.dl * 2.4, easing: d.ease });
+        if (a) a.onfinish = () => c.remove();
+      } else if (kind === 'track') {
+        const c = el('circle', { cx, cy: cx, r, fill: 'none', stroke: P.arc2, 'stroke-width': sw * 2.2, filter: `url(#g${u})` }, svg);
+        svg.insertBefore(c, ag);
+        const a = anim(c, [{ opacity: 0 }, { opacity: .55, offset: .35 }, { opacity: 0 }], { duration: d.dl * 2, easing: 'ease-in-out' });
+        if (a) a.onfinish = () => c.remove();
+      } else {
+        st.forEach((s, i) => anim(s, [{ transform: 'scale(1)' }, { transform: 'scale(1.45)' }, { transform: 'scale(1)' }], { duration: d.dm * 1.4, delay: i * 90, easing: d.emph }));
+        anim(svg, [{ transform: 'scale(1)' }, { transform: 'scale(1.05)' }, { transform: 'scale(1)' }], { duration: d.dm * 2, delay: 120, easing: d.ease });
+      }
+    }
+  };
+  return api;
+}
+
+/* ---------- Overview cards ---------- */
+document.getElementById('dirs').append(...DIRS.map(d => h(`<article class="dir">
+  <h3><span class="tag">${d.tag}</span>${d.name}</h3>
+  <p>${d.line}</p>
+  <dl><dt>المدار والمحطات</dt><dd>${d.orbitLine}</dd></dl>
+  <dl><dt>الإنجاز</dt><dd>${d.win}</dd></dl>
+  <div class="ms num"><span>${d.ds} مللي ثانية</span><span>${d.dm}</span><span>${d.dl}</span><span>هالة ${d.halo / 1000} ث</span></div>
+</article>`)));
+
+const cellHead = d => `<div class="ch"><span class="tag">${d.tag}</span><b>${d.name}</b></div>`;
+
+/* ---------- Timer ---------- */
+const TM = { st: 'focus', prev: 'focus', round: 2, left: 825, total: 1500, choice: null };
+const fmt = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+const ICON_STRETCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.8"/><path d="M5 9l7 1.5L19 9M12 10.5V15l-3 6M12 15l3 6"/></svg>';
+
+const timers = DIRS.map(d => {
+  const cell = h(`<div class="cell" style="${cellVars(d)}">${cellHead(d)}
+    <div class="dial" data-d="${d.id}"><div class="ctr"><b class="dg">13:45</b><span class="lb"></span>${d.orbit === 'track' ? '<span class="pills"><i></i><i></i><i></i><i></i></span>' : ''}</div></div>
+    <div class="brk" hidden><span class="q"></span>
+      <div class="opts"><button class="opt" type="button" data-c="move" aria-pressed="false">تحرّك</button><button class="opt" type="button" data-c="rest" aria-pressed="false">ارتاح</button></div>
+      <div class="pick"></div></div></div>`);
+  const orb = Orbit(d, { size: 260, r: 100, sw: d.orbit === 'track' ? 10 : d.orbit === 'gap' ? 9 : 8, n: d.orbit === 'track' ? 0 : 4, ticks: true, ro: 18, inner: d.orbit === 'gap', gap: 12, sq: 14, stR: 5 });
+  const dial = cell.querySelector('.dial'); dial.prepend(orb.svg);
+  const brk = cell.querySelector('.brk'), pick = cell.querySelector('.pick');
+  brk.addEventListener('click', e => { const b = e.target.closest('.opt'); if (b) { TM.choice = b.dataset.c; timers.forEach(t => t.choice(true)); } });
+  document.getElementById('tRow').append(cell);
+  return {
+    d, cell, orb,
+    choice(animate) {
+      brk.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.c === TM.choice)));
+      pick.innerHTML = TM.choice === 'move' ? `<span class="sq-ic">${ICON_STRETCH}</span><span>تمدّد الرقبة الجانبي<small class="num">30 ثانية · 4 حركات خفيفة</small></span>`
+        : TM.choice === 'rest' ? `<span class="breath"></span><span>تنفّس ببطء<small class="num">شهيق 4 ثوانٍ، وزفير 4</small></span>` : '<span class="lb">اختر طريقة الاستراحة.</span>';
+      if (animate) this.enter(pick);
+    },
+    enter(node) {
+      const k = d.id === 'a' ? [{ opacity: 0 }, { opacity: 1 }] : d.id === 'b' ? [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'none' }];
+      anim(node, k, { duration: d.dm, easing: d.id === 'c' ? d.emph : d.ease });
+    },
+    update(how) {
+      const base = TM.st === 'paused' ? TM.prev : TM.st, ph = base === 'done' ? 1 : 1 - TM.left / TM.total;
+      const brkState = base === 'short' || base === 'long';
+      orb.setPal(brkState ? 'b' : 'f', TM.st === 'paused');
+      dial.classList.toggle('paused', TM.st === 'paused');
+      const R = TM.round;
+      if (d.orbit === 'gap') {
+        const p = base === 'focus' ? (R - 1 + ph) / 4 : base === 'long' ? 1 : R / 4;
+        orb.setP(p, how);
+        orb.setInner(brkState, ph, how);
+        orb.showHead(!brkState);
+        orb.setSt([0, 1, 2, 3].map(i => base === 'long' ? (i < 3 ? 'done' : 'cur') : i < R - 1 ? 'done' : (i === R - 1 && base !== 'focus') ? 'cur' : 'up'));
+      } else {
+        orb.setP(ph, how);
+        orb.showHead(true);
+        const sts = [0, 1, 2, 3].map(i => base === 'long' ? 'done' : (base === 'focus') ? (i < R - 1 ? 'done' : i === R - 1 ? 'cur' : 'up') : (i < R ? 'done' : 'up'));
+        orb.setSt(sts);
+        cell.querySelectorAll('.pills i').forEach((p, i) => { p.className = sts[i]; });
+      }
+      cell.querySelector('.dg').textContent = fmt(TM.left);
+      const lbl = { focus: `جولة تركيز ${R} من 4`, done: `انتهت جولة التركيز ${R}`, short: 'استراحة قصيرة', long: 'استراحة طويلة' }[base];
+      cell.querySelector('.lb').textContent = TM.st === 'paused' ? `متوقف مؤقتًا · ${lbl}` : lbl;
+      const showBrk = base !== 'focus';
+      cell.querySelector('.q').textContent = base === 'done' ? 'الاستراحة التالية: 5 دقائق. كيف تقضيها؟' : 'كيف تقضي الاستراحة؟';
+      if (showBrk && brk.hidden) { brk.hidden = false; this.choice(false); this.enter(brk); }
+      if (!showBrk) brk.hidden = true;
+    },
+    arrive() {
+      if (d.orbit === 'track') {
+        const p = cell.querySelectorAll('.pills i')[TM.round - 1];
+        if (p) anim(p, [{ transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(127,216,190,.6)' }, { transform: 'scale(1.5)', boxShadow: '0 0 0 8px rgba(127,216,190,0)' }, { transform: 'scale(1)' }], { duration: d.dl * 1.2, easing: d.ease });
+      } else orb.celebrate(TM.round - 1);
+    }
+  };
+});
+
+function tRender(how) {
+  timers.forEach(t => t.update(how));
+  document.querySelectorAll('#tCtl .btn').forEach(b => {
+    const s = b.dataset.s;
+    if (s === 'pause') { b.textContent = TM.st === 'paused' ? 'استئناف' : 'إيقاف مؤقت'; b.setAttribute('aria-pressed', String(TM.st === 'paused')); b.disabled = TM.st === 'done'; }
+    else b.setAttribute('aria-pressed', String(TM.st === s));
+  });
+}
+function tSet(s) {
+  if (s === 'pause') {
+    if (TM.st === 'paused') { TM.st = TM.prev; } else if (TM.st !== 'done') { TM.prev = TM.st; TM.st = 'paused'; }
+    return tRender('move');
+  }
+  if (s === 'focus') {
+    const from = TM.st === 'paused' ? TM.prev : TM.st;
+    if (TM.st === 'paused' && from === 'focus') TM.st = 'focus';
+    else { TM.round = from === 'long' ? 1 : from === 'focus' ? TM.round : Math.min(4, TM.round + 1); TM.st = 'focus'; TM.left = TM.total = 1500; }
+  } else if (s === 'done') {
+    TM.st = 'done'; TM.left = 0; tRender('move'); later(DIRS[0].dl * .8, () => timers.forEach(t => t.arrive())); return;
+  } else if (s === 'short') { TM.st = 'short'; TM.left = TM.total = 300; TM.round = Math.min(TM.round, 3); }
+  else if (s === 'long') { TM.st = 'long'; TM.left = TM.total = 900; TM.round = 4; }
+  TM.choice = null; tRender('move');
+}
+document.getElementById('tCtl').addEventListener('click', e => { const b = e.target.closest('.btn'); if (b) tSet(b.dataset.s); });
+setInterval(() => {
+  if (!['focus', 'short', 'long'].includes(TM.st)) return;
+  TM.left = Math.max(0, TM.left - 30);
+  if (TM.left > 0) return tRender('tick');
+  if (TM.st === 'focus') tSet('done');
+  else { const wasLong = TM.st === 'long'; TM.st = 'focus'; TM.round = wasLong ? 1 : TM.round + 1; TM.left = TM.total = 1500; TM.choice = null; tRender('move'); }
+}, 1000);
+
+/* ---------- Week plan ---------- */
+const WK = { k: 1 };
+const weeks = DIRS.map(d => {
+  const cell = h(`<div class="cell" style="${cellVars(d)}">${cellHead(d)}
+    <div class="wk"><div class="dial"><div class="ctr"><b class="dg num">1/3</b></div></div>
+    <div class="wt"><h4>خطة الأسبوع</h4><span class="wm num"></span><span class="wd">أتممت خطة الأسبوع</span></div></div></div>`);
+  const orb = Orbit(d, { size: 132, r: 44, sw: 6, n: 3, ro: 13, stR: 4, gap: 9, sq: 11 });
+  cell.querySelector('.dial').prepend(orb.svg);
+  document.getElementById('wRow').append(cell);
+  return {
+    d, orb,
+    render(how) {
+      orb.setP(WK.k / 3, how);
+      orb.setSt([0, 1, 2].map(i => i < WK.k ? 'done' : 'up'));
+      cell.querySelector('.dg').textContent = `${WK.k}/3`;
+      cell.querySelector('.wm').textContent = `${WK.k} من 3 جلسات`;
+      cell.querySelector('.wd').style.opacity = WK.k === 3 ? 1 : 0;
+    },
+    step() {
+      const k = WK.k; orb.setP(k / 3, 'move');
+      cell.querySelector('.dg').textContent = `${k}/3`;
+      cell.querySelector('.wm').textContent = `${k} من 3 جلسات`;
+      later(d.dl * .85, () => { orb.setSt([0, 1, 2].map(i => i < k ? 'done' : 'up')); orb.celebrate(k - 1); });
+      if (k === 3) later(d.dl + d.dm, () => { orb.complete(); cell.querySelector('.wd').style.opacity = 1; });
+    }
+  };
+});
+const wNext = document.getElementById('wNext');
+const wSync = () => { wNext.disabled = WK.k >= 3; };
+wNext.addEventListener('click', () => { if (WK.k >= 3) return; WK.k++; weeks.forEach(w => w.step()); wSync(); });
+document.getElementById('wReset').addEventListener('click', () => { WK.k = 0; weeks.forEach(w => w.render('move')); wSync(); });
+
+/* ---------- Habits ---------- */
+const ICON = {
+  water: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c3 4 6 7.2 6 10.5a6 6 0 0 1-12 0c0-3.3 3-6.5 6-10.5z"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5c3-1 5.5-1 8 .8 2.5-1.8 5-1.8 8-.8V19c-3-1-5.5-1-8 .8-2.5-1.8-5-1.8-8-.8z"/><path d="M12 6.3V19.8"/></svg>'
+};
+const HB_N = 8, HB_START = 3;
+function segPath(cx, r, i, n, gapDeg) {
+  const a0 = -90 + i * 360 / n + gapDeg / 2, a1 = -90 + (i + 1) * 360 / n - gapDeg / 2;
+  const p = a => [cx + r * Math.cos(a * Math.PI / 180), cx + r * Math.sin(a * Math.PI / 180)];
+  const [x0, y0] = p(a0), [x1, y1] = p(a1);
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+}
+const habits = DIRS.map(d => {
+  const cell = h(`<div class="cell" style="${cellVars(d)}">${cellHead(d)}
+    <div class="hb" style="--hc:#6CB4E8"><span class="ic">${ICON.water}</span><span class="nm"><b>اشرب الماء</b><small class="num wq"></small></span><button class="tap" type="button" aria-label="أضف كوبًا"></button></div>
+    <div class="hb" style="--hc:#B09CF5"><span class="ic">${ICON.book}</span><span class="nm"><b>اقرأ 10 صفحات</b><small class="rq">مرة واحدة يوميًا</small></span><button class="tap cb" type="button" aria-label="سجّل القراءة" aria-pressed="false"></button></div></div>`);
+  const S = 44, cx = 22, r = 17, sw = 4, col = '#6CB4E8';
+  const svg = el('svg', { viewBox: `0 0 ${S} ${S}`, 'aria-hidden': 'true' });
+  const segs = el('g', {}, svg); segs.style.transition = 'opacity var(--ds) linear';
+  const over = [];
+  for (let i = 0; i < HB_N; i++) {
+    const dd = segPath(cx, r, i, HB_N, 12);
+    el('path', { d: dd, fill: 'none', stroke: P.ring, 'stroke-width': sw, 'stroke-linecap': 'round' }, segs);
+    const o = el('path', { d: dd, fill: 'none', stroke: col, 'stroke-width': sw, 'stroke-linecap': 'round', pathLength: 100, 'stroke-dasharray': '100 100' }, segs);
+    o.style.strokeDashoffset = 0; over.push(o);
+  }
+  const full = el('g', { class: 'pop' }, svg);
+  el('circle', { cx, cy: cx, r: r + 2, fill: col }, full);
+  const chk = el('path', { d: 'M15 22.5l4.5 4.5 9.5-10', fill: 'none', stroke: '#0B1222', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 100, 'stroke-dasharray': '100 100' }, full);
+  const plus = el('text', { x: cx, y: cx + 5, 'text-anchor': 'middle', 'font-size': 15, 'font-weight': 500, fill: '#93A0BE' }, segs); plus.textContent = '+';
+  const tap = cell.querySelector('.tap:not(.cb)'); tap.append(svg);
+
+  const cb = cell.querySelector('.tap.cb'), cbCol = '#B09CF5';
+  const cs = el('svg', { viewBox: '0 0 32 32', 'aria-hidden': 'true' });
+  el('rect', { x: 3, y: 3, width: 26, height: 26, rx: 9, fill: 'none', stroke: P.dots, 'stroke-width': 2 }, cs);
+  const cf = el('g', { class: 'pop' }, cs);
+  el('rect', { x: 3, y: 3, width: 26, height: 26, rx: 9, fill: cbCol }, cf);
+  const cc = el('path', { d: 'M10 16.5l4 4 8-9', fill: 'none', stroke: '#0B1222', 'stroke-width': 2.8, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 100, 'stroke-dasharray': '100 100' }, cf);
+  cb.append(cs);
+  document.getElementById('hRow').append(cell);
+
+  const st = { k: HB_START, on: false };
+  const self = {
+    paint() {
+      over.forEach((o, i) => { o.style.opacity = i < st.k ? 1 : 0; });
+      const isFull = st.k >= HB_N;
+      segs.style.opacity = isFull ? 0 : 1; full.style.opacity = isFull ? 1 : 0; chk.style.strokeDashoffset = 0;
+      cell.querySelector('.wq').textContent = isFull ? 'اكتمل هدف اليوم: 8 أكواب' : `${st.k} من 8 أكواب`;
+      cf.style.opacity = st.on ? 1 : 0; cc.style.strokeDashoffset = 0;
+      cb.setAttribute('aria-pressed', String(st.on));
+      cell.querySelector('.rq').textContent = st.on ? 'أُنجزت اليوم' : 'مرة واحدة يوميًا';
+    },
+    add() {
+      if (st.k >= HB_N) { st.k = 0; return self.paint(); }
+      const i = st.k++; self.paint();
+      const o = over[i];
+      if (d.id === 'a') anim(o, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: d.dm, easing: d.ease });
+      else if (d.id === 'b') anim(o, [{ opacity: 0, strokeWidth: sw * .3 }, { opacity: 1, strokeWidth: sw }], { duration: d.dm, easing: d.ease });
+      else anim(o, [{ strokeWidth: sw }, { strokeWidth: sw * 1.9, offset: .4 }, { strokeWidth: sw }], { duration: d.dm * 1.3, easing: 'ease-out' });
+      if (st.k === HB_N) {
+        anim(segs, [{ opacity: 1 }, { opacity: 0 }], { duration: d.ds });
+        if (d.id === 'a') anim(full, [{ opacity: 0 }, { opacity: 1 }], { duration: d.dm, delay: d.ds, easing: 'linear', fill: 'backwards' });
+        else if (d.id === 'b') anim(full, [{ opacity: 0, transform: 'scale(.82)' }, { opacity: 1, transform: 'scale(1)' }], { duration: d.dl, delay: d.ds, easing: d.ease, fill: 'backwards' });
+        else { anim(full, [{ opacity: 0, transform: 'scale(.5)' }, { opacity: 1, transform: 'scale(1)' }], { duration: d.dm * 1.5, delay: d.ds, easing: d.emph, fill: 'backwards' }); later(d.ds + d.dm * .6, () => particles(svg, cx, cx, col, d, 7, 26)); }
+        anim(chk, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: d.dm, delay: d.ds + d.dm * .6, easing: d.ease, fill: 'backwards' });
+      }
+    },
+    check(force) {
+      st.on = force === undefined ? !st.on : force; self.paint();
+      if (!st.on) return anim(cf, [{ opacity: 1 }, { opacity: 0 }], { duration: d.ds });
+      if (d.id === 'a') anim(cf, [{ opacity: 0 }, { opacity: 1 }], { duration: d.ds });
+      else if (d.id === 'b') anim(cf, [{ opacity: 0, transform: 'scale(.8)' }, { opacity: 1, transform: 'scale(1)' }], { duration: d.dm, easing: d.ease });
+      else { anim(cf, [{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'scale(1)' }], { duration: d.dm * 1.4, easing: d.emph }); later(d.ds, () => particles(cs, 16, 16, cbCol, d, 6, 20)); }
+      anim(cc, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: d.dm, delay: d.ds * .6, easing: d.ease, fill: 'backwards' });
+    },
+    reset() { st.k = HB_START; st.on = false; self.paint(); }
+  };
+  tap.addEventListener('click', () => self.add());
+  cb.addEventListener('click', () => self.check());
+  self.paint();
+  return self;
+});
+document.getElementById('hAdd').addEventListener('click', () => habits.forEach(x => x.add()));
+document.getElementById('hFill').addEventListener('click', fillWater);
+function fillWater() {
+  // Set every cell to 7 cups, then add the last one so the completion moment plays
+  habits.forEach(x => { x.reset(); });
+  habits.forEach(x => { for (let i = HB_START; i < HB_N - 1; i++) { const was = RM; RM = true; x.add(); RM = was; } x.add(); });
+}
+document.getElementById('hCheck').addEventListener('click', () => habits.forEach(x => x.check(true)));
+document.getElementById('hReset').addEventListener('click', () => habits.forEach(x => x.reset()));
+
+/* ---------- Boot ---------- */
+const MR = 27, MA = -60;
+const mix = (a, b, t) => '#' + [1, 3, 5].map(i => Math.round(parseInt(a.substr(i, 2), 16) + (parseInt(b.substr(i, 2), 16) - parseInt(a.substr(i, 2), 16)) * t).toString(16).padStart(2, '0')).join('');
+const mpt = (deg, r) => [50 + r * Math.cos(deg * Math.PI / 180), 50 + r * Math.sin(deg * Math.PI / 180)];
+const boots = DIRS.map(d => {
+  const cell = h(`<div class="cell" style="${cellVars(d)}">${cellHead(d)}<div class="boot"><div class="wordm"><b>هِمّة</b><span>HIMMA</span></div></div></div>`);
+  const u = 'bt' + d.id;
+  const svg = el('svg', { viewBox: '0 0 100 100', 'aria-hidden': 'true' });
+  const defs = el('defs', {}, svg);
+  const [dx, dy] = mpt(MA, MR);
+  const gm = el('mask', { id: u + 'g', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: 100, height: 100 }, defs);
+  el('rect', { width: 100, height: 100, fill: '#fff' }, gm); el('circle', { cx: dx, cy: dy, r: 11.75, fill: '#000' }, gm);
+  const rm = el('mask', { id: u + 'r', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: 100, height: 100 }, defs);
+  const rv = el('circle', { cx: 50, cy: 50, r: MR, fill: 'none', stroke: '#fff', 'stroke-width': 16, pathLength: 100, 'stroke-dasharray': '100 100', transform: `rotate(${MA} 50 50)` }, rm);
+  rv.style.strokeDashoffset = 0;
+  const ringG = el('g', { class: 'pop' }, svg);
+  const g1 = el('g', { mask: `url(#${u}g)` }, ringG), g2 = el('g', { mask: `url(#${u}r)` }, g1);
+  for (let i = 0; i < 120; i++) {
+    const t = i / 120, a0 = MA - t * 360 + .8, a1 = MA - (i + 1) / 120 * 360 - .8;
+    const [x0, y0] = mpt(a0, MR), [x1, y1] = mpt(a1, MR);
+    el('path', { d: `M${x0.toFixed(2)} ${y0.toFixed(2)}A${MR} ${MR} 0 0 0 ${x1.toFixed(2)} ${y1.toFixed(2)}`, fill: 'none', stroke: mix(mix('#7FD8BE', '#6CB4E8', Math.min(1, t * 1.15)), '#14213D', .32 * t), 'stroke-width': 11 }, g2);
+  }
+  const dotG = el('g', {}, svg); dotG.style.transformBox = 'view-box'; dotG.style.transformOrigin = '50px 50px';
+  const dot = el('circle', { cx: dx, cy: dy, r: 8.25, fill: P.warm, class: 'pop' }, dotG);
+  const box = cell.querySelector('.boot'); box.prepend(svg);
+  const word = cell.querySelector('.wordm');
+  document.getElementById('bRow').append(cell);
+  return {
+    play() {
+      if (RM) { if (box.animate) box.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 }); return; }
+      if (d.id === 'a') {
+        anim(rv, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: d.dl * 1.6, easing: d.ease });
+        anim(dot, [{ opacity: 0, transform: 'scale(.4)' }, { opacity: 1, transform: 'scale(1)' }], { duration: d.dm, delay: d.dl * 1.3, easing: d.ease, fill: 'backwards' });
+        anim(word, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: d.dm * 1.5, delay: d.dl * 1.7, easing: d.ease, fill: 'backwards' });
+      } else if (d.id === 'b') {
+        anim(dotG, [{ transform: 'rotate(-360deg)' }, { transform: 'rotate(0deg)' }], { duration: d.dl * 1.8, easing: d.ease });
+        anim(rv, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: d.dl * 1.8, easing: d.ease });
+        anim(dot, [{ opacity: 0 }, { opacity: 1 }], { duration: d.ds * 1.5 });
+        anim(word, [{ opacity: 0 }, { opacity: 1 }], { duration: d.dl, delay: d.dl * 1.3, easing: d.ease, fill: 'backwards' });
+      } else {
+        anim(ringG, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1)' }], { duration: d.dm * 1.6, easing: d.emph });
+        anim(dot, [{ opacity: 0, transform: 'translateY(-28px)' }, { opacity: 1, transform: 'none' }], { duration: d.dm * 1.6, delay: d.dm, easing: d.emph, fill: 'backwards' });
+        later(d.dm * 2.3, () => {
+          const c = el('circle', { cx: dx, cy: dy, r: 8.25, fill: 'none', stroke: P.warm, 'stroke-width': 1.5, class: 'pop' }, svg);
+          const a = anim(c, [{ opacity: .8, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(2.4)' }], { duration: d.dl, easing: d.ease });
+          if (a) a.onfinish = () => c.remove(); else c.remove();
+        });
+        anim(word, [{ opacity: 0, transform: 'scale(.9)' }, { opacity: 1, transform: 'none' }], { duration: d.dm * 1.4, delay: d.dm * 2, easing: d.emph, fill: 'backwards' });
+      }
+    }
+  };
+});
+document.getElementById('bReplay').addEventListener('click', () => boots.forEach(b => b.play()));
+
+/* ---------- Tokens table ---------- */
+document.getElementById('tokTable').innerHTML = `<thead><tr><th scope="col"></th>${DIRS.map(d => `<th scope="col">${d.tag} · ${d.name}</th>`).join('')}</tr></thead><tbody>
+  <tr><th scope="row">قصيرة</th>${DIRS.map(d => `<td>${d.ds} مللي ثانية</td>`).join('')}</tr>
+  <tr><th scope="row">متوسطة</th>${DIRS.map(d => `<td>${d.dm} مللي ثانية</td>`).join('')}</tr>
+  <tr><th scope="row">طويلة</th>${DIRS.map(d => `<td>${d.dl} مللي ثانية</td>`).join('')}</tr>
+  <tr><th scope="row">المنحنى الأساسي</th>${DIRS.map(d => `<td><code>${d.ease}</code></td>`).join('')}</tr>
+  <tr><th scope="row">منحنى الإبراز</th>${DIRS.map(d => `<td><code>${d.emph}</code></td>`).join('')}</tr>
+  <tr><th scope="row">في Flutter</th>${DIRS.map(d => `<td><code>${d.flutter}</code><br><span class="lb">الإبراز: </span><code>${d.flutterEmph}</code></td>`).join('')}</tr>
+  <tr><th scope="row">دورة الهالة</th>${DIRS.map(d => `<td>${d.halo / 1000} ثانية، تكبر حتى ${d.hs}</td>`).join('')}</tr>
+  <tr><th scope="row">تقليل الحركة</th>${DIRS.map(() => `<td>تلاشٍ 150 مللي ثانية، بلا حركة مكانية</td>`).join('')}</tr>
+</tbody>`;
+
+/* ---------- Global controls ---------- */
+const rmBtn = document.getElementById('rmToggle');
+function applyRM() {
+  document.documentElement.classList.toggle('rm', RM);
+  rmBtn.setAttribute('aria-pressed', String(RM));
+  rmBtn.textContent = RM ? 'تقليل الحركة: مفعّل' : 'تقليل الحركة';
+  document.querySelectorAll('.cell').forEach((c, i) => c.setAttribute('style', cellVars(DIRS[i % 3])));
+}
+rmBtn.addEventListener('click', () => { RM = !RM; applyRM(); });
+function replayAll() {
+  Object.assign(TM, { st: 'focus', prev: 'focus', round: 2, left: 825, total: 1500, choice: null });
+  timers.forEach(t => t.orb.setP(0, 'snap'));
+  WK.k = 0; weeks.forEach(w => w.render('snap'));
+  document.body.getBoundingClientRect();
+  tRender('move');
+  WK.k = 1; weeks.forEach(w => w.render('move')); wSync();
+  habits.forEach(x => x.reset());
+  boots.forEach(b => b.play());
+}
+document.getElementById('replayAll').addEventListener('click', replayAll);
+
+applyRM();
+tRender('snap');
+weeks.forEach(w => w.render('snap')); wSync();
+boots.forEach(b => b.play());
+</script>
