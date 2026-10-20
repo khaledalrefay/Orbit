@@ -1,0 +1,314 @@
+<title>أيقونات همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..700&display=swap">
+<style>
+/* Layout: one dark page. Section 1 = four open-license libraries side by side on the same content
+   (navigation, actions, habit rows, categories). Section 2 = one library on two phones (Today, habit
+   icon picker sheet) with the tile treatment as a switch. Section 3 = license and Flutter route.
+   Section 4 = what needs a decision. Phones use the approved compact type, spacing and soft radius. */
+:root {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F; --dots: #4A5C8C;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222; --warm: #F2A65A; --on-warm: #1B1406;
+  --arc1: #6CB4E8; --arc2: #7FD8BE; --hero: #1B2B55; --hero-ink: #EEF3FF; --hero-muted: #A9B6D6; --hero-ring: #2E3F70; --frame: #2A3550;
+  --h-sky: #6CB4E8; --h-indigo: #8C9BF2; --h-violet: #B09CF5; --h-plum: #D79BE0; --h-rose: #F28FA8; --h-coral: #F49A7E;
+  --h-apricot: #F2A65A; --h-amber: #E9C15A; --h-olive: #B4D77A; --h-green: #7FD39A; --h-teal: #7FD8BE; --h-slate: #A3B1C6;
+  --sw: 1.75;
+  --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1240px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--arc1); }
+svg.i { width: 24px; height: 24px; display: block; flex: none; }
+
+.hd { padding-block: 40px 16px; display: grid; gap: 12px; }
+.eyebrow { color: var(--muted); font-size: 13px; }
+.hd h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; line-height: 1.25; }
+.hd p { color: var(--muted); max-width: 76ch; }
+.note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.note i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); flex: none; }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.bar nav { display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: 13px; margin-inline-end: auto; }
+.bar nav a { color: var(--muted); text-decoration: none; }
+.bar nav a:hover { color: var(--ink); }
+.grp { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.grp > span { font-size: 13px; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--surface2); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 9px; cursor: pointer; font-size: 13.5px; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); font-weight: 500; }
+
+.sec { padding-block: 36px 8px; display: grid; gap: 16px; align-content: start; }
+.sec h2 { font-size: 22px; font-weight: 600; }
+.sec > p { color: var(--muted); max-width: 78ch; }
+
+/* ---- Library cards ---- */
+.libs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.lib { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.lh { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px 12px; flex-wrap: wrap; }
+.lh > div { display: grid; gap: 2px; min-width: 0; }
+.lh h3 { font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+.tag { width: 28px; height: 28px; border-radius: 8px; display: inline-grid; place-items: center; background: var(--surface2); color: var(--primary); font-weight: 600; font-size: 15px; flex: none; }
+.lh p { color: var(--muted); font-size: 13.5px; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.facts span { font-size: 12px; color: var(--muted); background: var(--surface2); border-radius: 8px; padding: 2px 8px; }
+.blk { background: var(--bg); border-radius: 16px; padding: 12px; display: grid; gap: 10px; min-width: 0; }
+.blk > b { font-size: 12.5px; font-weight: 500; color: var(--muted); }
+.nav5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; }
+.tab { display: grid; justify-items: center; gap: 4px; color: var(--muted); font-size: 11px; font-weight: 500; text-align: center; min-width: 0; }
+.tab .pill { width: 56px; height: 30px; border-radius: 999px; display: grid; place-items: center; }
+.tab.on { color: var(--ink); }
+.tab.on .pill { background: color-mix(in srgb, var(--primary) 18%, transparent); color: var(--primary); }
+.ui { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 10px 4px; justify-items: center; color: var(--ink); }
+.ui span { position: relative; }
+.rows { display: grid; gap: 8px; }
+.hr { display: flex; align-items: center; gap: 10px; }
+.hr .nm { flex: 1; min-width: 0; display: grid; font-size: 14px; font-weight: 500; line-height: 1.4; }
+.hr .nm small { font-size: 12px; font-weight: 400; color: var(--muted); }
+.tile { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex: none; position: relative; }
+.tile svg.i { width: 22px; height: 22px; }
+.t-tint .tile { background: color-mix(in srgb, var(--hc) 18%, transparent); color: var(--hc); }
+.t-solid .tile { background: var(--hc); color: var(--bg); }
+.t-line .tile { background: transparent; color: var(--hc); border: 1.5px solid color-mix(in srgb, var(--hc) 45%, transparent); }
+.cats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.cat { display: grid; justify-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); text-align: center; min-width: 0; }
+.gap::after { content: ""; position: absolute; top: -3px; inset-inline-end: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--warm); }
+.legend { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.legend i { width: 7px; height: 7px; border-radius: 50%; background: var(--warm); flex: none; }
+.wsel { justify-self: start; }
+
+/* ---- Phones ---- */
+.ctl { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 14px 16px; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; justify-items: center; align-items: start; }
+.ph { width: 360px; max-width: 100%; background: var(--bg); color: var(--ink); border-radius: 38px; border: 6px solid var(--frame); overflow: hidden; display: flex; flex-direction: column; position: relative; min-height: 700px; }
+.st { display: flex; justify-content: space-between; padding: 10px 24px 2px; font-size: 12px; font-weight: 500; direction: ltr; }
+.scr { padding: 8px 16px 20px; display: flex; flex-direction: column; gap: 20px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.top > div { display: grid; min-width: 0; }
+.top small { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.top b { font-size: 24px; font-weight: 700; line-height: 1.3; }
+.ib { width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; padding: 0; flex: none; }
+.hero { background: var(--hero); color: var(--hero-ink); border-radius: 20px; padding: 12px; display: grid; gap: 8px; }
+.hero .k { display: flex; gap: 10px; align-items: center; }
+.hero .k > div { display: grid; min-width: 0; }
+.hero small { font-size: 12px; color: var(--hero-muted); line-height: 1.5; }
+.hero b { font-size: 19px; font-weight: 700; line-height: 1.35; }
+.hero .ct { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: color-mix(in srgb, var(--h-teal) 22%, transparent); color: var(--h-teal); flex: none; }
+.hero .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { min-height: 40px; padding-inline: 16px; border-radius: 12px; border: 0; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+.btn svg.i { width: 18px; height: 18px; }
+.btn.warm { background: var(--warm); color: var(--on-warm); }
+.btn.ghost { background: color-mix(in srgb, var(--hero-ink) 14%, transparent); color: var(--hero-ink); }
+.sx { display: grid; gap: 8px; }
+.sh { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.sh b { font-size: 16px; font-weight: 600; }
+.sh small { font-size: 12px; color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: grid; gap: 8px; }
+.card .hr + .hr { border-top: 1px solid var(--line); padding-top: 8px; }
+.chk { width: 44px; height: 44px; display: grid; place-items: center; color: var(--hc); flex: none; }
+.chk i { width: 28px; height: 28px; border-radius: 8px; border: 2px solid var(--dots); display: grid; place-items: center; }
+.chk i.on { background: var(--hc); border-color: var(--hc); color: var(--bg); }
+.chk svg.i { width: 18px; height: 18px; }
+.tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--surface); border-top: 1px solid var(--line); padding: 8px 4px 14px; margin-top: auto; }
+.dim { position: absolute; inset: 0; background: rgb(0 0 0 / .5); }
+.sheet { position: absolute; inset-inline: 0; bottom: 0; background: var(--surface); border-radius: 20px 20px 0 0; padding: 8px 16px 20px; display: grid; gap: 12px; }
+.grab { width: 36px; height: 4px; border-radius: 2px; background: var(--dots); justify-self: center; }
+.sheet .sh2 { display: flex; justify-content: space-between; align-items: center; }
+.sheet .sh2 b { font-size: 16px; font-weight: 600; }
+.pick { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; justify-items: center; }
+.pick .tile { width: 44px; height: 44px; }
+.pick .tile.off { --hc: var(--muted); }
+.t-tint .pick .tile.off { background: var(--surface2); }
+.t-solid .pick .tile.off { background: var(--surface2); color: var(--muted); }
+.t-line .pick .tile.off { border-color: var(--line); }
+.pick .tile.sel { outline: 2px solid var(--hc); outline-offset: 2px; }
+.cols { display: flex; gap: 6px; flex-wrap: wrap; justify-content: space-between; }
+.cols i { width: 22px; height: 22px; border-radius: 50%; background: var(--c); }
+.cols i.sel { outline: 2px solid var(--ink); outline-offset: 2px; }
+.prev { display: flex; align-items: center; gap: 10px; background: var(--surface2); border-radius: 12px; padding: 8px; }
+.prev .nm { font-size: 14px; font-weight: 500; }
+
+/* ---- Tables ---- */
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px; display: grid; gap: 12px; min-width: 0; }
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: start; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 500; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 500; white-space: nowrap; }
+.qs ol { margin: 0; padding-inline-start: 20px; display: grid; gap: 10px; font-size: 14.5px; }
+.qs li span { display: block; color: var(--muted); font-size: 13.5px; }
+.rec { border-inline-start: 3px solid var(--warm); padding-inline-start: 12px; display: grid; gap: 6px; }
+.rec b { font-weight: 600; }
+.rec p { color: var(--muted); font-size: 14px; }
+.foot { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 980px) { .libs, .pair { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<header class="wrap hd">
+  <span class="eyebrow">هِمّة · المرحلة 2 · القرار 6: نظام التصميم · الجولة 4 · الأيقونات</span>
+  <h1>الأيقونات: الأسلوب والمصدر</h1>
+  <p>أربع مكتبات مفتوحة الرخصة على نفس المحتوى: القائمة السفلية، وأيقونات الأفعال، وصفوف العادات، وفئات البرامج. ثم المكتبة التي تختارها على شاشة «اليوم» ونافذة اختيار أيقونة العادة (36 أيقونة من 40 إلى 60 مطلوبة). الأيقونات حقيقية من الحزم نفسها، لا رسوم تقريبية.</p>
+  <span class="note"><i></i>مرجع استكشافي حتى تعتمده. الوضع الغامق فقط، والأساس المعتمد (المضغوط والمعتدل).</span>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <nav aria-label="الأقسام"><a href="#libs">المكتبات</a><a href="#phones">على الشاشة</a><a href="#license">الرخص و Flutter</a><a href="#decide">للقرار</a></nav>
+    <div class="grp"><span>سماكة الخط</span><div class="seg" id="segSw" role="group" aria-label="سماكة الخط لـ Lucide و Tabler"><button type="button" id="sw-150" data-v="1.5">1.5</button><button type="button" id="sw-175" data-v="1.75">1.75</button><button type="button" id="sw-200" data-v="2">2</button></div></div>
+    <div class="grp"><span>أيقونة «اليوم»</span><div class="seg" id="segToday" role="group" aria-label="أيقونة اليوم"><button type="button" id="td-lib" data-v="lib">من المكتبة</button><button type="button" id="td-mark" data-v="mark">من الشعار</button></div></div>
+  </div>
+</div>
+
+<main>
+  <section class="wrap sec" id="libs">
+    <h2>1. أربع مكتبات</h2>
+    <p>«سماكة الخط» في الشريط العلوي تغيّر Lucide و Tabler لأنهما خطوط حقيقية. Phosphor له أوزان جاهزة تختارها داخل بطاقته، و Material بوزن 400 هنا، ووزنه متغيّر في Flutter. الحالة النشطة في القائمة السفلية: نسخة ممتلئة حيث توجد، وإلا الخلفية الملوّنة وحدها.</p>
+    <span class="legend"><i></i>نقطة مشمشية: المكتبة لا تملك أيقونة مناسبة، فوضعنا أقرب بديل.</span>
+    <div class="libs" id="libGrid"></div>
+  </section>
+
+  <section class="wrap sec" id="phones">
+    <h2>2. على الشاشة</h2>
+    <p>المكتبة المختارة على «اليوم»، وعلى نافذة سفلية لاختيار أيقونة العادة ولونها. «مربع الأيقونة» يحدّد كيف تظهر أيقونات العادات والفئات: لون خفيف خلف الأيقونة (كما في النماذج السابقة)، أو مربع ممتلئ، أو إطار فقط.</p>
+    <div class="ctl">
+      <div class="grp"><span>المكتبة</span><div class="seg" id="segLib" role="group" aria-label="المكتبة"></div></div>
+      <div class="grp"><span>مربع الأيقونة</span><div class="seg" id="segTile" role="group" aria-label="مربع الأيقونة"><button type="button" id="tl-tint" data-v="tint">لون خفيف</button><button type="button" id="tl-solid" data-v="solid">ممتلئ</button><button type="button" id="tl-line" data-v="line">إطار</button></div></div>
+    </div>
+    <div class="pair" id="phonePair"></div>
+  </section>
+
+  <section class="wrap sec" id="license">
+    <h2>3. الرخص والطريق إلى Flutter</h2>
+    <div class="box"><div class="tw"><table id="licTable"></table></div>
+      <p style="color:var(--muted);font-size:14px">أيًا كانت المكتبة، الطريق الأضمن في Flutter: نصدّر الأيقونات التي نستعملها فقط بصيغة SVG بالسماكة المعتمدة، ونحوّلها إلى خط أيقونات خاص بهمة بأداة واحدة. هكذا لا نعتمد على حزمة خارجية، وتعمل <code>Icon</code> العادية مع <code>matchTextDirection</code> لعكس أيقونات الاتجاه في RTL.</p>
+    </div>
+  </section>
+
+  <section class="wrap sec qs" id="decide">
+    <h2>4. المطلوب للقرار</h2>
+    <div class="box">
+      <ol>
+        <li>المكتبة: Lucide، أو Tabler، أو Phosphor، أو Material Symbols.<span>أو رسم مجموعة خاصة لهمة. لكنها تحتاج 80 أيقونة على الأقل (الواجهة والعادات والفئات) بنفس الدقة، فالأعقل مكتبة مع أيقونات قليلة خاصة.</span></li>
+        <li>سماكة الخط: 1.5، أو 1.75، أو 2 (أو وزن Phosphor).</li>
+        <li>مربع الأيقونة للعادات والفئات: لون خفيف، أو ممتلئ، أو إطار.</li>
+        <li>أيقونة «اليوم» في القائمة السفلية: من المكتبة، أو من رمز الشعار (الحلقة والنقطة).</li>
+      </ol>
+      <div class="rec">
+        <b>اقتراحي: Tabler بسماكة 1.75، والمربع بلون خفيف، وأيقونة «اليوم» من الشعار.</b>
+        <p>Tabler أكبر مجموعة (أكثر من 5000)، وفيها كل أيقونات العادات المطلوبة بما فيها الصلاة والتمدّد واليوغا والسباحة، ولها نسخ ممتلئة للحالة النشطة. خطوطها المستديرة تنسجم مع Rubik، والسماكة 1.75 أقرب لوزن النص 400 و500. Phosphor الخيار الثاني إن أعجبك الوزن الثنائي اللون. Lucide تنقصه أيقونات الحركة والأشخاص، و Material أسهل في Flutter لكنه الأكثر شبهًا بتطبيقات Android العامة.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">الجولة 4 للقرار 6. الأيقونات من الحزم: Lucide 1.50.0، و Tabler 3.48.0، و Phosphor 2.1.1، و Material Symbols Rounded 0.47.5، ومولّدة بـ <code>brand/tools/build_icon_specimens.py</code>.</footer>
+
+<script src="icons-data.js"></script>
+<script>
+document.documentElement.dir = 'rtl'; document.documentElement.lang = 'ar';
+const I = window.ICONS;
+const LIBS = {
+  lucide: { tag: 'أ', name: 'Lucide', lic: 'ISC', stroke: true, desc: 'خطي، بسماكة 2 افتراضيًا وزوايا مستديرة. نظيف وشائع جدًا.', flutter: 'حزمة <code>lucide_icons_flutter</code>، أو تصدير SVG.', gaps: ['stretch', 'cardio', 'swim', 'meditate', 'stairs'], fill: false },
+  tabler: { tag: 'ب', name: 'Tabler', lic: 'MIT', stroke: true, desc: 'خطي على شبكة 24، ونهايات مستديرة. أكبر مجموعة، ونسخ ممتلئة لكثير منها.', flutter: 'حزمة <code>flutter_tabler_icons</code>، أو تصدير SVG.', gaps: [], fill: true },
+  phosphor: { tag: 'ج', name: 'Phosphor', lic: 'MIT', stroke: false, desc: 'ستة أوزان جاهزة، منها ثنائي اللون (شكل خفيف خلف الخط). أدفأ وأكثر شخصية.', flutter: 'حزمة <code>phosphor_flutter</code>، أو تصدير SVG.', gaps: [], fill: true },
+  material: { tag: 'د', name: 'Material Symbols', lic: 'Apache 2.0', stroke: false, desc: 'نسخة Rounded من Google. خط متغيّر: الامتلاء والوزن يتغيّران في Flutter مباشرة.', flutter: 'حزمة <code>material_symbols_icons</code>، و<code>Icon</code> تدعم <code>fill</code> و<code>weight</code>.', gaps: [], fill: true }
+};
+const PW = [['l', 'خفيف'], ['o', 'عادي'], ['b', 'عريض'], ['d', 'ثنائي اللون']];
+const st = { sw: 1.75, today: 'lib', lib: 'tabler', tile: 'tint', pw: 'o' };
+try { Object.assign(st, JSON.parse(localStorage.getItem('himma-icons') || '{}')); } catch (e) {}
+const save = () => { try { localStorage.setItem('himma-icons', JSON.stringify(st)); } catch (e) {} };
+
+const MARK = '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="15.5" cy="5.94" r="4.2" fill="var(--mask, var(--bg))"/><circle cx="15.5" cy="5.94" r="2.7" fill="var(--warm)"/></svg>';
+function icon(lib, key, variant) {
+  const e = I.lib[lib][key]; if (!e) return '';
+  let v = variant || 'o';
+  if (lib === 'phosphor' && (!variant || variant === 'o')) v = st.pw;
+  const d = e[v] || e.o, [vb, body] = d;
+  const strokeMode = LIBS[lib].stroke && d === e.o;
+  const attrs = strokeMode ? `fill="none" stroke="currentColor" stroke-width="${st.sw}" stroke-linecap="round" stroke-linejoin="round"` : 'fill="currentColor"';
+  const flip = key === 'back' ? ' style="transform:scaleX(-1)"' : '';
+  return `<svg class="i" viewBox="${vb}" ${attrs} aria-hidden="true"${flip}>${body}</svg>`;
+}
+const gapCls = (lib, key) => LIBS[lib].gaps.includes(key) ? ' gap' : '';
+const concepts = g => I.concepts.filter(c => c.g === g);
+const nav = (lib, bg) => `<div class="nav5">${concepts('nav').map((c, i) => {
+  const on = i === 0, ic = c.k === 'today' && st.today === 'mark' ? MARK : icon(lib, c.k, on && LIBS[lib].fill ? 'f' : 'o');
+  return `<span class="tab${on ? ' on' : ''}" style="--mask:${bg}"><span class="pill">${ic}</span>${c.ar}</span>`;
+}).join('')}</div>`;
+const CAT_COL = { stretch: 'var(--h-teal)', strength: 'var(--h-violet)', cardio: 'var(--h-coral)', general: 'var(--h-sky)' };
+
+function libCard(lib) {
+  const L = LIBS[lib];
+  const habits = [['water', 'شرب الماء', '3 من 8 كاسات', 'var(--h-sky)'], ['read', 'قراءة 10 صفحات', 'مرة واحدة يوميًا', 'var(--h-violet)'], ['mosque', 'صلاة الفجر', 'كل يوم', 'var(--h-teal)'], ['meditate', 'تأمّل 5 دقائق', 'أُنجزت · 4 أيام متتالية', 'var(--h-rose)']];
+  return `<article class="lib t-${st.tile}">
+    <div class="lh"><div><h3><span class="tag">${L.tag}</span>${L.name}</h3><p>${L.desc}</p></div>
+      <div class="facts"><span>${L.lic}</span><span class="num">${I.counts[lib]} أيقونة</span></div></div>
+    ${lib === 'phosphor' ? `<div class="seg wsel" data-pw role="group" aria-label="وزن Phosphor">${PW.map(([v, n]) => `<button type="button" data-v="${v}" aria-pressed="${st.pw === v}">${n}</button>`).join('')}</div>` : ''}
+    <div class="blk"><b>القائمة السفلية</b>${nav(lib, 'var(--bg)')}</div>
+    <div class="blk"><b>الأفعال بمقاس 24</b><div class="ui">${concepts('ui').map(c => `<span title="${c.ar}">${icon(lib, c.k)}</span>`).join('')}</div></div>
+    <div class="blk"><b>صفوف العادات</b><div class="rows">${habits.map(([k, n, m, col]) => `<div class="hr" style="--hc:${col}"><span class="tile${gapCls(lib, k)}">${icon(lib, k)}</span><span class="nm">${n}<small class="num">${m}</small></span></div>`).join('')}</div></div>
+    <div class="blk"><b>فئات البرامج</b><div class="cats">${concepts('cat').map(c => `<span class="cat" style="--hc:${CAT_COL[c.k]}"><span class="tile${gapCls(lib, c.k)}">${icon(lib, c.k)}</span>${c.ar}</span>`).join('')}</div></div>
+  </article>`;
+}
+
+function phones() {
+  const lib = st.lib;
+  const rows = [['water', 'شرب الماء', '3 من 8 كاسات', 'var(--h-sky)', false], ['read', 'قراءة 10 صفحات', 'مرة واحدة يوميًا', 'var(--h-violet)', false], ['walk', 'مشي 20 دقيقة', 'أُنجزت · 5 أيام متتالية', 'var(--h-green)', true]];
+  const today = `<div class="ph t-${st.tile}"><div class="st"><span class="num">9:41</span><span>●●</span></div><div class="scr">
+    <div class="top"><div><small>الثلاثاء، 20 أكتوبر</small><b>اليوم</b></div><span class="ib">${icon(lib, 'settings')}</span></div>
+    <div class="hero"><div class="k"><span class="ct">${icon(lib, 'stretch')}</span><div><small>جلسة اليوم</small><b>تمدّد ومرونة</b><small class="num">المستوى 2 · 20 دقيقة · 6 تمارين</small></div></div>
+      <div class="acts"><span class="btn warm">${icon(lib, 'play', LIBS[lib].fill ? 'f' : 'o')}ابدأ الجلسة</span><span class="btn ghost">${icon(lib, 'info')}التفاصيل</span></div></div>
+    <div class="sx"><div class="sh"><b>عادات اليوم</b><small class="num">1 من 3</small></div><div class="card">
+      ${rows.map(([k, n, m, col, on]) => `<div class="hr" style="--hc:${col}"><span class="tile">${icon(lib, k)}</span><span class="nm">${n}<small class="num">${m}</small></span><span class="chk"><i class="${on ? 'on' : ''}">${on ? icon(lib, 'check') : ''}</i></span></div>`).join('')}
+    </div></div>
+    <div class="sx"><div class="sh"><b>البرامج</b><small>4 فئات</small></div><div class="card"><div class="cats">${concepts('cat').map(c => `<span class="cat" style="--hc:${CAT_COL[c.k]}"><span class="tile">${icon(lib, c.k)}</span>${c.ar}</span>`).join('')}</div></div></div>
+  </div><nav class="tabs">${nav(lib, 'var(--surface)').replace('<div class="nav5">', '').replace(/<\/div>$/, '')}</nav></div>`;
+
+  const habits = concepts('habit'), sel = 'meditate';
+  const cols = ['sky', 'indigo', 'violet', 'plum', 'rose', 'coral', 'apricot', 'amber', 'olive', 'green', 'teal', 'slate'];
+  const sheet = `<div class="ph t-${st.tile}"><div class="st"><span class="num">9:41</span><span>●●</span></div><div class="scr">
+    <div class="top"><div><small>عادة جديدة</small><b>العادات</b></div><span class="ib">${icon(lib, 'add')}</span></div></div>
+    <div class="dim"></div>
+    <div class="sheet" style="--hc:var(--h-rose)"><span class="grab"></span>
+      <div class="sh2"><b>أيقونة العادة ولونها</b><span class="ib" style="width:40px;height:40px">${icon(lib, 'close')}</span></div>
+      <div class="prev"><span class="tile">${icon(lib, sel)}</span><span class="nm">تأمّل 5 دقائق</span></div>
+      <div class="cols">${cols.map(c => `<i style="--c:var(--h-${c})" class="${c === 'rose' ? 'sel' : ''}"></i>`).join('')}</div>
+      <div class="pick">${habits.map(c => `<span class="tile ${c.k === sel ? 'sel' : 'off'}${gapCls(lib, c.k)}" title="${c.ar}">${icon(lib, c.k)}</span>`).join('')}</div>
+      <span class="btn warm" style="justify-content:center">حفظ</span>
+    </div></div>`;
+  return `<div>${today}</div><div>${sheet}</div>`;
+}
+
+function licTable() {
+  return `<thead><tr><th>المكتبة</th><th>الرخصة</th><th>العدد</th><th>الأسلوب</th><th>في Flutter</th></tr></thead><tbody>${Object.entries(LIBS).map(([k, L]) =>
+    `<tr><td>${L.name}</td><td>${L.lic}</td><td class="num">${I.counts[k]}</td><td>${L.desc}</td><td>${L.flutter}</td></tr>`).join('')}</tbody>`;
+}
+
+const $ = id => document.getElementById(id);
+$('segLib').innerHTML = Object.entries(LIBS).map(([k, L]) => `<button type="button" id="lib-${k}" data-v="${k}">${L.name}</button>`).join('');
+const bind = (id, key, num) => $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; st[key] = num ? +b.dataset.v : b.dataset.v; render(); });
+bind('segSw', 'sw', true); bind('segToday', 'today'); bind('segLib', 'lib'); bind('segTile', 'tile');
+$('libGrid').addEventListener('click', e => { const b = e.target.closest('[data-pw] button'); if (!b) return; st.pw = b.dataset.v; render(); });
+
+function render() {
+  const mark = (id, v) => $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === String(v))));
+  mark('segSw', st.sw); mark('segToday', st.today); mark('segLib', st.lib); mark('segTile', st.tile);
+  $('libGrid').innerHTML = Object.keys(LIBS).map(libCard).join('');
+  $('phonePair').innerHTML = phones();
+  $('licTable').innerHTML = licTable();
+  save();
+}
+render();
+</script>
