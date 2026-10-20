@@ -1,0 +1,548 @@
+<title>أساس نظام همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script>document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl';</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..800&display=swap">
+<style>
+/* Layout: a sticky bar of option switches drives three live phone screens (Today, Focus, a habit sheet).
+   Below them, one section per foundation (type, spacing, radius, elevation) lists the options as selectable cards,
+   then the next steps. Page chrome follows the viewer's theme; the phones follow the mode switch. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --surface2: #E9EEF6; --line: #DCE3EE;
+  --ink: #14213D; --muted: #5A6785; --primary: #3D4FA3; --on-primary: #FFFFFF;
+  --warm: #F2A65A; --warm-text: #A5561A; --on-warm: #1B1406;
+  --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F;
+    --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222; --warm-text: #F2A65A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222; --warm-text: #F2A65A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1240px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+code { font-family: var(--mono); font-size: 12.5px; direction: ltr; unicode-bidi: isolate; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+.hd { padding-block: 40px 16px; display: grid; gap: 12px; }
+.eyebrow { color: var(--muted); font-size: 13px; }
+.hd h1 { font-size: clamp(26px, 4vw, 38px); font-weight: 600; line-height: 1.3; }
+.hd p { color: var(--muted); max-width: 74ch; }
+.note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); flex: none; }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-block: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; }
+.grp { display: flex; gap: 6px; align-items: center; }
+.grp > span { font-size: 12.5px; color: var(--muted); }
+.seg { display: inline-flex; background: var(--surface2); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: none; border-radius: 9px; padding: 4px 11px; cursor: pointer; font-size: 13.5px; min-width: 34px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 500; box-shadow: 0 1px 2px rgb(20 33 61 / .12); }
+
+.sec { padding-block: 40px 8px; display: grid; gap: 16px; align-content: start; }
+.sec h2 { font-size: 22px; font-weight: 600; }
+.sec > p { color: var(--muted); max-width: 76ch; }
+
+/* ---------- Phones ---------- */
+.phones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; justify-items: center; }
+.shot { margin: 0; display: grid; gap: 10px; justify-items: center; width: 100%; }
+.shot figcaption { font-size: 13px; color: var(--muted); text-align: center; }
+.shot figcaption b { color: var(--ink); font-weight: 500; display: block; }
+.ph {
+  width: min(360px, 100%); height: 740px; border-radius: 36px; overflow: hidden; position: relative;
+  background: var(--c-bg); color: var(--c-ink); border: 1px solid var(--line);
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto; font-family: var(--f);
+  box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 16px 40px rgb(20 33 61 / .10);
+}
+.ph * { box-sizing: border-box; }
+.stat { height: 32px; padding-inline: 24px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 500; direction: ltr; color: var(--c-ink); }
+.stat i { display: inline-block; width: 22px; height: 10px; border: 1.5px solid currentColor; border-radius: 3px; opacity: .8; }
+.scr { overflow-y: auto; overflow-x: hidden; padding-inline: var(--sp-screen); padding-block: var(--sp-sm) var(--sp-section); display: flex; flex-direction: column; gap: var(--sp-section); scrollbar-width: none; }
+.scr::-webkit-scrollbar { display: none; }
+.ph .t-timer { font-size: var(--t-timer-s); font-weight: var(--t-timer-w); line-height: var(--t-timer-l); }
+.ph .t-display { font-size: var(--t-display-s); font-weight: var(--t-display-w); line-height: var(--t-display-l); }
+.ph .t-headline { font-size: var(--t-headline-s); font-weight: var(--t-headline-w); line-height: var(--t-headline-l); }
+.ph .t-title { font-size: var(--t-title-s); font-weight: var(--t-title-w); line-height: var(--t-title-l); }
+.ph .t-section { font-size: var(--t-section-s); font-weight: var(--t-section-w); line-height: var(--t-section-l); color: var(--t-section-c); }
+.ph .t-body { font-size: var(--t-body-s); font-weight: var(--t-body-w); line-height: var(--t-body-l); }
+.ph .t-bodySm { font-size: var(--t-bodySm-s); font-weight: var(--t-bodySm-w); line-height: var(--t-bodySm-l); }
+.ph .t-label { font-size: var(--t-label-s); font-weight: var(--t-label-w); line-height: var(--t-label-l); }
+.ph .t-caption { font-size: var(--t-caption-s); font-weight: var(--t-caption-w); line-height: var(--t-caption-l); }
+.ph .mu { color: var(--c-muted); }
+.ph .tn { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.ph svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.ph[dir="ltr"] .fwd { transform: scaleX(-1); transform-box: fill-box; transform-origin: center; }
+
+.ph-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-md); }
+.ph-head > div { display: grid; gap: 2px; min-width: 0; }
+.ibtn { width: 44px; height: 44px; border-radius: var(--r-icon44); background: var(--c-surface2); color: var(--c-ink); display: grid; place-items: center; border: 0; flex: none; }
+.card { background: var(--c-surface); border-radius: var(--r-lg); padding: var(--sp-card); display: grid; gap: var(--sp-stack); border: var(--e-card-border); box-shadow: var(--e-card-shadow); min-width: 0; }
+.hero { background: var(--c-hero); color: var(--c-heroInk); border: 0; box-shadow: none; }
+.hero .mu { color: var(--c-heroMuted); }
+.cat { display: flex; gap: var(--sp-xs); align-items: center; min-width: 0; }
+.sq { display: grid; place-items: center; flex: none; }
+.sq32 { width: 32px; height: 32px; border-radius: var(--r-icon32); }
+.sq40 { width: 40px; height: 40px; border-radius: var(--r-icon40); }
+.sq48 { width: 48px; height: 48px; border-radius: var(--r-icon48); }
+.sq svg.i { width: 20px; height: 20px; }
+.btn { border: 0; min-height: 52px; border-radius: var(--r-btn); padding-inline: var(--sp-card); display: flex; gap: var(--sp-xs); align-items: center; justify-content: center; cursor: default; }
+.btn.warm { background: var(--c-warm); color: var(--c-onWarm); }
+.btn.pri { background: var(--c-primary); color: var(--c-onPrimary); }
+.btn.sub { background: var(--c-surface2); color: var(--c-ink); }
+.btn.txt { background: none; color: var(--c-primary); min-height: 44px; padding-inline: var(--sp-xs); }
+.btn svg.i { width: 20px; height: 20px; }
+.play { fill: currentColor !important; stroke: none !important; }
+.sec-row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md); margin-bottom: calc(var(--sp-stack) * -1 + var(--sp-xs)); }
+.list { display: grid; gap: var(--sp-gap); }
+.row { background: var(--c-surface); border-radius: var(--r-md); padding: var(--sp-rowy) var(--sp-rowx); display: flex; gap: var(--sp-md); align-items: center; border: var(--e-card-border); box-shadow: var(--e-card-shadow); min-width: 0; }
+.row .tx { flex: 1; min-width: 0; display: grid; }
+.cb { width: 30px; height: 30px; border-radius: var(--r-sm); border: 2px solid var(--c-line2); flex: none; margin-inline: 5px; }
+.seg-ring { width: 40px; height: 40px; flex: none; }
+
+/* linked steps (approved in decision 5) */
+.steps { display: flex; align-items: flex-start; }
+.st { flex: 0 1 auto; display: grid; justify-items: center; gap: 4px; min-width: 44px; }
+.st .b { width: 30px; height: 30px; border-radius: var(--r-sm); display: grid; place-items: center; border: 1.5px solid var(--c-dots); position: relative; overflow: hidden; font-size: 12px; font-weight: 600; color: var(--c-muted2); }
+.st .b .fl { position: absolute; inset-block: 0; inset-inline-start: 0; background: color-mix(in srgb, var(--c-arc2) 28%, transparent); }
+.st .b span { position: relative; }
+.st.done .b { background: var(--c-arc2); border-color: var(--c-arc2); }
+.st.cur .b { border-color: var(--c-warm); color: var(--c-warm); }
+.st small { color: var(--c-muted2); text-align: center; max-width: 72px; }
+.st.cur small { color: inherit; }
+.st .ck { width: 14px; height: 14px; fill: none; stroke: #0B1222; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.cn { flex: 1; height: 3px; border-radius: 2px; background: var(--c-ring); margin-top: 14px; position: relative; overflow: hidden; min-width: 8px; }
+.cn.done { background: var(--c-arc2); }
+
+/* timer */
+.dial { position: relative; width: 224px; max-width: 100%; aspect-ratio: 1; margin-inline: auto; }
+.dial svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.dial .c { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 2px; }
+.dial .t-timer { direction: ltr; }
+.acts { display: flex; gap: var(--sp-xs); align-items: center; }
+.acts .btn.sub:not(.ibtn) { flex: 1; }
+.halo { transform-box: fill-box; transform-origin: center; animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.4); opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .halo { animation: none; } }
+
+/* bottom nav */
+.nav { background: var(--c-surface); border-top: 1px solid var(--c-line); display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 4px 14px; }
+.nav div { display: grid; justify-items: center; gap: 4px; color: var(--c-muted); min-width: 0; }
+.nav .pill { width: 56px; height: 30px; border-radius: var(--r-pillnav); display: grid; place-items: center; }
+.nav .on { color: var(--c-ink); }
+.nav .on .pill { background: color-mix(in srgb, var(--c-primary) 18%, transparent); color: var(--c-primary); }
+.nav small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+
+/* sheet */
+.dim { position: absolute; inset: 32px 0 0; background: rgb(6 10 20 / .55); }
+.sheet { position: absolute; inset: auto 0 0; background: var(--c-raised); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: var(--sp-sm) var(--sp-card) calc(var(--sp-card) + 8px); display: grid; gap: var(--sp-stack); box-shadow: var(--e-float); max-height: calc(100% - 64px); overflow-y: auto; scrollbar-width: none; }
+.handle { width: 36px; height: 4px; border-radius: 2px; background: var(--c-line2); justify-self: center; }
+.srow { display: flex; gap: var(--sp-md); align-items: center; min-height: 48px; }
+.srow .tx { flex: 1; min-width: 0; display: grid; }
+.sdiv { height: 1px; background: var(--c-line); }
+.stepper { display: flex; align-items: center; gap: var(--sp-xs); flex: none; }
+.stepper .sb { width: 40px; height: 40px; border-radius: var(--r-md); background: var(--c-ctl); display: grid; place-items: center; }
+.stepper .sb svg.i { width: 18px; height: 18px; }
+.stepper .v { min-width: 36px; text-align: center; }
+.tog { width: 52px; height: 32px; border-radius: 16px; background: var(--c-primary); position: relative; flex: none; }
+.tog::after { content: ""; position: absolute; top: 4px; inset-inline-end: 4px; width: 24px; height: 24px; border-radius: 50%; background: var(--c-onPrimary); }
+.sacts { display: grid; gap: var(--sp-xs); }
+
+/* ---------- Option cards ---------- */
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.opt { text-align: start; background: var(--surface); border: 1.5px solid var(--line); border-radius: 22px; padding: 20px; display: grid; gap: 14px; align-content: start; cursor: pointer; min-width: 0; }
+.opt:hover { border-color: color-mix(in srgb, var(--primary) 45%, var(--line)); }
+.opt[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); }
+.oh { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.oh h3 { font-size: 17px; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+.tag { width: 28px; height: 28px; border-radius: 9px; display: inline-grid; place-items: center; background: var(--surface2); color: var(--primary); font-weight: 600; font-size: 15px; flex: none; }
+.opt[aria-pressed="true"] .tag { background: var(--primary); color: var(--on-primary); }
+.rec { display: inline-flex; gap: 6px; align-items: center; font-size: 12.5px; color: var(--warm-text); font-weight: 500; }
+.opt p { color: var(--muted); font-size: 14px; }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; font-size: 13.5px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-variant-numeric: tabular-nums; }
+.tw { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; }
+table.ty { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 720px; }
+.ty th, .ty td { text-align: start; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.ty th { font-weight: 500; color: var(--muted); font-size: 12.5px; }
+.ty tr:last-child td { border-bottom: 0; }
+.ty td.v { font-variant-numeric: tabular-nums; white-space: nowrap; direction: ltr; text-align: end; color: var(--muted); }
+.ty td.v.on, .ty th.on { color: var(--ink); background: color-mix(in srgb, var(--primary) 9%, transparent); }
+.ty td.s { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-end; }
+.chips span { display: grid; justify-items: center; gap: 4px; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chips i { display: block; background: color-mix(in srgb, var(--primary) 55%, transparent); border-radius: 3px; }
+.shapes { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.shapes span { display: grid; justify-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); }
+.shapes i { display: block; background: var(--surface2); border: 1.5px solid color-mix(in srgb, var(--primary) 45%, var(--line)); }
+.mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mini > div { border-radius: 14px; padding: 12px; display: grid; gap: 8px; }
+.mini .c1 { height: 34px; border-radius: 10px; }
+.mini .c2 { height: 22px; border-radius: 8px; width: 70%; }
+.rules { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 20px; }
+.rules ul { margin: 0; padding-inline-start: 18px; display: grid; gap: 8px; font-size: 14px; }
+.rules li span { color: var(--muted); display: block; font-size: 13.5px; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.foot { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 1100px) { .phones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .opts, .two { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) { .phones { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<header class="wrap hd">
+  <span class="eyebrow">هِمّة · المرحلة 2 · القرار 6: نظام التصميم · الجولة 1</span>
+  <h1>الأساس: الطباعة والمسافات والزوايا والارتفاع</h1>
+  <p>ثلاثة خيارات لكل أساس، مطبّقة على شاشات حقيقية: جلسة اليوم وصف العادات، والمؤقت، ونافذة سفلية لتعديل عادة. غيّر الخيارات من الشريط وقارن، ويمكنك الجمع بين خيارات مختلفة. الألوان والخط والحركة هي المعتمدة.</p>
+  <span class="note"><span class="dot"></span>مرجع استكشافي حتى تعتمده. النقطة المشمشية على البطاقة تعني الخيار المقترح.</span>
+</header>
+
+<div class="bar" aria-label="الخيارات">
+  <div class="wrap" id="ctl"></div>
+</div>
+
+<main>
+  <section class="wrap sec" id="preview">
+    <h2>المعاينة</h2>
+    <p>جرّب «حجم الخط» لترى سلوك الشاشات مع تكبير النص في النظام، و«EN» للنسخة الإنجليزية. الشاشات تتمرّر من الداخل إذا طال المحتوى.</p>
+    <div class="phones" id="phones"></div>
+  </section>
+
+  <section class="wrap sec" id="type">
+    <h2>1. سُلّم الطباعة</h2>
+    <p>تسعة أدوار، بوحدة sp في Flutter. كلها بخط Rubik، والأرقام في المؤقت والعدّادات بخاصية <code>tnum</code>. القيم نفسها للعربي والإنجليزي، فارتفاع السطر محسوب للحروف العربية ويريح اللاتينية أيضًا.</p>
+    <div class="opts" id="o-type"></div>
+    <div class="tw"><table class="ty" id="typeTable"></table></div>
+    <div class="rules">
+      <ul>
+        <li>تكبير النص في النظام يُحترم حتى 200%.<span>النص العادي يكبر بالنسبة كاملة، والعناوين الكبيرة أقل منها حتى لا تأكل الشاشة (على نمط Android 14). أرقام المؤقت ثابتة لأنها كبيرة أصلًا.</span></li>
+        <li>لا قصّ للنص.<span>الصفوف تلتف إلى سطرين أو أكثر، والأزرار تزيد ارتفاعها، والشاشة تتمرّر.</span></li>
+        <li>وزنان للعناوين ووزنان للنص فقط في كل خيار.<span>حتى تبقى الشاشة هادئة، ويُقرأ الترتيب من الحجم أولًا.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="space">
+    <h2>2. المسافات</h2>
+    <p>وحدة أساسية وسُلّم ثابت، ثم خمس قيم مسمّاة تستعملها كل الشاشات: هامش الشاشة، وداخل البطاقة، وبين العناصر داخلها، وبين البطاقات، وبين الأقسام. مناطق اللمس 48 على الأقل في كل الخيارات.</p>
+    <div class="opts" id="o-space"></div>
+  </section>
+
+  <section class="wrap sec" id="radius">
+    <h2>3. الزوايا</h2>
+    <p>خمس درجات بدل القيم المتفرّقة في النماذج السابقة (بين 6 و 34). الأيقونات المربعة المستديرة تأخذ زاويتها نسبةً من حجمها، فتبقى بنفس الشكل في كل المقاسات.</p>
+    <div class="opts" id="o-radius"></div>
+    <div class="rules">
+      <ul>
+        <li>العنصر داخل عنصر: الزاوية الداخلية أصغر من الخارجية بقدر المسافة بينهما، ولا تقل عن الدرجة الصغيرة.<span>مثل الخطوة داخل بطاقة الجلسة، وأزرار stepper داخل النافذة السفلية.</span></li>
+        <li>الدائرة الكاملة للنقاط والحلقات والتبديل فقط.<span>لا تُستعمل للبطاقات ولا للصفوف.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="elev">
+    <h2>4. الارتفاع والظلال</h2>
+    <p>في الغامق لا يظهر الظل، فالسطح الأعلى يكون أفتح دائمًا. السؤال الحقيقي هو الوضع الفاتح: هل تنفصل البطاقة عن الخلفية بخط، أو بظل ناعم، أو بفرق الدرجة وحده. النوافذ السفلية والقوائم المنبثقة لها ظل في كل الخيارات لأنها فوق المحتوى فعلًا.</p>
+    <div class="opts" id="o-elev"></div>
+  </section>
+
+  <section class="wrap sec" id="next">
+    <h2>بعد هذه الجولة</h2>
+    <div class="two">
+      <div class="rules">
+        <h3 style="font-size:17px;font-weight:600;margin-bottom:10px">حين تختار</h3>
+        <ul>
+          <li>أكتب القيم في <code>brand/tokens/</code>: <code>typography.json</code> و <code>spacing.json</code> و <code>radius.json</code> و <code>elevation.json</code>، بنفس صيغة ملفي الألوان والحركة.</li>
+          <li>أوثّقها في <code>docs/BRAND.md</code> القسم 3، وأحدّث خطة المرحلة وجدول القسم 6.</li>
+          <li>ثم جولة المكوّنات: الأزرار والقوائم والتبديل والمنزلق و stepper والبطاقات والحالات الفارغة، بكل حالاتها (عادي، ومضغوط، ومعطّل، وتركيز لوحة المفاتيح) وبالوضعين.</li>
+        </ul>
+      </div>
+      <div class="rules">
+        <h3 style="font-size:17px;font-weight:600;margin-bottom:10px">الأيقونات: جولة خاصة</h3>
+        <ul>
+          <li>الأيقونات في هذه الصفحة مؤقتة، خطية بسماكة 1.75 على شبكة 24.</li>
+          <li>المرشّحون: مكتبة مفتوحة الرخصة بأسلوب خطّي مستدير (Lucide بترخيص ISC، أو Phosphor و Tabler بترخيص MIT)، أو مجموعة مرسومة لهمة.<span>المكتبة أسرع وتغطي أيقونات العادات (40 إلى 60). أعرضها لك جنبًا إلى جنب في جولة الأيقونات.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">الجولة 1 للقرار 6. المعتمد حتى الآن في <code>docs/BRAND.md</code> القسم 3، والقيم في <code>brand/tokens/</code>.</footer>
+
+<script>
+/* ---------- Approved colors (brand/tokens/colors.json) ---------- */
+const PAL = {
+  light: { bg: '#F3F6FA', surface: '#FFFFFF', surface2: '#E9EEF6', line: '#DCE3EE', ink: '#14213D', muted: '#5A6785', primary: '#3D4FA3', onPrimary: '#FFFFFF', warm: '#F2A65A', onWarm: '#1B1406', hero: '#14213D', heroInk: '#EEF3FF', heroMuted: '#AEBBDA', heroRing: '#2B3A66', arc1: '#6CB4E8', arc2: '#7FD8BE', sky: '#3E8FD6', mint: '#1F948A', honey: '#A98516', green: '#2E9C5E', stretch: '#7FD8BE' },
+  dark: { bg: '#0B1222', surface: '#141E36', surface2: '#1C2844', line: '#24314F', ink: '#E8EEFB', muted: '#93A0BE', primary: '#8C9BF2', onPrimary: '#0B1222', warm: '#F2A65A', onWarm: '#1B1406', hero: '#1B2B55', heroInk: '#EEF3FF', heroMuted: '#A9B6D6', heroRing: '#2E3F70', arc1: '#6CB4E8', arc2: '#7FD8BE', sky: '#6CB4E8', mint: '#7FD8BE', honey: '#E9C15A', green: '#7FD39A', stretch: '#7FD8BE' }
+};
+
+/* ---------- Options ---------- */
+const ROLES = [
+  ['timer', 'أرقام المؤقت', 'المؤقت وحده', '13:40'],
+  ['display', 'عنوان الشاشة', 'اليوم، التركيز', 'اليوم'],
+  ['headline', 'عنوان كبير', 'اسم الجلسة والتمرين', 'رقبة وكتفان'],
+  ['title', 'عنوان البطاقة', 'النافذة السفلية، والبطاقات', 'شرب الماء'],
+  ['section', 'عنوان قسم', 'فوق مجموعة', 'عادات اليوم'],
+  ['body', 'نص', 'أسماء العادات، والفقرات', 'القراءة'],
+  ['bodySm', 'نص ثانوي', 'التفاصيل تحت الاسم', 'المستوى 2 · 20 دقيقة'],
+  ['label', 'تسمية الأزرار', 'الأزرار والقيم', 'ابدأ الجلسة'],
+  ['caption', 'تسمية صغيرة', 'القائمة السفلية، والخطوات', 'الثلاثاء']
+];
+const TYPE = {
+  a: { name: 'متوازن', rec: true, desc: 'النص 16 مثل Material، وتدرّج هادئ بنسبة 1.2 تقريبًا. العناوين 700 والنص 400، والمؤقت 500 كما في نموذج الحركة.',
+    v: { timer: [60, 500, 1.1], display: [28, 700, 1.3], headline: [22, 700, 1.35], title: [18, 600, 1.4], section: [16, 600, 1.45], body: [16, 400, 1.55], bodySm: [14, 400, 1.55], label: [15, 500, 1.3], caption: [12, 500, 1.4] } },
+  b: { name: 'مدمج', desc: 'السُّلّم المبدئي من جولة الخطوط بأحجام الهاتف الفعلية. النص 15 بوزن 500، فتتّسع الشاشة لمحتوى أكثر، والعناوين أثقل.',
+    v: { timer: [52, 500, 1.1], display: [25, 700, 1.3], headline: [21, 700, 1.35], title: [17, 700, 1.4], section: [14, 600, 1.45], body: [15, 500, 1.5], bodySm: [13, 400, 1.55], label: [14, 500, 1.3], caption: [11, 500, 1.4] } },
+  c: { name: 'هادئ واسع', desc: 'نص أكبر (17) وأوزان أخف: العناوين 600، والمؤقت 300 كبيرًا ورقيقًا. عناوين الأقسام صغيرة بلون خافت، فالفرق بين المستويات أوضح.',
+    v: { timer: [72, 300, 1.05], display: [32, 600, 1.25], headline: [24, 600, 1.3], title: [19, 600, 1.4], section: [13, 500, 1.45, 'muted'], body: [17, 400, 1.6], bodySm: [15, 400, 1.6], label: [16, 500, 1.3], caption: [12, 400, 1.4] } }
+};
+const SPACE = {
+  a: { name: 'وحدة 4 مرنة', rec: true, desc: 'مضاعفات 4 مع درجتي 12 و 20. هامش الشاشة أوسع قليلًا من البطاقة، والقريب من نموذج الواجهة السابق.',
+    scale: [4, 8, 12, 16, 20, 24, 32, 40], v: { screen: 20, card: 20, stack: 12, gap: 12, section: 32, rowy: 12, rowx: 16, xs: 8, sm: 12, md: 12 } },
+  b: { name: 'وحدة 8 صارمة', desc: 'مضاعفات 8 فقط. أسهل في القرار والتطبيق، وأكثف قليلًا: 16 للهامش والبطاقة، و 8 بين العناصر.',
+    scale: [8, 16, 24, 32, 40, 48], v: { screen: 16, card: 16, stack: 8, gap: 16, section: 32, rowy: 8, rowx: 16, xs: 8, sm: 8, md: 16 } },
+  c: { name: 'وحدة 4 فسيحة', desc: 'السُّلّم نفسه للخيار أ، بقيم أكبر: 24 للهامش والبطاقة، و 40 بين الأقسام. هدوء أكثر، ومحتوى أقل في الشاشة الأولى.',
+    scale: [4, 8, 12, 16, 20, 24, 32, 40, 48], v: { screen: 24, card: 24, stack: 16, gap: 16, section: 40, rowy: 16, rowx: 16, xs: 8, sm: 16, md: 16 } }
+};
+const RADIUS = {
+  a: { name: 'متدرّج', rec: true, desc: 'مبني على القيمتين الأكثر تكرارًا في النماذج السابقة: 14 للأزرار والصفوف، و 22 للبطاقات. الأيقونة المربعة 30% من حجمها.',
+    v: { xs: 6, sm: 10, md: 14, lg: 22, xl: 28 }, btn: 'md', icon: .3 },
+  b: { name: 'أوسع', desc: 'روح Hybrid بأقصاها: درجات أكبر، والأزرار بيضاوية كاملة. أنعم وأكثر ودًّا، ويقترب من الفقاعات في الأحجام الصغيرة.',
+    v: { xs: 8, sm: 12, md: 18, lg: 28, xl: 36 }, btn: 'pill', icon: .36 },
+  c: { name: 'معتدل', desc: 'أقرب إلى Material 3: 12 للأزرار و 16 للبطاقات. أكثر جدّية وتنظيمًا، وأقل من «الزوايا الأوسع» التي اخترتها.',
+    v: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 }, btn: 'md', icon: .25 }
+};
+const ELEV = {
+  a: { name: 'درجة وخط', rec: true, desc: 'البطاقة أفتح من الخلفية، ومعها خط رفيع بلون line في الفاتح فقط. واضحة ونظيفة، بلا ظلال إلا للنوافذ.',
+    light: { border: '1px solid #DCE3EE', shadow: 'none' }, dark: { border: '1px solid transparent', shadow: 'none' } },
+  b: { name: 'ظل ناعم', desc: 'في الفاتح ظل خفيف جدًا تحت البطاقة بلا خط، فتبدو مرفوعة قليلًا. في الغامق مثل أ.',
+    light: { border: '1px solid transparent', shadow: '0 1px 2px rgb(20 33 61 / .06), 0 6px 20px rgb(20 33 61 / .07)' }, dark: { border: '1px solid transparent', shadow: 'none' } },
+  c: { name: 'درجة فقط', desc: 'لا خط ولا ظل: الفرق بين الخلفية والبطاقة وحده. الأهدأ، لكن الفرق في الفاتح خفيف (أبيض على رمادي فاتح جدًا).',
+    light: { border: '1px solid transparent', shadow: 'none' }, dark: { border: '1px solid transparent', shadow: 'none' } }
+};
+const FLOAT = { light: '0 -6px 28px rgb(20 33 61 / .16)', dark: '0 -10px 36px rgb(0 0 0 / .5)' };
+const SCALES = [1, 1.3, 1.6, 2];
+
+/* ---------- Strings ---------- */
+const STR = {
+  ar: { today: 'اليوم', date: 'الثلاثاء، 20 أكتوبر', cat: 'تمدّد ومرونة', session: 'الجلسة 2 من 3', title: 'رقبة وكتفان', meta: 'المستوى 2 · 20 دقيقة · 6 تمارين', days: ['الأحد', 'الثلاثاء', 'الخميس'], start: 'ابدأ الجلسة', habitsToday: 'عادات اليوم', all: 'الكل', water: 'شرب الماء', waterSub: '3 من 8 كاسات', read: 'القراءة', readSub: '20 دقيقة · لم تُسجَّل بعد', walk: 'المشي', walkSub: '4,000 من 6,000 خطوة', tabs: ['اليوم', 'البرامج', 'العادات', 'التركيز', 'التقدّم'], focus: 'التركيز', focusSub: 'جولة 25 دقيقة، ثم استراحة 5', phase: 'جولة تركيز', round: n => `جولة ${n}`, pause: 'إيقاف مؤقت', nextBreak: 'الاستراحة القادمة', move: 'تحرّك: لف الكتفين', moveSub: 'دقيقة واحدة · بعد 13 دقيقة', habits: 'العادات', sheetSub: 'عادة كمّية · كل يوم', goal: 'الهدف اليومي', cups: 'كاسات', reminder: 'تذكير', reminderSub: 'كل ساعتين، من 9 إلى 17', save: 'حفظ', cancel: 'إلغاء', sleep: 'النوم قبل 12', sleepSub: 'كل يوم · 5 أيام متتالية' },
+  en: { today: 'Today', date: 'Tuesday, October 20', cat: 'Stretch & mobility', session: 'Session 2 of 3', title: 'Neck & shoulders', meta: 'Level 2 · 20 min · 6 exercises', days: ['Sun', 'Tue', 'Thu'], start: 'Start session', habitsToday: "Today's habits", all: 'All', water: 'Drink water', waterSub: '3 of 8 cups', read: 'Reading', readSub: '20 min · not logged yet', walk: 'Walking', walkSub: '4,000 of 6,000 steps', tabs: ['Today', 'Programs', 'Habits', 'Focus', 'Progress'], focus: 'Focus', focusSub: '25-minute round, then a 5-minute break', phase: 'Focus round', round: n => `Round ${n}`, pause: 'Pause', nextBreak: 'Next break', move: 'Move: shoulder rolls', moveSub: '1 min · in 13 min', habits: 'Habits', sheetSub: 'Count habit · every day', goal: 'Daily goal', cups: 'cups', reminder: 'Reminder', reminderSub: 'Every 2 hours, 9 to 17', save: 'Save', cancel: 'Cancel', sleep: 'Sleep before 12', sleepSub: 'Every day · 5-day streak' }
+};
+
+/* ---------- Placeholder icons (24 grid, 1.75 stroke) ---------- */
+const P = {
+  settings: '<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',
+  home: '<path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>',
+  programs: '<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>',
+  habits: '<rect x="4" y="4" width="16" height="16" rx="5"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+  focus: '<circle cx="12" cy="13" r="7"/><path d="M12 13V9.5M10 3h4"/>',
+  progress: '<path d="M6 19v-5M12 19V9M18 19V5"/>',
+  play: '<path class="play" d="M9 6.8v10.4a.6.6 0 0 0 .9.5l8-5.2a.6.6 0 0 0 0-1l-8-5.2a.6.6 0 0 0-.9.5z"/>',
+  pause: '<path d="M9 7v10M15 7v10"/>',
+  skip: '<path d="M7 7.2v9.6l7-4.8zM17 7v10"/>',
+  reset: '<path d="M5.5 12a6.5 6.5 0 1 0 2-4.7M5 4.5V8h3.5"/>',
+  drop: '<path d="M12 3.5c3 4 5.5 6.8 5.5 10a5.5 5.5 0 0 1-11 0c0-3.2 2.5-6 5.5-10z"/>',
+  book: '<path d="M4 5.5c2.5-1 5-1 8 1 3-2 5.5-2 8-1v13c-2.5-1-5-1-8 1-3-2-5.5-2-8-1zM12 6.5v13"/>',
+  walk: '<path d="M8 4.5c1.7 0 2.5 1.7 2.5 4S9.5 12 8 12s-2.5-1.2-2.5-3.5S6.3 4.5 8 4.5zM6 15h4.5M16 9c1.7 0 2.5 1.7 2.5 4s-1 3.5-2.5 3.5-2.5-1.2-2.5-3.5S14.3 9 16 9zM14 19.5h4.5"/>',
+  moon: '<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/>',
+  stretch: '<circle cx="12" cy="5" r="2"/><path d="M5 9.5c2.5 1 4.5 1.5 7 1.5s4.5-.5 7-1.5M12 11v4l-3 5M12 15l3 5"/>',
+  chev: '<path class="fwd" d="M14.5 6l-6 6 6 6"/>',
+  plus: '<path d="M12 6v12M6 12h12"/>',
+  minus: '<path d="M6 12h12"/>',
+  bell: '<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 1.5H5zM10 20h4"/>'
+};
+const ic = (k, cls = '') => `<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${P[k]}</svg>`;
+const CHK = '<svg class="ck" viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-4.5 0.5l3 3 6-6.5"/></svg>';
+
+/* ---------- State ---------- */
+const st = { type: 'a', space: 'a', radius: 'a', elev: 'a', mode: 'dark', lang: 'ar', scale: 1 };
+try { Object.assign(st, JSON.parse(localStorage.getItem('himma-r4') || '{}')); } catch (e) {}
+const save = () => { try { localStorage.setItem('himma-r4', JSON.stringify(st)); } catch (e) {} };
+
+/* ---------- Controls ---------- */
+const GROUPS = [
+  ['type', 'الطباعة', ['a', 'b', 'c'], ['أ', 'ب', 'ج']],
+  ['space', 'المسافات', ['a', 'b', 'c'], ['أ', 'ب', 'ج']],
+  ['radius', 'الزوايا', ['a', 'b', 'c'], ['أ', 'ب', 'ج']],
+  ['elev', 'الارتفاع', ['a', 'b', 'c'], ['أ', 'ب', 'ج']],
+  ['mode', 'الوضع', ['dark', 'light'], ['غامق', 'فاتح']],
+  ['lang', 'اللغة', ['ar', 'en'], ['ع', 'EN']],
+  ['scale', 'حجم الخط', SCALES, SCALES.map(s => `${Math.round(s * 100)}%`)]
+];
+document.getElementById('ctl').innerHTML = GROUPS.map(([k, label, vals, names]) =>
+  `<div class="grp" role="group" aria-label="${label}"><span>${label}</span><div class="seg">${vals.map((v, i) =>
+    `<button type="button" id="c-${k}-${String(v).replace('.', '_')}" data-k="${k}" data-v="${v}" aria-pressed="false">${names[i]}</button>`).join('')}</div></div>`).join('');
+document.getElementById('ctl').addEventListener('click', e => {
+  const b = e.target.closest('button[data-k]'); if (!b) return;
+  const k = b.dataset.k; st[k] = k === 'scale' ? Number(b.dataset.v) : b.dataset.v; save(); apply();
+});
+
+/* ---------- Option cards ---------- */
+const L = { a: 'أ', b: 'ب', c: 'ج' };
+const head = (k, o, id) => `<div class="oh"><h3><span class="tag">${L[id]}</span>${o.name}</h3>${o.rec ? '<span class="rec"><span class="dot"></span>مقترح</span>' : ''}</div><p>${o.desc}</p>`;
+function optCards(k, set, body) {
+  const box = document.getElementById('o-' + k);
+  box.innerHTML = Object.entries(set).map(([id, o]) => `<button type="button" class="opt" id="o-${k}-${id}" data-k="${k}" data-v="${id}" aria-pressed="false">${head(k, o, id)}${body(o, id)}</button>`).join('');
+  box.addEventListener('click', e => { const b = e.target.closest('.opt'); if (!b) return; st[k] = b.dataset.v; save(); apply(); });
+}
+optCards('type', TYPE, o => `<dl class="kv"><dt>النص</dt><dd>${o.v.body[0]} / ${o.v.body[1]}</dd><dt>عنوان الشاشة</dt><dd>${o.v.display[0]} / ${o.v.display[1]}</dd><dt>المؤقت</dt><dd>${o.v.timer[0]} / ${o.v.timer[1]}</dd></dl>`);
+optCards('space', SPACE, o => `<div class="chips">${o.scale.map(s => `<span><i style="width:${s}px;height:${s}px"></i>${s}</span>`).join('')}</div>
+  <dl class="kv"><dt>هامش الشاشة</dt><dd>${o.v.screen}</dd><dt>داخل البطاقة</dt><dd>${o.v.card}</dd><dt>بين العناصر داخلها</dt><dd>${o.v.stack}</dd><dt>بين البطاقات</dt><dd>${o.v.gap}</dd><dt>بين الأقسام</dt><dd>${o.v.section}</dd></dl>`);
+optCards('radius', RADIUS, o => {
+  const sh = [['xs', 'شارة', 22, 22], ['sm', 'خطوة', 30, 30], ['md', 'زر وصف', 56, 34], ['lg', 'بطاقة', 64, 48], ['xl', 'نافذة', 72, 40]];
+  return `<div class="shapes">${sh.map(([k, n, w, h]) => `<span><i style="width:${w}px;height:${h}px;border-radius:${k === 'xl' ? `${o.v.xl}px ${o.v.xl}px 0 0` : o.v[k] + 'px'}"></i>${n} ${o.v[k]}</span>`).join('')}<span><i style="width:40px;height:40px;border-radius:${Math.round(40 * o.icon)}px"></i>أيقونة ${Math.round(o.icon * 100)}%</span></div>
+  <dl class="kv"><dt>الأزرار</dt><dd>${o.btn === 'pill' ? 'بيضاوية كاملة' : o.v.md}</dd><dt>البطاقات</dt><dd>${o.v.lg}</dd><dt>الصفوف</dt><dd>${o.v.md}</dd></dl>`;
+});
+optCards('elev', ELEV, o => {
+  const tile = m => { const p = PAL[m], e = o[m]; return `<div style="background:${p.bg};border:1px solid ${m === 'light' ? '#DCE3EE' : '#24314F'}"><div class="c1" style="background:${p.surface};border:${e.border};box-shadow:${e.shadow}"></div><div class="c2" style="background:${p.surface};border:${e.border};box-shadow:${e.shadow}"></div></div>`; };
+  return `<div class="mini">${tile('light')}${tile('dark')}</div>`;
+});
+
+/* ---------- Type table ---------- */
+function typeTable() {
+  const ids = ['a', 'b', 'c'];
+  const sel = TYPE[st.type].v;
+  document.getElementById('typeTable').innerHTML = `<thead><tr><th>الدور</th><th>الاستعمال</th><th>عيّنة بالخيار المختار</th>${ids.map(i => `<th class="${i === st.type ? 'on' : ''}" style="text-align:end">${L[i]}: ${TYPE[i].name}</th>`).join('')}</tr></thead><tbody>${ROLES.map(([k, n, u, s]) => {
+    const [sz, w, lh] = sel[k];
+    return `<tr><td>${n}</td><td style="color:var(--muted)">${u}</td><td class="s" style="font-size:${Math.min(sz, 44)}px;font-weight:${w};line-height:${lh};${k === 'timer' ? 'font-variant-numeric:tabular-nums;direction:ltr;text-align:end' : ''}${sel[k][3] ? ';color:var(--muted)' : ''}">${s}</td>${ids.map(i => { const v = TYPE[i].v[k]; return `<td class="v ${i === st.type ? 'on' : ''}">${v[0]} / ${v[1]} / ${v[2]}</td>`; }).join('')}</tr>`;
+  }).join('')}</tbody>`;
+}
+
+/* ---------- Drawing helpers ---------- */
+function segRing(n, done, color, track) {
+  const r = 16, cx = 20, cy = 20, gapDeg = 360 / n > 30 ? 10 : 8;
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const a0 = (-90 + i * 360 / n + gapDeg / 2) * Math.PI / 180, a1 = (-90 + (i + 1) * 360 / n - gapDeg / 2) * Math.PI / 180;
+    const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0), x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    s += `<path d="M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" stroke="${i < done ? color : track}" stroke-width="4" stroke-linecap="round" fill="none"/>`;
+  }
+  return `<svg class="seg-ring" viewBox="0 0 40 40" aria-hidden="true">${s}</svg>`;
+}
+function dial(p, c) {
+  const R = 96, C = 112, a = (-90 + 360 * p) * Math.PI / 180, hx = C + R * Math.cos(a), hy = C + R * Math.sin(a), len = 2 * Math.PI * R;
+  let dots = '';
+  for (let i = 0; i < 60; i++) { const b = i * 6 * Math.PI / 180; dots += `<circle cx="${(C + 108 * Math.cos(b)).toFixed(1)}" cy="${(C + 108 * Math.sin(b)).toFixed(1)}" r="1" fill="${c.dots}"/>`; }
+  return `<svg viewBox="0 0 224 224" aria-hidden="true"><defs><linearGradient id="g-arc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c.arc1}"/><stop offset="1" stop-color="${c.arc2}"/></linearGradient></defs>${dots}
+    <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${c.ring}" stroke-width="10"/>
+    <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="url(#g-arc)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(len * p).toFixed(1)} ${len.toFixed(1)}" transform="rotate(-90 ${C} ${C})"/>
+    <circle class="halo" cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="11" fill="${c.warm}" opacity=".35"/><circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="7" fill="${c.warm}"/></svg>`;
+}
+function steps(items, states, frac) {
+  return `<div class="steps">${items.map((t, i) => `${i ? `<span class="cn ${states[i - 1] === 'done' ? 'done' : ''}"></span>` : ''}<div class="st ${states[i]}"><span class="b">${states[i] === 'cur' ? `<span class="fl" style="width:${frac * 100}%"></span>` : ''}${states[i] === 'done' ? CHK : `<span class="tn">${i + 1}</span>`}</span><small class="t-caption">${t}</small></div>`).join('')}</div>`;
+}
+const nav = (s, on) => `<nav class="nav">${['home', 'programs', 'habits', 'focus', 'progress'].map((k, i) => `<div class="${i === on ? 'on' : ''}"><span class="pill">${ic(k)}</span><small class="t-caption">${s.tabs[i]}</small></div>`).join('')}</nav>`;
+const stat = '<div class="stat"><span>9:41</span><i></i></div>';
+
+/* ---------- Screens ---------- */
+function today(s, c) {
+  return `${stat}<div class="scr">
+    <div class="ph-head"><div><h3 class="t-display">${s.today}</h3><p class="t-bodySm mu">${s.date}</p></div><span class="ibtn">${ic('settings')}</span></div>
+    <div class="card hero">
+      <div class="cat"><span class="sq sq32" style="background:color-mix(in srgb, ${c.stretch} 20%, transparent);color:${c.stretch}">${ic('stretch')}</span><span class="t-caption mu">${s.cat} · ${s.session}</span></div>
+      <div style="display:grid;gap:2px"><h4 class="t-headline">${s.title}</h4><p class="t-bodySm mu tn">${s.meta}</p></div>
+      ${steps(s.days, ['done', 'cur', 'up'], 0)}
+      <span class="btn warm t-label">${ic('play')}${s.start}</span>
+    </div>
+    <div style="display:grid;gap:var(--sp-stack)">
+      <div class="sec-row"><h4 class="t-section">${s.habitsToday}</h4><span class="btn txt t-label">${s.all}</span></div>
+      <div class="list">
+        <div class="row"><span class="sq sq40" style="background:color-mix(in srgb, ${c.sky} 18%, transparent);color:${c.sky}">${ic('drop')}</span><span class="tx"><b class="t-body" style="font-weight:500">${s.water}</b><small class="t-bodySm mu tn">${s.waterSub}</small></span>${segRing(8, 3, c.sky, c.ring)}</div>
+        <div class="row"><span class="sq sq40" style="background:color-mix(in srgb, ${c.honey} 18%, transparent);color:${c.honey}">${ic('book')}</span><span class="tx"><b class="t-body" style="font-weight:500">${s.read}</b><small class="t-bodySm mu tn">${s.readSub}</small></span><span class="cb"></span></div>
+        <div class="row"><span class="sq sq40" style="background:color-mix(in srgb, ${c.green} 18%, transparent);color:${c.green}">${ic('walk')}</span><span class="tx"><b class="t-body" style="font-weight:500">${s.walk}</b><small class="t-bodySm mu tn">${s.walkSub}</small></span>${segRing(6, 4, c.green, c.ring)}</div>
+      </div>
+    </div>
+  </div>${nav(s, 0)}`;
+}
+function focus(s, c) {
+  return `${stat}<div class="scr">
+    <div class="ph-head"><div><h3 class="t-display">${s.focus}</h3><p class="t-bodySm mu">${s.focusSub}</p></div><span class="ibtn">${ic('settings')}</span></div>
+    <div class="card">
+      <div class="dial">${dial(.45, c)}<div class="c"><span class="t-timer tn">13:40</span><span class="t-caption mu">${s.phase}</span></div></div>
+      ${steps([1, 2, 3, 4].map(s.round), ['done', 'cur', 'up', 'up'], .45)}
+    </div>
+    <div class="acts"><span class="btn sub ibtn" style="width:52px;height:52px;padding:0;flex:none">${ic('reset')}</span><span class="btn sub t-label">${ic('pause')}${s.pause}</span><span class="btn sub ibtn" style="width:52px;height:52px;padding:0;flex:none">${ic('skip')}</span></div>
+    <div style="display:grid;gap:var(--sp-stack)">
+      <h4 class="t-section">${s.nextBreak}</h4>
+      <div class="row"><span class="sq sq40" style="background:color-mix(in srgb, ${c.stretch} 18%, transparent);color:${c.stretch}">${ic('stretch')}</span><span class="tx"><b class="t-body" style="font-weight:500">${s.move}</b><small class="t-bodySm mu tn">${s.moveSub}</small></span><span class="mu">${ic('chev')}</span></div>
+    </div>
+  </div>${nav(s, 3)}`;
+}
+function sheet(s, c) {
+  return `${stat}<div class="scr">
+    <div class="ph-head"><div><h3 class="t-display">${s.habits}</h3><p class="t-bodySm mu">${s.date}</p></div><span class="ibtn">${ic('plus')}</span></div>
+    <div class="list">
+      <div class="row"><span class="sq sq40" style="background:color-mix(in srgb, ${c.sky} 18%, transparent);color:${c.sky}">${ic('drop')}</span><span class="tx"><b class="t-body" style="font-weight:500">${s.water}</b><small class="t-bodySm mu tn">${s.waterSub}</small></span>${segRing(8, 3, c.sky, c.ring)}</div>
+      <div class="row"><span class="sq sq40" style="background:color-mix(in srgb, ${c.mint} 18%, transparent);color:${c.mint}">${ic('moon')}</span><span class="tx"><b class="t-body" style="font-weight:500">${s.sleep}</b><small class="t-bodySm mu tn">${s.sleepSub}</small></span><span class="cb"></span></div>
+    </div>
+  </div>${nav(s, 2)}
+  <div class="dim"></div>
+  <div class="sheet" role="dialog" aria-label="${s.water}">
+    <span class="handle"></span>
+    <div class="srow"><span class="sq sq48" style="background:color-mix(in srgb, ${c.sky} 18%, transparent);color:${c.sky}">${ic('drop')}</span><span class="tx"><b class="t-title">${s.water}</b><small class="t-bodySm mu">${s.sheetSub}</small></span></div>
+    <div class="sdiv"></div>
+    <div class="srow"><span class="tx"><span class="t-body">${s.goal}</span><small class="t-bodySm mu">${s.cups}</small></span><span class="stepper"><span class="sb">${ic('minus')}</span><span class="v t-title tn">8</span><span class="sb">${ic('plus')}</span></span></div>
+    <div class="srow"><span class="tx"><span class="t-body">${s.reminder}</span><small class="t-bodySm mu tn">${s.reminderSub}</small></span><span class="tog"></span></div>
+    <div class="sacts"><span class="btn pri t-label">${s.save}</span><span class="btn txt t-label" style="color:${c.muted}">${s.cancel}</span></div>
+  </div>`;
+}
+
+/* ---------- Apply ---------- */
+// Nonlinear text scaling: body sizes take the full factor, large sizes less, the timer none.
+function scaled(size, role) {
+  if (role === 'timer' || st.scale === 1) return size;
+  const k = Math.max(.35, Math.min(1, 1 - (size - 16) / 30));
+  return Math.round(size * (1 + (st.scale - 1) * k) * 10) / 10;
+}
+function apply() {
+  document.querySelectorAll('#ctl button').forEach(b => b.setAttribute('aria-pressed', String(String(st[b.dataset.k]) === b.dataset.v)));
+  document.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', String(st[b.dataset.k] === b.dataset.v)));
+  typeTable();
+
+  const p = PAL[st.mode], dark = st.mode === 'dark';
+  const c = { ...p, ring: dark ? '#2E3F70' : '#DCE3EE', dots: dark ? '#4A5C8C' : '#B4C0D6' };
+  const T = TYPE[st.type].v, S = SPACE[st.space].v, R = RADIUS[st.radius], E = ELEV[st.elev][st.mode];
+  const v = {
+    '--c-bg': p.bg, '--c-surface': p.surface, '--c-surface2': p.surface2, '--c-line': p.line, '--c-ink': p.ink, '--c-muted': p.muted,
+    '--c-primary': p.primary, '--c-onPrimary': p.onPrimary, '--c-warm': p.warm, '--c-onWarm': p.onWarm, '--c-hero': p.hero,
+    '--c-heroInk': p.heroInk, '--c-heroMuted': p.heroMuted, '--c-arc2': p.arc2, '--c-ring': c.ring, '--c-dots': c.dots,
+    '--c-line2': dark ? '#3A4A70' : '#B4C0D6', '--c-muted2': dark ? '#93A0BE' : '#5A6785',
+    '--c-raised': dark ? p.surface2 : p.surface, '--c-ctl': dark ? '#26345A' : p.surface2,
+    '--sp-screen': S.screen + 'px', '--sp-card': S.card + 'px', '--sp-stack': S.stack + 'px', '--sp-gap': S.gap + 'px', '--sp-section': S.section + 'px',
+    '--sp-rowy': S.rowy + 'px', '--sp-rowx': S.rowx + 'px', '--sp-xs': S.xs + 'px', '--sp-sm': S.sm + 'px', '--sp-md': S.md + 'px',
+    '--r-sm': R.v.sm + 'px', '--r-md': R.v.md + 'px', '--r-lg': R.v.lg + 'px', '--r-xl': R.v.xl + 'px',
+    '--r-btn': R.btn === 'pill' ? '999px' : R.v.md + 'px', '--r-pillnav': R.btn === 'pill' ? '999px' : R.v.md + 'px',
+    '--r-icon32': Math.round(32 * R.icon) + 'px', '--r-icon40': Math.round(40 * R.icon) + 'px', '--r-icon44': Math.round(44 * R.icon) + 'px', '--r-icon48': Math.round(48 * R.icon) + 'px',
+    '--e-card-border': E.border, '--e-card-shadow': E.shadow, '--e-float': FLOAT[st.mode]
+  };
+  for (const [k] of ROLES) {
+    const [sz, w, lh, col] = T[k];
+    v[`--t-${k}-s`] = scaled(sz, k) + 'px'; v[`--t-${k}-w`] = w; v[`--t-${k}-l`] = lh;
+    if (k === 'section') v['--t-section-c'] = col ? p.muted : p.ink;
+  }
+  const s = STR[st.lang], dir = st.lang === 'ar' ? 'rtl' : 'ltr', lang = st.lang;
+  const box = document.getElementById('phones');
+  box.innerHTML = [
+    ['اليوم', 'بطاقة جلسة اليوم، وعنوان القسم، وصف العادات، والقائمة السفلية', today],
+    ['التركيز', 'المؤقت والخطوات الموصولة والأزرار الثانوية', focus],
+    ['نافذة سفلية', 'تعديل عادة: stepper للهدف، وتبديل، وزر أساسي', sheet]
+  ].map(([n, d, fn]) => `<figure class="shot"><div class="ph" dir="${dir}" lang="${lang}">${fn(s, c)}</div><figcaption><b>${n}</b>${d}</figcaption></figure>`).join('');
+  for (const ph of box.querySelectorAll('.ph')) for (const k in v) ph.style.setProperty(k, v[k]);
+}
+apply();
+</script>
