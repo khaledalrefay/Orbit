@@ -1,0 +1,603 @@
+<title>حركة همة: الجولة 3</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300..700&display=swap">
+<style>
+/* Layout: one dark page. Section 1 compares three step-card variants on the weekly plan and the focus rounds.
+   Section 2 is the full timer with every state. Sections 3 and 4 sit side by side (habit logging, boot).
+   Section 5 lists the motion rules and the reduced-motion fallback for approval. */
+:root {
+  --bg: #0B1222; --surface: #141E36; --surface2: #1C2844; --line: #24314F;
+  --ink: #E8EEFB; --muted: #93A0BE; --primary: #8C9BF2; --on-primary: #0B1222;
+  --warm: #F2A65A; --on-warm: #1B1406; --arc1: #6CB4E8; --arc2: #7FD8BE;
+  --ring: #2E3F70; --dots: #4A5C8C; --icon-bg: #14213D;
+  --ds: 200ms; --dm: 420ms; --dl: 880ms; --ease: cubic-bezier(.22,1,.36,1);
+  --f: "Rubik", "Segoe UI", Tahoma, system-ui, sans-serif;
+  color-scheme: dark;
+}
+:root.rm { --ds: 150ms; --dm: 150ms; --dl: 150ms; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f); font-size: 15px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num, .dg, td { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.hd { padding-block: 40px 12px; display: grid; gap: 12px; }
+.eyebrow { color: var(--muted); font-size: 13px; }
+.hd h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; }
+.hd p { color: var(--muted); max-width: 72ch; }
+.note { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); }
+.note i { width: 8px; height: 8px; border-radius: 50%; background: var(--warm); }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.bar nav { display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: 13px; }
+.bar nav a { color: var(--muted); text-decoration: none; }
+.bar nav a:hover { color: var(--ink); }
+
+.sec { padding-block: 36px 8px; display: grid; gap: 14px; align-content: start; }
+.sec h2 { font-size: 22px; font-weight: 600; }
+.sec > p { color: var(--muted); max-width: 74ch; }
+.ctls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--line); background: var(--surface2); border-radius: 14px; padding: 7px 14px; cursor: pointer; font-size: 14px; }
+.btn:hover { border-color: var(--dots); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.btn.warm { background: var(--warm); color: var(--on-warm); border-color: var(--warm); font-weight: 500; }
+.ctls .lbl { font-size: 13px; color: var(--muted); }
+
+.row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+.cell { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 20px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.ch { display: grid; gap: 4px; }
+.ch h3 { font-size: 17px; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+.ch p { color: var(--muted); font-size: 14px; }
+.tag { width: 28px; height: 28px; border-radius: 9px; display: inline-grid; place-items: center; background: var(--surface2); color: var(--primary); font-weight: 600; font-size: 15px; flex: none; }
+.blk { background: var(--surface2); border-radius: 18px; padding: 14px; display: grid; gap: 10px; min-width: 0; }
+.blk .t { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.blk .t b { color: var(--ink); font-weight: 500; }
+.msg { color: var(--arc2); font-size: 13px; font-weight: 500; transition: opacity var(--dm) linear; }
+.pop { transform-box: fill-box; transform-origin: center; }
+
+/* ---- Step variants ---- */
+.chk { width: 14px; height: 14px; }
+.chk path { fill: none; stroke: #0B1222; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+/* V1 cards */
+.s-cards { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.s-cards .it { position: relative; overflow: hidden; border-radius: 14px; border: 1.5px solid var(--dots); background: var(--surface); padding: 8px 6px; display: grid; justify-items: center; gap: 3px; min-width: 0; transition: border-color var(--dm) linear, background var(--dm) linear; }
+.s-cards .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; background: color-mix(in srgb, var(--arc2) 20%, transparent); }
+.s-cards .ic { position: relative; width: 22px; height: 22px; border-radius: 8px; display: grid; place-items: center; border: 1.5px solid var(--dots); transition: background var(--dm) linear, border-color var(--dm) linear; }
+.s-cards small { position: relative; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; transition: color var(--dm) linear; }
+/* V2 linked */
+.s-linked { display: flex; align-items: center; }
+.s-linked .it { flex: none; display: grid; justify-items: center; gap: 4px; width: 56px; }
+.s-linked .ic { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; border: 1.5px solid var(--dots); background: var(--surface); position: relative; overflow: hidden; transition: background var(--dm) linear, border-color var(--dm) linear; }
+.s-linked .ic .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; background: color-mix(in srgb, var(--arc2) 28%, transparent); }
+.s-linked small { font-size: 11.5px; color: var(--muted); white-space: nowrap; transition: color var(--dm) linear; }
+.s-linked .cn { flex: 1; height: 3px; border-radius: 2px; background: var(--ring); margin-bottom: 22px; position: relative; overflow: hidden; min-width: 8px; }
+.s-linked .cn i { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; background: var(--arc2); transition: width var(--dl) var(--ease); }
+/* V3 bars */
+.s-bars { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.s-bars .it { display: grid; gap: 6px; min-width: 0; }
+.s-bars .tr { height: 10px; border-radius: 5px; background: var(--ring); position: relative; overflow: hidden; outline: 1.5px solid transparent; outline-offset: 2px; transition: outline-color var(--dm) linear; }
+.s-bars .fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; border-radius: 5px; background: linear-gradient(to left, var(--arc1), var(--arc2)); }
+.s-bars .lb2 { display: flex; gap: 4px; align-items: center; justify-content: center; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; transition: color var(--dm) linear; }
+.s-bars .lb2 .chk { width: 12px; height: 12px; display: none; }
+.s-bars .lb2 .chk path { stroke: var(--arc2); }
+/* shared states */
+.it .chk { display: none; }
+.it.done .chk { display: block; }
+.it.done .n { display: none; }
+.n { font-size: 12px; font-weight: 600; color: var(--muted); transition: color var(--dm) linear; }
+.it.cur .n, .it.cur small, .it.cur .lb2 { color: var(--warm); }
+.it.cur small { color: var(--ink); }
+.s-cards .it.cur, .s-linked .it.cur .ic { border-color: var(--warm); }
+.s-cards .it.cur .ic { border-color: var(--warm); }
+.s-cards .it.done { border-color: var(--arc2); background: color-mix(in srgb, var(--arc2) 14%, var(--surface)); }
+.s-cards .it.done .ic, .s-linked .it.done .ic { background: var(--arc2); border-color: var(--arc2); }
+.s-bars .it.cur .tr { outline-color: var(--warm); }
+.s-bars .it.done .lb2 { color: var(--ink); }
+.s-bars .it.done .lb2 .chk { display: block; }
+.s-bars .it .lb2 .n { display: none; }
+
+/* ---- Timer ---- */
+.timer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: center; }
+.dial { position: relative; width: min(280px, 100%); margin-inline: auto; aspect-ratio: 1; }
+.dial svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.dial .c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; pointer-events: none; }
+.dg { font-size: 48px; font-weight: 500; line-height: 1.1; direction: ltr; transition: opacity var(--dm) linear; }
+.lb { font-size: 13px; color: var(--muted); }
+.dial.paused .dg { animation: fadebreath 2.4s ease-in-out infinite; }
+@keyframes fadebreath { 50% { opacity: .4; } }
+.tside { display: grid; gap: 12px; min-width: 0; }
+.fname { font-size: 13px; color: var(--muted); }
+.brk { display: grid; gap: 10px; background: var(--surface2); border-radius: 18px; padding: 12px 14px; }
+.brk .q { font-size: 13px; color: var(--muted); }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opt { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 8px; cursor: pointer; font-size: 14px; transition: background var(--ds) linear, border-color var(--ds) linear, color var(--ds) linear; }
+.opt[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.pick { display: flex; gap: 10px; align-items: center; font-size: 14px; min-height: 34px; }
+.pick small { color: var(--muted); display: block; font-size: 12px; }
+.breath { width: 28px; height: 28px; border-radius: 50%; background: color-mix(in srgb, var(--arc1) 35%, transparent); border: 1.5px solid var(--arc1); flex: none; animation: breathbox 8s ease-in-out infinite; }
+@keyframes breathbox { 0%, 100% { transform: scale(.55); } 50% { transform: scale(1); } }
+.sq-ic { width: 32px; height: 32px; border-radius: 10px; background: var(--surface); display: grid; place-items: center; flex: none; color: var(--arc2); }
+.sq-ic svg { width: 18px; height: 18px; }
+.halo { transform-box: fill-box; transform-origin: center; animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.4); opacity: .45; } }
+.paused .halo { animation-play-state: paused; opacity: .3; }
+
+/* ---- Habits ---- */
+.hb { display: flex; gap: 12px; align-items: center; background: var(--surface2); border-radius: 18px; padding: 10px 12px; }
+.hb .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--hc) 18%, transparent); color: var(--hc); flex: none; }
+.hb .ic svg { width: 20px; height: 20px; }
+.hb .nm { flex: 1; min-width: 0; display: grid; }
+.hb .nm b { font-weight: 500; font-size: 14px; }
+.hb .nm small { color: var(--muted); font-size: 12px; }
+.tap { border: 0; background: none; padding: 0; cursor: pointer; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; }
+.tap svg { width: 46px; height: 46px; overflow: visible; }
+.tap.cb svg { width: 32px; height: 32px; }
+
+/* ---- Boot ---- */
+.boot { background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--arc1) 14%, transparent), transparent 60%), var(--icon-bg); border-radius: 20px; height: 240px; display: grid; place-content: center; justify-items: center; gap: 12px; overflow: hidden; }
+.boot svg { width: 96px; height: 96px; overflow: visible; }
+.wordm { display: grid; justify-items: center; }
+.wordm b { font-size: 26px; font-weight: 700; line-height: 1.2; }
+.wordm span { font-size: 11px; font-weight: 500; letter-spacing: .22em; color: #A9B6D6; direction: ltr; }
+
+/* ---- Rules ---- */
+.rbox ul { margin: 0; padding-inline-start: 18px; display: grid; gap: 8px; font-size: 14px; }
+.rbox li span { color: var(--muted); display: block; font-size: 13px; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; direction: ltr; unicode-bidi: isolate; color: var(--arc1); }
+.foot { padding-block: 32px 48px; color: var(--muted); font-size: 13px; }
+
+.rm .halo, .rm .breath, .rm .dial.paused .dg { animation: none !important; }
+.rm .breath { transform: scale(.8); }
+@media (prefers-reduced-motion: reduce) { .halo, .breath { animation: none !important; } }
+@media (max-width: 900px) { .row3, .duo, .timer { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<header class="wrap hd">
+  <span class="eyebrow">هِمّة · المرحلة 2 · القرار 5: لغة الحركة والمؤقت · الجولة 3</span>
+  <h1>الخطوات، والمؤقت كاملًا، والعادات</h1>
+  <p>مبنية على المعتمد: حركة «ناعمة ومرنة»، والمحطات خطوات بسيطة للأسبوع والجولات، وحلقة المؤقت للجولة الحالية، والإقلاع المرتدّ. المطلوب هنا: شكل الخطوات النهائي، وحالات المؤقت، وتسجيل العادة، وقواعد الحركة مع بديل تقليلها.</p>
+  <span class="note"><i></i>مرجع استكشافي حتى تعتمده. الوضع الغامق فقط.</span>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <nav aria-label="الأقسام"><a href="#steps">الخطوات</a><a href="#timer">المؤقت</a><a href="#habits">العادات</a><a href="#boot">الإقلاع</a><a href="#rules">القواعد</a></nav>
+    <button class="btn" id="rmToggle" type="button" aria-pressed="false">تقليل الحركة</button>
+  </div>
+</div>
+
+<main>
+  <section class="wrap sec" id="steps">
+    <h2>1. ثلاث تنويعات للخطوات</h2>
+    <p>كلها من الخيار «خطوات». الأولى كما هي مع تنظيف، والثانية خطوات أصغر يصلها خط يمتلئ، والثالثة أشرطة قصيرة باسم تحتها. كل تنويعة تعرض خطة الأسبوع وجولات التركيز، والجولات مربوطة بالمؤقت في القسم 2.</p>
+    <div class="ctls">
+      <button class="btn warm" type="button" id="wNext">أنهِ جلسة اليوم</button>
+      <button class="btn" type="button" id="wReset">أسبوع جديد</button>
+    </div>
+    <div class="row3" id="variants"></div>
+  </section>
+
+  <section class="wrap sec" id="timer">
+    <h2>2. المؤقت بكل حالاته</h2>
+    <p>الحلقة للمرحلة الحالية فقط: الجولة أثناء التركيز، والاستراحة أثناءها. الوقت يجري أسرع 30 مرة للعرض. جرّب الحالات بالترتيب.</p>
+    <div class="ctls" id="tCtl">
+      <button class="btn" type="button" data-s="focus">تركيز</button>
+      <button class="btn" type="button" data-s="pause">إيقاف مؤقت</button>
+      <button class="btn" type="button" data-s="done">انتهاء الجولة</button>
+      <button class="btn" type="button" data-s="short">استراحة قصيرة</button>
+      <button class="btn" type="button" data-s="long">استراحة طويلة</button>
+    </div>
+    <div class="ctls" id="vPick"><span class="lbl">الخطوات تحت المؤقت:</span></div>
+    <div class="cell"><div class="timer" id="tBox"></div></div>
+  </section>
+
+  <div class="wrap duo">
+    <section class="sec" id="habits">
+      <h2>3. تسجيل العادة</h2>
+      <p>اضغط الحلقة لإضافة كوب، والمربع لتسجيل القراءة. القسم يمتلئ بنعومة، والاكتمال توهّج يتّسع ويخفت.</p>
+      <div class="ctls">
+        <button class="btn" type="button" id="hFill">أكمل هدف الماء</button>
+        <button class="btn" type="button" id="hReset">صفّر</button>
+      </div>
+      <div class="cell" id="hCell"></div>
+    </section>
+    <section class="sec" id="boot">
+      <h2>4. الإقلاع (معتمد)</h2>
+      <p>للمراجعة مع زر تقليل الحركة: في الوضع المقلّل يظهر الرمز كاملًا بتلاشٍ واحد.</p>
+      <div class="ctls"><button class="btn" type="button" id="bReplay">أعد الإقلاع</button></div>
+      <div class="cell" id="bCell"></div>
+    </section>
+  </div>
+
+  <section class="wrap sec" id="rules">
+    <h2>5. القواعد للاعتماد</h2>
+    <p>شغّل «تقليل الحركة» من الشريط العلوي، ثم أعد تجربة الأقسام السابقة لترى البديل مطبّقًا.</p>
+    <div class="duo" style="gap: 16px">
+      <div class="cell rbox">
+        <h3>متى نحرّك، ومتى لا</h3>
+        <ul>
+          <li>نحرّك لنشرح تغيّر الحالة أو لنؤكّد فعلًا قام به المستخدم.<span>لا حركة للزينة، ولا حركة عند فتح كل شاشة.</span></li>
+          <li>الحركة المستمرة اثنتان فقط: تنفّس هالة «أنت هنا»، وتقدّم المؤقت.<span>وفي الاستراحة، دائرة التنفّس حين يختار المستخدم «ارتاح».</span></li>
+          <li>الاحتفال للإنجاز وحده: اكتمال جولة أو جلسة، وإتمام الأسبوع، واكتمال عادة.<span>توهّج ناعم يتّسع ويخفت. لا ارتداد ولا نثرات.</span></li>
+          <li>لا حركة تؤخّر المستخدم.<span>كل زر يستجيب أثناء الحركة، والحركة الجديدة تقطع القديمة.</span></li>
+          <li>ثلاث مدد ومنحنيان فقط، والارتداد للإقلاع وحده.<span>200 و 420 و 880 مللي ثانية.</span></li>
+        </ul>
+      </div>
+      <div class="cell rbox">
+        <h3>بديل تقليل الحركة</h3>
+        <ul>
+          <li>يتبع إعداد الجهاز تلقائيًا.<span>في Flutter: <code>MediaQuery.disableAnimations</code>.</span></li>
+          <li>لا حركة مكانية: القوس والنقطة والخطوات تقفز إلى مكانها.</li>
+          <li>كل تغيّر يظهر بتلاشٍ سريع، 150 مللي ثانية.</li>
+          <li>الهالة ودائرة التنفّس ثابتتان، ولا احتفال.<span>يكفي تغيّر اللون والنص.</span></li>
+          <li>الإقلاع: يظهر الرمز كاملًا بتلاشٍ واحد.</li>
+          <li>المؤقت يبقى يعدّ، والقوس يتحدّث كل ثانية بلا انزلاق.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">الجولة 3 للقرار 5. المعتمد حتى الآن في <code>docs/BRAND.md</code> القسم 3، والأرقام في <code>brand/tokens/motion.json</code>.</footer>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const C = { surface: '#141E36', surface2: '#1C2844', ring: '#2E3F70', dots: '#4A5C8C', soft: 'rgba(140,155,242,.12)', warm: '#F2A65A', arc1: '#6CB4E8', arc2: '#7FD8BE', primary: '#8C9BF2' };
+const D = { ds: 200, dm: 420, dl: 880 };
+const EASE_CSS = 'cubic-bezier(.22,1,.36,1)', EMPH_CSS = 'cubic-bezier(.16,1,.3,1)', BACK_CSS = 'cubic-bezier(.34,1.56,.64,1)';
+let RM = false;
+try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+const el = (t, a = {}, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const anim = (n, f, o) => (RM || !n || !n.animate) ? null : n.animate(f, o);
+const later = (ms, fn) => setTimeout(fn, RM ? 0 : ms);
+const fade = n => { if (RM && n && n.animate) n.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); };
+function bez(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = t => ((ax * t + bx) * t + cx) * t, Y = t => ((ay * t + by) * t + cy) * t, dX = t => (3 * ax * t + 2 * bx) * t + cx;
+  return x => { let t = x; for (let i = 0; i < 6; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - x) / d; } return Y(Math.max(0, Math.min(1, t))); };
+}
+const easeB = bez(.22, 1, .36, 1), lin = x => x;
+function tween(o, to, dur, ease, step) {
+  cancelAnimationFrame(o._raf);
+  const from = o.v ?? to;
+  if (RM || dur <= 0 || from === to) { o.v = to; step(to); return; }
+  const t0 = performance.now();
+  const f = now => { const k = Math.min(1, (now - t0) / dur); o.v = from + (to - from) * ease(k); step(o.v); if (k < 1) o._raf = requestAnimationFrame(f); };
+  o._raf = requestAnimationFrame(f);
+}
+const CHK = '<svg class="chk" viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-4.5 0.5l3 3 6-6.5"/></svg>';
+const fmt = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+
+/* ---------- Steps: one component, three looks ---------- */
+const VARIANTS = [
+  { id: 'cards', tag: 'أ', name: 'بطاقات', desc: 'بطاقة لكل خطوة باسمها، والحالية تمتلئ من الداخل. الأوضح، وتأخذ أكبر مساحة.' },
+  { id: 'linked', tag: 'ب', name: 'خطوات موصولة', desc: 'مربعات صغيرة يصلها خط يمتلئ عند الإنجاز. تُقرأ كمسار، وتبقي شيئًا من روح المدار.' },
+  { id: 'bars', tag: 'ج', name: 'أشرطة', desc: 'شريط قصير لكل خطوة واسم تحته. الأخف والأصغر، ويناسب تحت المؤقت وفي الويدجت.' }
+];
+function Steps(variant, items) {
+  let root;
+  if (variant === 'cards') root = h(`<div class="s-cards">${items.map(t => `<div class="it up"><span class="fill"></span><span class="ic"><span class="n">${t.n}</span>${CHK}</span><small>${t.label}</small></div>`).join('')}</div>`);
+  else if (variant === 'linked') root = h(`<div class="s-linked">${items.map((t, i) => `${i ? '<span class="cn"><i></i></span>' : ''}<div class="it up"><span class="ic"><span class="fill"></span><span class="n" style="position:relative">${t.n}</span><span style="position:relative">${CHK}</span></span><small>${t.label}</small></div>`).join('')}</div>`);
+  else root = h(`<div class="s-bars">${items.map(t => `<div class="it up"><span class="tr"><span class="fill"></span></span><span class="lb2">${CHK}<span class="n">${t.n}</span>${t.label}</span></div>`).join('')}</div>`);
+  const its = [...root.querySelectorAll('.it')], cns = [...root.querySelectorAll('.cn i')];
+  return {
+    el: root,
+    render(states, frac, how) {
+      // states: 'done' | 'cur' | 'up' per item; frac fills the current one
+      const tr = RM || how === 'snap' ? 'none' : how === 'tick' ? 'width 1000ms linear' : `width ${D.dl}ms ${EASE_CSS}`;
+      its.forEach((it, i) => {
+        it.className = 'it ' + states[i];
+        const f = it.querySelector('.fill');
+        f.style.transition = tr;
+        f.style.width = (states[i] === 'done' ? (variant === 'cards' || variant === 'linked' ? 0 : 100) : states[i] === 'cur' ? (frac || 0) * 100 : 0) + '%';
+      });
+      cns.forEach((c, i) => { c.style.transition = RM || how === 'snap' ? 'none' : ''; c.style.width = states[i] === 'done' ? '100%' : '0%'; });
+    },
+    celebrate(i) {
+      const it = its[i]; if (!it) return;
+      const target = variant === 'cards' ? it : variant === 'linked' ? it.querySelector('.ic') : it.querySelector('.tr');
+      anim(target, [{ boxShadow: '0 0 0 0 rgba(127,216,190,.55)' }, { boxShadow: '0 0 0 10px rgba(127,216,190,0)' }], { duration: D.dl * 1.2, easing: EMPH_CSS });
+      fade(target);
+    },
+    complete() { its.forEach((it, i) => anim(it, [{ opacity: 1 }, { opacity: .55 }, { opacity: 1 }], { duration: D.dl, delay: i * 110, easing: 'ease-in-out' })); }
+  };
+}
+
+/* ---------- State ---------- */
+const WEEK = [{ n: 1, label: 'الأحد' }, { n: 2, label: 'الثلاثاء' }, { n: 3, label: 'الخميس' }];
+const ROUNDS = [1, 2, 3, 4].map(n => ({ n, label: `جولة ${n}` }));
+const WK = { done: 1 };
+const TM = { st: 'focus', prev: 'focus', round: 2, left: 825, total: 1500, choice: null };
+const weekStates = () => WEEK.map((_, i) => i < WK.done ? 'done' : i === WK.done ? 'cur' : 'up');
+function roundStates() {
+  const base = TM.st === 'paused' ? TM.prev : TM.st, R = TM.round;
+  if (base === 'long') return { s: ROUNDS.map(() => 'done'), f: 0 };
+  if (base === 'focus') return { s: ROUNDS.map((_, i) => i < R - 1 ? 'done' : i === R - 1 ? 'cur' : 'up'), f: 1 - TM.left / TM.total };
+  return { s: ROUNDS.map((_, i) => i < R ? 'done' : 'up'), f: 0 };
+}
+
+/* ---------- Section 1 ---------- */
+const varCells = VARIANTS.map(v => {
+  const cell = h(`<article class="cell"><div class="ch"><h3><span class="tag">${v.tag}</span>${v.name}</h3><p>${v.desc}</p></div>
+    <div class="blk"><div class="t"><b>خطة الأسبوع</b><span class="num wt"></span></div><div class="wv"></div><span class="msg">أتممت خطة الأسبوع</span></div>
+    <div class="blk"><div class="t"><b>جولات التركيز</b><span class="num rt"></span></div><div class="rv"></div></div></article>`);
+  const w = Steps(v.id, WEEK), r = Steps(v.id, ROUNDS);
+  cell.querySelector('.wv').append(w.el); cell.querySelector('.rv').append(r.el);
+  document.getElementById('variants').append(cell);
+  return {
+    week(how) { w.render(weekStates(), 0, how); cell.querySelector('.wt').textContent = `${WK.done} من 3 جلسات`; cell.querySelector('.msg').style.opacity = WK.done === 3 ? 1 : 0; },
+    rounds(how) { const { s, f } = roundStates(); r.render(s, f, how); cell.querySelector('.rt').textContent = timerLabel(); },
+    w, r
+  };
+});
+const wNext = document.getElementById('wNext');
+const wSync = () => { wNext.disabled = WK.done >= 3; };
+wNext.addEventListener('click', () => {
+  if (WK.done >= 3) return;
+  const i = WK.done++; varCells.forEach(c => { c.week('move'); c.w.celebrate(i); });
+  if (WK.done === 3) later(D.dm, () => varCells.forEach(c => c.w.complete()));
+  wSync();
+});
+document.getElementById('wReset').addEventListener('click', () => { WK.done = 0; varCells.forEach(c => c.week('move')); wSync(); });
+
+/* ---------- Section 2: timer ---------- */
+const ICON_STRETCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.8"/><path d="M5 9l7 1.5L19 9M12 10.5V15l-3 6M12 15l3 6"/></svg>';
+function timerLabel() {
+  const base = TM.st === 'paused' ? TM.prev : TM.st, R = TM.round;
+  const l = { focus: `جولة تركيز ${R} من 4`, done: `انتهت الجولة ${R}`, short: 'استراحة قصيرة · 5 دقائق', long: 'استراحة طويلة · 15 دقيقة' }[base];
+  return TM.st === 'paused' ? `متوقف مؤقتًا · ${l}` : l;
+}
+const T = (() => {
+  const box = document.getElementById('tBox');
+  const size = 280, cx = 140, r = 110, sw = 11;
+  const svg = el('svg', { viewBox: `0 0 ${size} ${size}`, 'aria-hidden': 'true' });
+  const defs = el('defs', {}, svg);
+  const grad = (id, a, b) => { const g = el('linearGradient', { id, x1: 0, y1: 0, x2: 1, y2: 1 }, defs); el('stop', { offset: 0, 'stop-color': a }, g); el('stop', { offset: 1, 'stop-color': b }, g); };
+  grad('tf', C.arc1, C.arc2); grad('tb', C.primary, C.arc1);
+  const fl = el('filter', { id: 'tg', x: '-30%', y: '-30%', width: '160%', height: '160%' }, defs); el('feGaussianBlur', { stdDeviation: 7 }, fl);
+  el('circle', { cx, cy: cx, r, fill: 'none', stroke: C.soft, 'stroke-width': sw + 9 }, svg);
+  const bloom = el('circle', { cx, cy: cx, r, fill: 'none', stroke: C.arc2, 'stroke-width': sw * 2.4, filter: 'url(#tg)', opacity: 0 }, svg);
+  const arcsG = el('g', {}, svg); arcsG.style.transition = `opacity ${D.ds}ms linear`;
+  const dim = el('g', {}, arcsG); dim.style.transition = 'opacity var(--dm) linear';
+  const pal = {};
+  const arcs = [];
+  ['f', 'b'].forEach(k => {
+    pal[k] = el('g', {}, dim); pal[k].style.transition = 'opacity var(--dm) linear';
+    [true, false].forEach(gl => {
+      const c = el('circle', { cx, cy: cx, r, fill: 'none', stroke: `url(#t${k})`, 'stroke-width': sw, 'stroke-linecap': 'round', pathLength: 100, 'stroke-dasharray': '100 100', transform: `rotate(-90 ${cx} ${cx})` }, pal[k]);
+      if (gl) { c.setAttribute('filter', 'url(#tg)'); c.setAttribute('opacity', '.5'); }
+      arcs.push(c);
+    });
+  });
+  const head = el('g', {}, svg); head.style.transition = `opacity ${D.ds}ms linear`;
+  el('circle', { r: 20, fill: C.warm, opacity: .22, class: 'halo' }, head);
+  el('circle', { r: 9, fill: C.warm, stroke: C.surface, 'stroke-width': 2 }, head);
+  const dial = h('<div class="dial"><div class="c"><b class="dg">13:45</b><span class="lb"></span></div></div>');
+  dial.prepend(svg);
+  const side = h(`<div class="tside"><span class="fname">كتابة التقرير</span><div class="sv"></div>
+    <div class="brk" hidden><span class="q"></span><div class="opts"><button class="opt" type="button" data-c="move" aria-pressed="false">تحرّك</button><button class="opt" type="button" data-c="rest" aria-pressed="false">ارتاح</button></div><div class="pick"></div></div></div>`);
+  box.append(dial, side);
+  const brk = side.querySelector('.brk'), pick = side.querySelector('.pick');
+  let steps, variant = 'bars';
+  const setVariant = id => { variant = id; steps = Steps(id, ROUNDS); side.querySelector('.sv').replaceChildren(steps.el); const { s, f } = roundStates(); steps.render(s, f, 'snap'); document.querySelectorAll('#vPick .btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === id))); };
+  const vp = document.getElementById('vPick');
+  VARIANTS.forEach(v => { const b = h(`<button class="btn" type="button" data-v="${v.id}">${v.tag} · ${v.name}</button>`); b.addEventListener('click', () => setVariant(v.id)); vp.append(b); });
+  setVariant('bars');
+  brk.addEventListener('click', e => { const b = e.target.closest('.opt'); if (!b) return; TM.choice = b.dataset.c; choice(true); });
+  function choice(animate) {
+    brk.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.c === TM.choice)));
+    pick.innerHTML = TM.choice === 'move' ? `<span class="sq-ic">${ICON_STRETCH}</span><span>تمدّد الرقبة الجانبي<small class="num">30 ثانية · 4 حركات خفيفة</small></span>`
+      : TM.choice === 'rest' ? '<span class="breath"></span><span>تنفّس ببطء<small class="num">شهيق 4 ثوانٍ، وزفير 4</small></span>' : '<span class="lb">اختر طريقة الاستراحة.</span>';
+    if (animate) { anim(pick, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: D.dm, easing: EASE_CSS }); fade(pick); }
+  }
+  const o = {};
+  const place = q => {
+    arcs.forEach(a => { a.style.strokeDashoffset = 100 - q * 100; });
+    arcsG.style.opacity = q > .002 ? 1 : 0;
+    const a = (-90 + 360 * q) * Math.PI / 180;
+    head.setAttribute('transform', `translate(${cx + r * Math.cos(a)} ${cx + r * Math.sin(a)})`);
+  };
+  let seq = 0;
+  function setQ(q, how) {
+    const my = ++seq;
+    if (how === 'tick') return tween(o, q, 1000, lin, place);
+    if (!RM && how !== 'snap' && q < (o.v ?? 0) - .02) {
+      arcsG.style.opacity = 0; head.style.opacity = 0;
+      return setTimeout(() => { if (my !== seq) return; o.v = q; place(q); head.style.opacity = 1; }, D.ds + 30);
+    }
+    head.style.opacity = 1;
+    tween(o, q, how === 'snap' ? 0 : D.dl, easeB, place);
+  }
+  return {
+    update(how) {
+      const base = TM.st === 'paused' ? TM.prev : TM.st, brkState = base === 'short' || base === 'long';
+      const q = base === 'done' ? 1 : 1 - TM.left / TM.total;
+      pal.f.style.opacity = brkState ? 0 : 1; pal.b.style.opacity = brkState ? 1 : 0;
+      dim.style.opacity = TM.st === 'paused' ? .32 : 1;
+      dial.classList.toggle('paused', TM.st === 'paused');
+      setQ(q, how);
+      dial.querySelector('.dg').textContent = fmt(TM.left);
+      dial.querySelector('.lb').textContent = timerLabel();
+      const { s, f } = roundStates(); steps.render(s, f, how);
+      const showBrk = base !== 'focus';
+      side.querySelector('.q').textContent = base === 'done' ? 'الاستراحة التالية 5 دقائق. كيف تقضيها؟' : 'كيف تقضي الاستراحة؟';
+      if (showBrk && brk.hidden) { brk.hidden = false; choice(false); anim(brk, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: D.dm, easing: EASE_CSS }); fade(brk); }
+      if (!showBrk) brk.hidden = true;
+    },
+    arrive() {
+      anim(bloom, [{ opacity: 0 }, { opacity: .5, offset: .3 }, { opacity: 0 }], { duration: D.dl * 1.6, easing: 'ease-in-out' });
+      steps.celebrate(TM.round - 1);
+    }
+  };
+})();
+
+function tRender(how) {
+  T.update(how); varCells.forEach(c => c.rounds(how));
+  document.querySelectorAll('#tCtl .btn').forEach(b => {
+    const s = b.dataset.s;
+    if (s === 'pause') { b.textContent = TM.st === 'paused' ? 'استئناف' : 'إيقاف مؤقت'; b.setAttribute('aria-pressed', String(TM.st === 'paused')); b.disabled = TM.st === 'done'; }
+    else b.setAttribute('aria-pressed', String(TM.st === s));
+  });
+}
+function tSet(s) {
+  if (s === 'pause') {
+    if (TM.st === 'paused') TM.st = TM.prev; else if (TM.st !== 'done') { TM.prev = TM.st; TM.st = 'paused'; }
+    return tRender('move');
+  }
+  const from = TM.st === 'paused' ? TM.prev : TM.st;
+  if (s === 'focus') {
+    if (TM.st === 'paused' && from === 'focus') TM.st = 'focus';
+    else { TM.round = from === 'long' ? 1 : from === 'focus' ? TM.round : Math.min(4, TM.round + 1); TM.st = 'focus'; TM.left = TM.total = 1500; }
+  } else if (s === 'done') {
+    TM.st = 'done'; TM.left = 0; tRender('move');
+    later(D.dl * .8, () => { T.arrive(); varCells.forEach(c => c.r.celebrate(TM.round - 1)); });
+    return;
+  } else if (s === 'short') { TM.st = 'short'; TM.left = TM.total = 300; TM.round = Math.min(TM.round, 3); }
+  else if (s === 'long') { TM.st = 'long'; TM.left = TM.total = 900; TM.round = 4; }
+  TM.choice = null; tRender('move');
+}
+document.getElementById('tCtl').addEventListener('click', e => { const b = e.target.closest('.btn'); if (b) tSet(b.dataset.s); });
+setInterval(() => {
+  if (!['focus', 'short', 'long'].includes(TM.st)) return;
+  TM.left = Math.max(0, TM.left - 30);
+  if (TM.left > 0) return tRender('tick');
+  if (TM.st === 'focus') tSet('done');
+  else { const wasLong = TM.st === 'long'; TM.st = 'focus'; TM.round = wasLong ? 1 : TM.round + 1; TM.left = TM.total = 1500; TM.choice = null; tRender('move'); }
+}, 1000);
+
+/* ---------- Section 3: habits ---------- */
+const H = (() => {
+  const cell = document.getElementById('hCell');
+  cell.innerHTML = `<div class="hb" style="--hc:#6CB4E8"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c3 4 6 7.2 6 10.5a6 6 0 0 1-12 0c0-3.3 3-6.5 6-10.5z"/></svg></span><span class="nm"><b>اشرب الماء</b><small class="num wq"></small></span><button class="tap" type="button" aria-label="أضف كوبًا"></button></div>
+    <div class="hb" style="--hc:#B09CF5"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5c3-1 5.5-1 8 .8 2.5-1.8 5-1.8 8-.8V19c-3-1-5.5-1-8 .8-2.5-1.8-5-1.8-8-.8z"/><path d="M12 6.3V19.8"/></svg></span><span class="nm"><b>اقرأ 10 صفحات</b><small class="rq"></small></span><button class="tap cb" type="button" aria-label="سجّل القراءة" aria-pressed="false"></button></div>`;
+  const N = 8, START = 3, S = 46, cx = 23, r = 18, sw = 4, col = '#6CB4E8', cbCol = '#B09CF5';
+  const svg = el('svg', { viewBox: `0 0 ${S} ${S}`, 'aria-hidden': 'true' });
+  const defs = el('defs', {}, svg);
+  const fl = el('filter', { id: 'hg', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs); el('feGaussianBlur', { stdDeviation: 4 }, fl);
+  const glow = el('circle', { cx, cy: cx, r: r + 2, fill: col, filter: 'url(#hg)', opacity: 0 }, svg);
+  const segs = el('g', {}, svg); segs.style.transition = 'opacity var(--ds) linear';
+  const over = [];
+  for (let i = 0; i < N; i++) {
+    const a0 = -90 + i * 360 / N + 6, a1 = -90 + (i + 1) * 360 / N - 6, p = a => [cx + r * Math.cos(a * Math.PI / 180), cx + r * Math.sin(a * Math.PI / 180)];
+    const [x0, y0] = p(a0), [x1, y1] = p(a1), d = `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+    el('path', { d, fill: 'none', stroke: C.ring, 'stroke-width': sw, 'stroke-linecap': 'round' }, segs);
+    over.push(el('path', { d, fill: 'none', stroke: col, 'stroke-width': sw, 'stroke-linecap': 'round' }, segs));
+  }
+  const plus = el('text', { x: cx, y: cx + 5, 'text-anchor': 'middle', 'font-size': 15, 'font-weight': 500, fill: '#93A0BE' }, segs); plus.textContent = '+';
+  const full = el('g', { class: 'pop' }, svg);
+  el('circle', { cx, cy: cx, r: r + 2, fill: col }, full);
+  const chk = el('path', { d: 'M15.5 23.5l5 5 10-11', fill: 'none', stroke: '#0B1222', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 100, 'stroke-dasharray': '100 100' }, full);
+  const tap = cell.querySelector('.tap:not(.cb)'); tap.append(svg);
+  const cb = cell.querySelector('.tap.cb');
+  const cs = el('svg', { viewBox: '0 0 32 32', 'aria-hidden': 'true' });
+  el('rect', { x: 3, y: 3, width: 26, height: 26, rx: 9, fill: 'none', stroke: C.dots, 'stroke-width': 2 }, cs);
+  const cf = el('g', { class: 'pop' }, cs);
+  el('rect', { x: 3, y: 3, width: 26, height: 26, rx: 9, fill: cbCol }, cf);
+  const cc = el('path', { d: 'M10 16.5l4 4 8-9', fill: 'none', stroke: '#0B1222', 'stroke-width': 2.8, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 100, 'stroke-dasharray': '100 100' }, cf);
+  cb.append(cs);
+  const st = { k: START, on: false };
+  const paint = () => {
+    over.forEach((o, i) => { o.style.opacity = i < st.k ? 1 : 0; });
+    const isFull = st.k >= N;
+    segs.style.opacity = isFull ? 0 : 1; full.style.opacity = isFull ? 1 : 0; chk.style.strokeDashoffset = 0;
+    cell.querySelector('.wq').textContent = isFull ? 'اكتمل هدف اليوم: 8 أكواب' : `${st.k} من 8 أكواب`;
+    cf.style.opacity = st.on ? 1 : 0; cc.style.strokeDashoffset = 0;
+    cb.setAttribute('aria-pressed', String(st.on));
+    cell.querySelector('.rq').textContent = st.on ? 'أُنجزت اليوم' : 'مرة واحدة يوميًا';
+  };
+  const api = {
+    add(quiet) {
+      if (st.k >= N) { st.k = 0; return paint(); }
+      const i = st.k++; paint();
+      if (quiet) return;
+      anim(over[i], [{ opacity: 0, strokeWidth: sw * .3 }, { opacity: 1, strokeWidth: sw }], { duration: D.dm, easing: EASE_CSS });
+      fade(over[i]);
+      if (st.k === N) {
+        anim(segs, [{ opacity: 1 }, { opacity: 0 }], { duration: D.ds });
+        anim(full, [{ opacity: 0, transform: 'scale(.82)' }, { opacity: 1, transform: 'scale(1)' }], { duration: D.dl, delay: D.ds, easing: EASE_CSS, fill: 'backwards' });
+        anim(chk, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: D.dm, delay: D.ds + D.dm * .6, easing: EASE_CSS, fill: 'backwards' });
+        anim(glow, [{ opacity: 0, transform: 'scale(.8)' }, { opacity: .7, offset: .3 }, { opacity: 0, transform: 'scale(1.6)' }], { duration: D.dl * 1.4, delay: D.ds, easing: EMPH_CSS });
+        fade(full);
+      }
+    },
+    check() {
+      st.on = !st.on; paint();
+      if (!st.on) { anim(cf, [{ opacity: 1 }, { opacity: 0 }], { duration: D.ds }); return; }
+      anim(cf, [{ opacity: 0, transform: 'scale(.8)' }, { opacity: 1, transform: 'scale(1)' }], { duration: D.dm, easing: EASE_CSS });
+      anim(cc, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: D.dm, delay: D.ds * .6, easing: EASE_CSS, fill: 'backwards' });
+      fade(cf);
+    },
+    fill() { st.k = START; paint(); while (st.k < N - 1) api.add(true); api.add(); },
+    reset() { st.k = START; st.on = false; paint(); }
+  };
+  glow.classList.add('pop');
+  tap.addEventListener('click', () => api.add());
+  cb.addEventListener('click', () => api.check());
+  paint();
+  return api;
+})();
+document.getElementById('hFill').addEventListener('click', () => H.fill());
+document.getElementById('hReset').addEventListener('click', () => H.reset());
+
+/* ---------- Section 4: boot (approved) ---------- */
+const B = (() => {
+  const MR = 27, MA = -60;
+  const mix = (a, b, t) => '#' + [1, 3, 5].map(i => Math.round(parseInt(a.substr(i, 2), 16) + (parseInt(b.substr(i, 2), 16) - parseInt(a.substr(i, 2), 16)) * t).toString(16).padStart(2, '0')).join('');
+  const mpt = (deg, r) => [50 + r * Math.cos(deg * Math.PI / 180), 50 + r * Math.sin(deg * Math.PI / 180)];
+  const cell = document.getElementById('bCell');
+  cell.innerHTML = '<div class="boot"><div class="wordm"><b>هِمّة</b><span>HIMMA</span></div></div>';
+  const svg = el('svg', { viewBox: '0 0 100 100', 'aria-hidden': 'true' }), defs = el('defs', {}, svg);
+  const [dx, dy] = mpt(MA, MR);
+  const gm = el('mask', { id: 'bg', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: 100, height: 100 }, defs);
+  el('rect', { width: 100, height: 100, fill: '#fff' }, gm); el('circle', { cx: dx, cy: dy, r: 11.75, fill: '#000' }, gm);
+  const rmk = el('mask', { id: 'br', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: 100, height: 100 }, defs);
+  const rv = el('circle', { cx: 50, cy: 50, r: MR, fill: 'none', stroke: '#fff', 'stroke-width': 16, pathLength: 100, 'stroke-dasharray': '100 100', transform: `rotate(${MA} 50 50)` }, rmk);
+  rv.style.strokeDashoffset = 0;
+  const g2 = el('g', { mask: 'url(#br)' }, el('g', { mask: 'url(#bg)' }, svg));
+  for (let i = 0; i < 120; i++) {
+    const t = i / 120, a0 = MA - t * 360 + .8, a1 = MA - (i + 1) / 120 * 360 - .8;
+    const [x0, y0] = mpt(a0, MR), [x1, y1] = mpt(a1, MR);
+    el('path', { d: `M${x0.toFixed(2)} ${y0.toFixed(2)}A${MR} ${MR} 0 0 0 ${x1.toFixed(2)} ${y1.toFixed(2)}`, fill: 'none', stroke: mix(mix('#7FD8BE', '#6CB4E8', Math.min(1, t * 1.15)), '#14213D', .32 * t), 'stroke-width': 11 }, g2);
+  }
+  const dot = el('circle', { cx: dx, cy: dy, r: 8.25, fill: C.warm, class: 'pop' }, svg);
+  const box = cell.querySelector('.boot'); box.prepend(svg);
+  const word = cell.querySelector('.wordm');
+  return {
+    play() {
+      if (RM) { if (box.animate) box.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 }); return; }
+      const draw = 1100, drop = 550, at = 950;
+      anim(rv, [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: draw, easing: EASE_CSS });
+      anim(dot, [{ opacity: 0, transform: 'translateY(-30px)' }, { opacity: 1, offset: .35 }, { opacity: 1, transform: 'none' }], { duration: drop, delay: at, easing: BACK_CSS, fill: 'backwards' });
+      later(at + drop * .8, () => {
+        const c = el('circle', { cx: dx, cy: dy, r: 8.25, fill: 'none', stroke: C.warm, 'stroke-width': 1.5, class: 'pop' }, svg);
+        const a = anim(c, [{ opacity: .8, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(2.4)' }], { duration: D.dl, easing: EASE_CSS });
+        if (a) a.onfinish = () => c.remove(); else c.remove();
+      });
+      anim(word, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: D.dl, delay: at + drop, easing: EASE_CSS, fill: 'backwards' });
+    }
+  };
+})();
+document.getElementById('bReplay').addEventListener('click', () => B.play());
+
+/* ---------- Reduced motion toggle ---------- */
+const rmBtn = document.getElementById('rmToggle');
+function applyRM() { document.documentElement.classList.toggle('rm', RM); rmBtn.setAttribute('aria-pressed', String(RM)); rmBtn.textContent = RM ? 'تقليل الحركة: مفعّل' : 'تقليل الحركة'; }
+rmBtn.addEventListener('click', () => { RM = !RM; applyRM(); });
+
+applyRM();
+varCells.forEach(c => c.week('snap'));
+tRender('snap');
+wSync();
+B.play();
+</script>
