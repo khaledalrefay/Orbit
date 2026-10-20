@@ -1,0 +1,194 @@
+<title>رموز همة: الهاء الخضراء</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: intro, shortlisted marks for reference, then the two chosen Haa variants in the brand green, each with the apricot dot at the end of the stroke (detached and attached). Each card: app icon (dark + light tile), monochrome, small sizes, wordmark lockup, and the rationale. Brand colors are the approved palette. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --fg: #14213D; --muted: #5A6785; --line: #DCE3EE; --chip: #E9EEF6; --focus: #3D4FA3;
+  --g1: #3D4FA3; --g2: #2A8CA6; --gr: #2E9C82; --navy: #14213D; --indigo: #3D4FA3; --sky: #6CB4E8; --mint: #7FD8BE; --warm: #F2A65A;
+  --f: "Rubik", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; --gr: #7FD8BE; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; --gr: #7FD8BE; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
+.wrap { max-width: 1160px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 10px; max-width: 74ch; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; font-weight: 700; }
+header p { margin: 0; color: var(--muted); }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+
+.filter { display: inline-flex; flex-wrap: wrap; gap: 4px; background: var(--chip); border-radius: 18px; padding: 3px; align-self: flex-start; }
+.filter button { font: inherit; font-size: 14px; border: 0; background: transparent; color: var(--fg); padding: 5px 16px; border-radius: 999px; cursor: pointer; }
+.filter button[aria-pressed="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / .12); }
+.filter button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.head h2 { margin: 0; font-size: 20px; font-weight: 700; }
+.head h2 small { font-size: 13px; color: var(--muted); font-weight: 500; margin-inline-start: 6px; }
+.tag { font-size: 12.5px; border-radius: 999px; padding: 2px 12px; white-space: nowrap; font-weight: 500; }
+.tag.aligned { background: color-mix(in srgb, #3D4FA3 16%, transparent); }
+.tag.bold { background: color-mix(in srgb, #F2A65A 26%, transparent); }
+.tag.letter { background: color-mix(in srgb, #6CB4E8 26%, transparent); }
+.tag.neutral { background: color-mix(in srgb, #7FD8BE 26%, transparent); }
+
+.show { display: grid; grid-template-columns: auto auto 1fr; gap: 14px; align-items: center; }
+@media (max-width: 480px) { .show { grid-template-columns: auto auto; } .show .lock { grid-column: 1 / -1; } }
+.tile { width: 104px; height: 104px; border-radius: 24px; display: grid; place-items: center; overflow: hidden; }
+.tile svg { width: 100%; height: 100%; }
+.tile.dark { background: var(--navy); }
+.tile.circle { border-radius: 50%; background: var(--navy); }
+.tile.light { background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCE3EE; }
+.lock { display: flex; align-items: center; gap: 12px; min-width: 0; flex-wrap: wrap; }
+.lock svg { width: 56px; height: 56px; flex: none; color: var(--fg); }
+.lock .words { display: flex; flex-direction: column; line-height: 1.15; }
+.lock .ar { font-size: 32px; font-weight: 700; }
+.lock .en { font-size: 15px; font-weight: 500; letter-spacing: .06em; color: var(--muted); direction: ltr; text-align: right; }
+
+.small { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.small .s { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.small .t { background: var(--navy); display: grid; place-items: center; overflow: hidden; }
+.small .t svg { width: 100%; height: 100%; }
+.small .mono { color: var(--fg); }
+.small .mono svg { width: 40px; height: 40px; }
+
+dl { margin: 0; display: grid; grid-template-columns: 6.5em 1fr; gap: 6px 12px; font-size: 14px; }
+dt { color: var(--muted); }
+dd { margin: 0; min-width: 0; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.ask h2 { margin: 0 0 6px; font-size: 18px; }
+.ask ol { margin: 0; padding-inline-start: 1.3em; }
+.group { display: flex; flex-direction: column; gap: 14px; }
+.group > h2 { margin: 0; font-size: 22px; }
+.group > p { margin: 0; color: var(--muted); max-width: 72ch; }
+.show { grid-template-columns: auto auto auto 1fr; }
+@media (max-width: 560px) { .show { grid-template-columns: auto auto auto; } .show .lock { grid-column: 1 / -1; } .tile { width: 84px; height: 84px; border-radius: 20px; } }
+.big { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.big span { aspect-ratio: 1; border-radius: 18px; display: grid; place-items: center; overflow: hidden; max-width: 100%; }
+.big span svg { width: 86%; height: 86%; }
+.big .bl { background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCE3EE; }
+.big .bd { background: var(--navy); }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="eyebrow">همة · المرحلة 2 · القرار 4 من 6 · جولة سادسة</div>
+    <h1>الهاء باللون الأخضر: هـ3 وهـ4</h1>
+    <p>الحرف باللون النعناعي المعتمد (الأغمق منه على الخلفيات الفاتحة)، والنقطة المشمشية في نهاية الحرف بعد الكشيدة. لكل تنويعة طريقتان للنقطة: منفصلة بمسافة قصيرة كأن القلم يتابع، أو ملتصقة بنهاية الخط.</p>
+    <div class="notice"><strong>رسومات للمقارنة، لا شيء معتمد.</strong> التحسينات: بداية أنعم عند رأس القلم، وسماكة أثبت في العين، ونهاية الكشيدة تستدق نحو النقطة.</div>
+  </header>
+  <div id="groups"></div>
+  <section class="ask">
+    <h2>للاختيار</h2>
+    <ol>
+      <li>أي تنويعة تفضّل: هـ3 أم هـ4؟</li>
+      <li>النقطة منفصلة أم ملتصقة؟</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+let GN = 0;
+const grad = c => { const id = 'lg' + (++GN); return [id, `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:${c.g1}"/><stop offset="1" style="stop-color:${c.g2}"/></linearGradient></defs>`]; };
+const pt = (deg, r, cx = 50, cy = 50) => [+(cx + r * Math.cos(deg * Math.PI / 180)).toFixed(2), +(cy + r * Math.sin(deg * Math.PI / 180)).toFixed(2)];
+const arc = (a0, a1, r) => { const [x0, y0] = pt(a0, r), [x1, y1] = pt(a1, r); return `M${x0} ${y0} A${r} ${r} 0 ${(a1 - a0) % 360 > 180 ? 1 : 0} 1 ${x1} ${y1}`; };
+const dot = (x, y, r, c, cut = 3.5) => `${cut ? `<circle cx="${x}" cy="${y}" r="${r + cut}" fill="${c.bg}"/>` : ''}<circle cx="${x}" cy="${y}" r="${r}" fill="${c.ac}"/>`;
+const lerp = (a, b, t) => a + (b - a) * t;
+const line = pts => pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join(' ');
+
+// Sample an absolute M/C/L path into points
+function sample(d, per = 30) {
+  const tok = d.match(/[MCL]|-?[\d.]+/g); let i = 0, cur = [0, 0], cmd = '', out = [];
+  const num = () => +tok[i++];
+  while (i < tok.length) {
+    if (/[MCL]/.test(tok[i])) cmd = tok[i++];
+    if (cmd === 'M') { cur = [num(), num()]; out.push(cur); }
+    else if (cmd === 'L') { const p = [num(), num()]; for (let k = 1; k <= per / 3; k++) { const t = k / (per / 3); out.push([lerp(cur[0], p[0], t), lerp(cur[1], p[1], t)]); } cur = p; }
+    else if (cmd === 'C') { const a = [num(), num()], b = [num(), num()], p = [num(), num()]; for (let k = 1; k <= per; k++) { const t = k / per, u = 1 - t; out.push([u*u*u*cur[0] + 3*u*u*t*a[0] + 3*u*t*t*b[0] + t*t*t*p[0], u*u*u*cur[1] + 3*u*u*t*a[1] + 3*u*t*t*b[1] + t*t*t*p[1]]); } cur = p; }
+  }
+  return out;
+}
+function ribbon(P, w) {
+  const L = [], R = [];
+  for (let i = 0; i < P.length; i++) {
+    const a = P[Math.max(0, i - 1)], b = P[Math.min(P.length - 1, i + 1)];
+    const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    const h = Math.max(.3, w(i / (P.length - 1), Math.atan2(dy, dx), i)) / 2;
+    L.push([P[i][0] + nx * h, P[i][1] + ny * h]); R.push([P[i][0] - nx * h, P[i][1] - ny * h]);
+  }
+  return line(L) + ' ' + line(R.reverse()).replace('M', 'L') + ' Z';
+}
+const noise = i => (Math.sin(i * 12.9898) * 43758.5453) % 1;
+const taper = (t, a = .08, b = .12) => Math.min(1, t / a, (1 - t) / b);
+// Width profile taken from the sketch: thin at the pen start, heavy in the arch and the right side, lighter in the eye, then the tail fades
+const PROFILE = [[0, 3], [.08, 5.6], [.26, 8.4], [.42, 7.6], [.56, 6.4], [.7, 6.2], [.82, 6.6], [.92, 6.2], [1, 4.2]];
+const prof = t => { for (let i = 1; i < PROFILE.length; i++) if (t <= PROFILE[i][0]) { const [t0, w0] = PROFILE[i - 1], [t1, w1] = PROFILE[i]; return lerp(w0, w1, (t - t0) / (t1 - t0)); } return PROFILE[PROFILE.length - 1][1]; };
+const smooth = (W, k = 6) => W.map((_, i) => { let s = 0, n = 0; for (let j = -k; j <= k; j++) { const v = W[i + j]; if (v !== undefined) { s += v; n++; } } return s / n; });
+function ribbonW(P, Wraw) {
+  const W = smooth(Wraw);
+  return ribbon(P, (t, dir, i) => W[i]) + capDots(P, W);
+}
+const capDots = () => '';
+
+// Free-hand Haa traced from the user's sketch: short stem rises into a wide arch, falls into the bottom, loops the eye, crosses itself, then runs out as the tail
+const HAA_D = 'M49.8 46.3 C48.8 39.5 53.2 30.6 61.0 26.2 C66.9 24.3 75.7 28.7 81.1 39.0 C85.5 47.3 88.0 58.1 84.1 64.5 C78.7 72.8 66.9 74.7 59.1 74.3 C53.2 73.8 49.3 69.8 48.8 63.0 C48.3 55.1 52.2 48.3 58.1 47.3 C64.0 46.3 68.4 52.2 67.9 58.1 C67.4 64.0 61.0 69.8 55.1 72.3 C47.3 74.3 29.7 72.3 12.0 64.9';
+const HAA_START = [49.8, 46.3], HAA_END = [12.0, 64.9];
+
+const SYM = {
+  a1: c => `<circle cx="50" cy="50" r="27" fill="none" stroke="${c.fg}" stroke-width="11"/>${dot(...pt(-45, 27), 10, c)}`,
+  b1: c => { const [id, d] = grad(c); return `${d}<path d="${arc(-90, 180, 28)}" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round"/>${dot(22, 50, 8.5, c)}`; },
+  // Tail end point, its direction, and where the dot goes (detached = small gap, attached = touching the end)
+  ...(() => {
+    const endDot = (P, W, c, attached) => { const e = P[P.length - 1], q = P[P.length - 8]; const dx = e[0] - q[0], dy = e[1] - q[1], L = Math.hypot(dx, dy); const r = 4.6, gap = attached ? r * .55 : r + 3.2; return dot(+(e[0] + dx / L * gap).toFixed(2), +(e[1] + dy / L * gap).toFixed(2), r, c, 0); };
+    const sketchW = P => P.map((_, i) => prof(i / (P.length - 1)));
+    const reedW = P => P.map((p, i) => { const a = P[Math.max(0, i - 2)], b = P[Math.min(P.length - 1, i + 2)]; const dir = Math.atan2(b[1] - a[1], b[0] - a[0]); const t = i / (P.length - 1); return lerp(2.8, 10.2, Math.abs(Math.sin(dir + 40 * Math.PI / 180))) * Math.max(.45, Math.min(1, t / .04)) * (t > .9 ? lerp(1, .55, (t - .9) / .1) : 1); });
+    const mk = (wf, attached) => c => { const P = sample(HAA_D, 40); const W = wf(P); return `<path d="${ribbonW(P, W)}" fill="${c.gr}"/>${endDot(P, smooth(W), c, attached)}`; };
+    return { f3a: mk(sketchW, false), f3b: mk(sketchW, true), p1a: mk(reedW, false), p1b: mk(reedW, true) };
+  })()
+};
+
+const GROUPS = [
+  { name: 'اختياراتك حتى الآن', note: 'للمقارنة فقط.', items: [['a1', 'أ1. نقطة على المدار، أثقل', 'حلقة عريضة ونقطة دافئة تقطعها.'], ['b1', 'ب1. قوس التقدّم', 'ثلاثة أرباع المدار المتدرّج، والنقطة عند نهايته.']] },
+  { name: 'هـ3. بسماكات رسمتك', note: 'سماكة تتبع رسمتك: رفيع عند البداية، ثقيل في القوس والنزول، ثابت في العين، ويستدق في آخر الكشيدة نحو النقطة.', items: [
+    ['f3a', 'هـ3أ. النقطة منفصلة', 'مسافة قصيرة بين آخر الكشيدة والنقطة، كأن الخط يتابع بعد الحرف: الاستمرار.', true],
+    ['f3b', 'هـ3ب. النقطة ملتصقة', 'النقطة تختم الكشيدة مباشرة، فيصير الحرف والنقطة كتلة واحدة أمتن في المقاسات الصغيرة.', true]
+  ] },
+  { name: 'هـ4. قلم القصب', note: 'رأس عريض مائل 40 درجة كقلم الخط العربي، مع بداية أنعم ونهاية تستدق نحو النقطة.', items: [
+    ['p1a', 'هـ4أ. النقطة منفصلة', 'التباين بين العريض والرفيع يعطي طابعًا خطّيًا عربيًا، والنقطة بعد الحرف بمسافة.', true],
+    ['p1b', 'هـ4ب. النقطة ملتصقة', 'النقطة في نهاية الضربة كأنها آخر ضغطة للقلم.', true]
+  ] }
+];
+
+const DARK = { fg: '#EEF3FF', ac: '#F2A65A', bg: '#14213D', g1: '#6CB4E8', g2: '#7FD8BE', gr: '#7FD8BE' };
+const LIGHT = { fg: '#14213D', ac: '#F2A65A', bg: '#FFFFFF', g1: '#3D4FA3', g2: '#2A8CA6', gr: '#2E9C82' };
+const svg = (k, c) => `<svg viewBox="0 0 100 100" aria-hidden="true">${SYM[k](c)}</svg>`;
+const icon = (k, c, inset = 18) => { const sc = (100 - 2 * inset) / 100; return `<svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="${c.bg}"/><g transform="translate(${inset} ${inset}) scale(${sc})">${SYM[k](c)}</g></svg>`; };
+function card([k, name, idea, big]) {
+  const ins = big ? 12 : 18;
+  const monoC = { fg: 'currentColor', ac: 'currentColor', bg: 'var(--surface)', g1: 'currentColor', g2: 'currentColor', gr: 'currentColor', mono: true };
+  const small = [48, 32, 20].map(sz => `<span class="s"><span class="t" style="width:${sz}px;height:${sz}px;border-radius:${sz * .23}px">${icon(k, DARK, ins)}</span>${sz}</span>`).join('');
+  return `<article class="card">
+    <div class="head"><h2>${name}</h2></div>
+    ${big ? `<div class="big"><span class="bl">${svg(k, LIGHT)}</span><span class="bd">${svg(k, DARK)}</span></div>` : ''}
+    <div class="show">
+      <span class="tile dark">${icon(k, DARK, ins)}</span>
+      <span class="tile light">${icon(k, LIGHT, ins)}</span>
+      <span class="tile circle" title="قناع Android الدائري">${icon(k, DARK, ins + 6)}</span>
+      <span class="lock">${svg(k, { fg: 'currentColor', ac: '#F2A65A', bg: 'var(--surface)', g1: 'var(--g1)', g2: 'var(--g2)', gr: 'var(--gr)' })}<span class="words"><span class="ar">هِمّة</span><span class="en">HIMMA</span></span></span>
+    </div>
+    <div class="small">${small}<span class="s mono">${svg(k, monoC)}بلون واحد</span></div>
+    <dl><dt>الفكرة</dt><dd>${idea}</dd></dl>
+  </article>`;
+}
+document.getElementById('groups').outerHTML = GROUPS.map(g => `<section class="group"><h2>${g.name}</h2><p>${g.note}</p><div class="grid">${g.items.map(card).join('')}</div></section>`).join('');
+</script>
