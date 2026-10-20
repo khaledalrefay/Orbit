@@ -1,0 +1,174 @@
+<title>رموز همة: الحلزون</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: intro, the two shortlisted marks for reference, then a 2-column grid of spiral variants, two of which draw a hand-written Haa. Each card: app icon (dark + light tile), monochrome, small sizes, wordmark lockup, and the rationale. Brand colors are the approved palette. */
+:root {
+  --bg: #F3F6FA; --surface: #FFFFFF; --fg: #14213D; --muted: #5A6785; --line: #DCE3EE; --chip: #E9EEF6; --focus: #3D4FA3;
+  --g1: #3D4FA3; --g2: #2A8CA6; --navy: #14213D; --indigo: #3D4FA3; --sky: #6CB4E8; --mint: #7FD8BE; --warm: #F2A65A;
+  --f: "Rubik", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
+.wrap { max-width: 1160px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 10px; max-width: 74ch; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; font-weight: 700; }
+header p { margin: 0; color: var(--muted); }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+
+.filter { display: inline-flex; flex-wrap: wrap; gap: 4px; background: var(--chip); border-radius: 18px; padding: 3px; align-self: flex-start; }
+.filter button { font: inherit; font-size: 14px; border: 0; background: transparent; color: var(--fg); padding: 5px 16px; border-radius: 999px; cursor: pointer; }
+.filter button[aria-pressed="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / .12); }
+.filter button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.head h2 { margin: 0; font-size: 20px; font-weight: 700; }
+.head h2 small { font-size: 13px; color: var(--muted); font-weight: 500; margin-inline-start: 6px; }
+.tag { font-size: 12.5px; border-radius: 999px; padding: 2px 12px; white-space: nowrap; font-weight: 500; }
+.tag.aligned { background: color-mix(in srgb, #3D4FA3 16%, transparent); }
+.tag.bold { background: color-mix(in srgb, #F2A65A 26%, transparent); }
+.tag.letter { background: color-mix(in srgb, #6CB4E8 26%, transparent); }
+.tag.neutral { background: color-mix(in srgb, #7FD8BE 26%, transparent); }
+
+.show { display: grid; grid-template-columns: auto auto 1fr; gap: 14px; align-items: center; }
+@media (max-width: 480px) { .show { grid-template-columns: auto auto; } .show .lock { grid-column: 1 / -1; } }
+.tile { width: 104px; height: 104px; border-radius: 24px; display: grid; place-items: center; overflow: hidden; }
+.tile svg { width: 100%; height: 100%; }
+.tile.dark { background: var(--navy); }
+.tile.circle { border-radius: 50%; background: var(--navy); }
+.tile.light { background: #FFFFFF; box-shadow: inset 0 0 0 1px #DCE3EE; }
+.lock { display: flex; align-items: center; gap: 12px; min-width: 0; flex-wrap: wrap; }
+.lock svg { width: 56px; height: 56px; flex: none; color: var(--fg); }
+.lock .words { display: flex; flex-direction: column; line-height: 1.15; }
+.lock .ar { font-size: 32px; font-weight: 700; }
+.lock .en { font-size: 15px; font-weight: 500; letter-spacing: .06em; color: var(--muted); direction: ltr; text-align: right; }
+
+.small { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.small .s { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.small .t { background: var(--navy); display: grid; place-items: center; overflow: hidden; }
+.small .t svg { width: 100%; height: 100%; }
+.small .mono { color: var(--fg); }
+.small .mono svg { width: 40px; height: 40px; }
+
+dl { margin: 0; display: grid; grid-template-columns: 6.5em 1fr; gap: 6px 12px; font-size: 14px; }
+dt { color: var(--muted); }
+dd { margin: 0; min-width: 0; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.ask h2 { margin: 0 0 6px; font-size: 18px; }
+.ask ol { margin: 0; padding-inline-start: 1.3em; }
+.group { display: flex; flex-direction: column; gap: 14px; }
+.group > h2 { margin: 0; font-size: 22px; }
+.group > p { margin: 0; color: var(--muted); max-width: 72ch; }
+.show { grid-template-columns: auto auto auto 1fr; }
+@media (max-width: 560px) { .show { grid-template-columns: auto auto auto; } .show .lock { grid-column: 1 / -1; } .tile { width: 84px; height: 84px; border-radius: 20px; } }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="eyebrow">همة · المرحلة 2 · القرار 4 من 6 · جولة ثالثة</div>
+    <h1>تطوير الحلزون</h1>
+    <p>7 تنويعات على فكرة الحلزون (ب4): خمس تطوّر الشكل نفسه، واثنتان يرسم فيهما خط الحلزون حرف «ه» بخط اليد، مرة بقلم خطّاط ومرة بخط واحد متدرّج كخطوط الواجهة.</p>
+    <div class="notice"><strong>رسومات للمقارنة، لا شيء معتمد.</strong> اختياراتك حتى الآن (أ1 وب1) معروضة أولًا للمقارنة.</div>
+  </header>
+  <div id="groups"></div>
+  <section class="ask">
+    <h2>للاختيار</h2>
+    <ol>
+      <li>أي تنويعة من الحلزون تدخل القائمة النهائية مع أ1 وب1؟</li>
+      <li>في «الهاء بخط اليد»: هل تفضّل القلم الخطّاط (سماكة متغيّرة) أم الخط الواحد؟</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+let GN = 0;
+const grad = c => { const id = 'lg' + (++GN); return [id, `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:${c.g1}"/><stop offset="1" style="stop-color:${c.g2}"/></linearGradient></defs>`]; };
+const pt = (deg, r, cx = 50, cy = 50) => [+(cx + r * Math.cos(deg * Math.PI / 180)).toFixed(2), +(cy + r * Math.sin(deg * Math.PI / 180)).toFixed(2)];
+const arc = (a0, a1, r) => { const [x0, y0] = pt(a0, r), [x1, y1] = pt(a1, r); return `M${x0} ${y0} A${r} ${r} 0 ${(a1 - a0) % 360 > 180 ? 1 : 0} 1 ${x1} ${y1}`; };
+const dot = (x, y, r, c, cut = 3.5) => `${cut ? `<circle cx="${x}" cy="${y}" r="${r + cut}" fill="${c.bg}"/>` : ''}<circle cx="${x}" cy="${y}" r="${r}" fill="${c.ac}"/>`;
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => t * t * (3 - 2 * t);
+const line = pts => pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join(' ');
+// Spiral centreline: angle a0 -> a1 (deg, SVG clockwise), radius r0 -> r1, centre moves c0 -> c1
+function spiral({ a0, a1, r0, r1, c0 = [50, 50], c1 = [50, 50], n = 120, shape = t => t }) {
+  const P = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, k = shape(t); P.push(pt(lerp(a0, a1, t), lerp(r0, r1, k), lerp(c0[0], c1[0], k), lerp(c0[1], c1[1], k))); }
+  return P;
+}
+// Ribbon with variable width w(t, dir): returns a filled path
+function ribbon(P, w) {
+  const L = [], R = [];
+  for (let i = 0; i < P.length; i++) {
+    const a = P[Math.max(0, i - 1)], b = P[Math.min(P.length - 1, i + 1)];
+    const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    const h = w(i / (P.length - 1), Math.atan2(dy, dx)) / 2;
+    L.push([P[i][0] + nx * h, P[i][1] + ny * h]); R.push([P[i][0] - nx * h, P[i][1] - ny * h]);
+  }
+  const e0 = w(0, 0) / 2, e1 = w(1, 0) / 2;
+  return { d: line(L) + ' ' + line(R.reverse()).replace('M', 'L') + ' Z', ends: [[P[0], e0], [P[P.length - 1], e1]] };
+}
+const capCircles = (rb, fill) => rb.ends.map(([p, r]) => `<circle cx="${p[0].toFixed(2)}" cy="${p[1].toFixed(2)}" r="${r.toFixed(2)}" fill="${fill}"/>`).join('');
+
+// Hand-written Haa: outer loop counter-clockwise from top-right, then winding inward into the inner eye
+const HAA = { a0: -60, a1: -60 - 640, r0: 30, r1: 11, c0: [50, 50], c1: [52, 59], n: 220, shape: t => t < .45 ? 0 : ease((t - .45) / .55) };
+
+const SYM = {
+  a1: c => `<circle cx="50" cy="50" r="27" fill="none" stroke="${c.fg}" stroke-width="11"/>${dot(...pt(-45, 27), 10, c)}`,
+  b1: c => { const [id, d] = grad(c); return `${d}<path d="${arc(-90, 180, 28)}" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round"/>${dot(22, 50, 8.5, c)}`; },
+  s1: c => { const [id, d] = grad(c); const P = spiral({ a0: 90, a1: 400, r0: 10, r1: 33, shape: ease }); const e = P[P.length - 1]; return `${d}<path d="${line(P)}" fill="none" stroke="url(#${id})" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>${dot(e[0], e[1], 8, c)}`; },
+  s2: c => { const [id, d] = grad(c); const P = spiral({ a0: 90, a1: 420, r0: 8, r1: 32 }); const rb = ribbon(P, t => lerp(2.5, 13, t)); const e = P[P.length - 1]; return `${d}<path d="${rb.d}" fill="url(#${id})"/>${capCircles(rb, `url(#${id})`)}${dot(e[0], e[1], 7.5, c)}`; },
+  s3: c => { const [id, d] = grad(c); const P = spiral({ a0: 0, a1: 340, r0: 4, r1: 33 }); return `${d}<path d="${line(P.slice(6))}" fill="none" stroke="url(#${id})" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>${dot(50, 50, 9, c, 0)}`; },
+  s4: c => { const P = spiral({ a0: 90, a1: 420, r0: 9, r1: 33 }); const e = P[P.length - 1]; const st = [.2, .45, .7].map(t => P[Math.round(t * (P.length - 1))]); return `<path d="${line(P)}" fill="none" stroke="${c.fg}" stroke-width="4" stroke-linecap="round" opacity="${c.mono ? 1 : .55}"/>${st.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="${c.g2}" stroke="${c.bg}" stroke-width="2.5"/>`).join('')}${dot(e[0], e[1], 8.5, c)}`; },
+  s5: c => { const [id, d] = grad(c); const P = spiral({ a0: 90, a1: 640, r0: 5, r1: 34 }); const e = P[P.length - 1]; return `${d}<path d="${line(P)}" fill="none" stroke="url(#${id})" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>${dot(e[0], e[1], 7.5, c)}`; },
+  h1: c => { const P = spiral(HAA); const nib = -Math.PI / 4; const rb = ribbon(P, (t, dir) => lerp(3, 13, Math.abs(Math.sin(dir - nib))) * (t > .96 ? lerp(1, .5, (t - .96) / .04) : 1)); const s0 = P[0]; return `<path d="${rb.d}" fill="${c.fg}"/>${capCircles(rb, c.fg)}${dot(s0[0] + 6, s0[1] - 9, 7, c)}`; },
+  h2: c => { const [id, d] = grad(c); const P = spiral(HAA); const s0 = P[0]; return `${d}<path d="${line(P)}" fill="none" stroke="url(#${id})" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>${dot(s0[0], s0[1], 7.5, c)}`; }
+};
+
+const GROUPS = [
+  { name: 'اختياراتك حتى الآن', note: 'للمقارنة فقط.', items: [['a1', 'أ1. نقطة على المدار، أثقل', 'حلقة عريضة ونقطة دافئة تقطعها.'], ['b1', 'ب1. قوس التقدّم', 'ثلاثة أرباع المدار المتدرّج، والنقطة عند نهايته.']] },
+  { name: 'تطوير الحلزون', note: 'الحلزون يبدأ صغيرًا ويتّسع: «ابدأ بحركة، واستمر».', items: [
+    ['s1', 'ح1. حلزون منقّح', 'دورة واحدة أنعم، يتّسع بسلاسة، والنقطة الدافئة في نهايته.'],
+    ['s2', 'ح2. حلزون يتسمّك', 'الخط يبدأ رفيعًا ويزداد سماكة كلما دار: الأثر يكبر مع الاستمرار.'],
+    ['s3', 'ح3. من نقطة البداية', 'النقطة الدافئة في المركز، والحلزون ينطلق منها للخارج. «ابدأ بحركة» حرفيًا.'],
+    ['s4', 'ح4. حلزون بمحطات', 'خط رفيع عليه محطات نعناعية كأيام منجزة، والنقطة الدافئة في آخره.'],
+    ['s5', 'ح5. حلزون أطول', 'دورة ونصف بخط أرفع: أكثر حركة وتفصيلًا.']
+  ] },
+  { name: 'الحلزون يرسم حرف الهاء', note: 'خط واحد متصل يدور كالحلزون فيرسم الهاء المفردة بخط اليد: حلقة خارجية، ثم ينعطف للداخل فيرسم عين الحرف. النقطة الدافئة حيث يبدأ القلم.', items: [
+    ['h1', 'ح6. هاء بقلم خطّاط', 'سماكة متغيّرة كقلم القصب المائل: عربية وإنسانية أكثر.'],
+    ['h2', 'ح7. هاء بخط واحد', 'نفس الحركة بخط ثابت متدرّج اللون، متّسق مع أقواس الواجهة.']
+  ] }
+];
+
+const DARK = { fg: '#EEF3FF', ac: '#F2A65A', bg: '#14213D', g1: '#6CB4E8', g2: '#7FD8BE' };
+const LIGHT = { fg: '#14213D', ac: '#F2A65A', bg: '#FFFFFF', g1: '#3D4FA3', g2: '#2A8CA6' };
+const svg = (k, c) => `<svg viewBox="0 0 100 100" aria-hidden="true">${SYM[k](c)}</svg>`;
+const icon = (k, c, inset = 18) => { const sc = (100 - 2 * inset) / 100; return `<svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="${c.bg}"/><g transform="translate(${inset} ${inset}) scale(${sc})">${SYM[k](c)}</g></svg>`; };
+function card([k, name, idea]) {
+  const monoC = { fg: 'currentColor', ac: 'currentColor', bg: 'var(--surface)', g1: 'currentColor', g2: 'currentColor', mono: true };
+  const small = [48, 32, 20].map(sz => `<span class="s"><span class="t" style="width:${sz}px;height:${sz}px;border-radius:${sz * .23}px">${icon(k, DARK)}</span>${sz}</span>`).join('');
+  return `<article class="card">
+    <div class="head"><h2>${name}</h2></div>
+    <div class="show">
+      <span class="tile dark">${icon(k, DARK)}</span>
+      <span class="tile light">${icon(k, LIGHT)}</span>
+      <span class="tile circle" title="قناع Android الدائري">${icon(k, DARK, 24)}</span>
+      <span class="lock">${svg(k, { fg: 'currentColor', ac: '#F2A65A', bg: 'var(--surface)', g1: 'var(--g1)', g2: 'var(--g2)' })}<span class="words"><span class="ar">هِمّة</span><span class="en">HIMMA</span></span></span>
+    </div>
+    <div class="small">${small}<span class="s mono">${svg(k, monoC)}بلون واحد</span></div>
+    <dl><dt>الفكرة</dt><dd>${idea}</dd></dl>
+  </article>`;
+}
+document.getElementById('groups').outerHTML = GROUPS.map(g => `<section class="group"><h2>${g.name}</h2><p>${g.note}</p><div class="grid">${g.items.map(card).join('')}</div></section>`).join('');
+</script>
