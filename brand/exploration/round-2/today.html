@@ -1,0 +1,263 @@
+<title>شاشة اليوم في همة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&family=Alexandria:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one band per shortlisted direction; each band shows the same "Today" screen in light and dark phones side by side, with review notes beside them. Phone colors are fixed exploratory values set per phone. */
+:root {
+  --bg: #f4f5f7; --surface: #ffffff; --fg: #1c2230; --muted: #5d6576; --line: #dfe2e8; --chip: #eceef3; --focus: #3d63d6;
+  --f-body: "IBM Plex Sans Arabic", "Noto Naskh Arabic", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #12151c; --surface: #1a1e27; --fg: #e8eaf0; --muted: #9aa2b3; --line: #2c3240; --chip: #252a35; --focus: #8aa6ff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #12151c; --surface: #1a1e27; --fg: #e8eaf0; --muted: #9aa2b3; --line: #2c3240; --chip: #252a35; --focus: #8aa6ff; color-scheme: dark; }
+
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 56px;
+}
+.wrap { max-width: 1180px; margin-inline: auto; display: flex; flex-direction: column; gap: 36px; }
+header.page { display: flex; flex-direction: column; gap: 10px; max-width: 72ch; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(26px, 4vw, 34px); line-height: 1.3; text-wrap: balance; }
+header.page p { margin: 0; color: var(--muted); }
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.notice strong { color: var(--fg); }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; }
+.jump a { text-decoration: none; color: var(--fg); background: var(--chip); border-radius: 999px; padding: 3px 12px; font-size: 13.5px; }
+.jump a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.band { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; align-items: start; border-top: 1px solid var(--line); padding-top: 28px; }
+@media (max-width: 1040px) { .band { grid-template-columns: 1fr; } }
+.phones { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; min-width: 0; }
+.ph-wrap { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.ph-label { font-size: 12.5px; color: var(--muted); }
+.notes { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.notes h2 { margin: 0; font-size: 22px; line-height: 1.3; }
+.notes h2 span { display: block; font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); font-weight: 500; letter-spacing: .03em; }
+.notes p { margin: 0; font-size: 14px; }
+.notes ul { margin: 0; padding-inline-start: 1.1em; font-size: 14px; display: flex; flex-direction: column; gap: 4px; }
+.notes .k { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+
+/* ---------- Phone (all colors from per-phone tokens) ---------- */
+.phone {
+  width: min(340px, 100%); background: var(--p-bg); color: var(--p-ink); font-family: var(--p-font);
+  border-radius: 34px; border: 6px solid var(--p-frame); overflow: hidden;
+  display: flex; flex-direction: column; font-size: 14px; line-height: 1.5;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 12px 32px rgb(0 0 0 / .08);
+}
+.phone .status { display: flex; justify-content: space-between; padding: 10px 22px 0; font-size: 12px; font-weight: 600; direction: ltr; color: var(--p-ink); }
+.phone .status i { display: inline-flex; gap: 4px; }
+.phone .status i b { width: 14px; height: 8px; border-radius: 2px; background: currentColor; opacity: .8; }
+.phone .body { display: flex; flex-direction: column; gap: 14px; padding: 12px 16px 16px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.top .date { font-size: 12.5px; color: var(--p-muted); }
+.top h3 { margin: 0; font-family: var(--p-head); font-size: 26px; line-height: 1.25; font-weight: 700; }
+.icon-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--p-line); background: var(--p-surface); color: var(--p-ink); display: grid; place-items: center; padding: 0; }
+.icon-btn svg { width: 18px; height: 18px; }
+.icon-btn:focus-visible, .cta:focus-visible, .ghost:focus-visible { outline: 2px solid var(--p-primary); outline-offset: 2px; }
+
+.session { position: relative; overflow: hidden; background: var(--p-s-bg); color: var(--p-s-ink); border-radius: var(--p-radius); padding: 16px; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.session .txt { display: flex; flex-direction: column; gap: 2px; position: relative; z-index: 1; min-width: 0; }
+.session .lbl { font-size: 12px; opacity: .78; }
+.session .ttl { font-family: var(--p-head); font-size: 19px; font-weight: 700; line-height: 1.35; }
+.session .meta { font-size: 12.5px; opacity: .85; }
+.session .art { position: relative; z-index: 1; width: 84px; height: 84px; }
+.session .bg-art { position: absolute; inset: auto 0 0 0; z-index: 0; width: 100%; height: 60px; }
+.cta { margin-top: 10px; align-self: flex-start; font: inherit; font-weight: 600; font-size: 13.5px; border: 0; background: var(--p-cta); color: var(--p-cta-ink); border-radius: var(--p-btn-radius); padding: 7px 18px; }
+
+.card { background: var(--p-surface); border: 1px solid var(--p-line); border-radius: var(--p-radius); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.row-head h4 { margin: 0; font-size: 14.5px; font-weight: 600; font-family: var(--p-head); }
+.row-head span { font-size: 12.5px; color: var(--p-muted); }
+
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; position: relative; }
+.week.track::before { content: ""; position: absolute; inset-inline: 7%; top: 34px; height: 2px; background: var(--p-line); }
+.day { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11.5px; color: var(--p-muted); position: relative; }
+.day .mk { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--p-surface); }
+.day.done .mk { background: var(--p-done); color: var(--p-on-done); }
+.day.today .mk { border: 2.5px solid var(--p-accent); }
+.day.today { color: var(--p-ink); font-weight: 700; }
+.day.plan .mk { border: 1.5px dashed var(--p-muted); }
+.day.rest .mk::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--p-line); }
+.day .mk svg { width: 13px; height: 13px; }
+
+.sec { font-size: 11.5px; color: var(--p-muted); letter-spacing: .02em; margin-top: 2px; }
+.habit { display: grid; grid-template-columns: 34px 1fr 34px; gap: 10px; align-items: center; }
+.habit .ic { width: 34px; height: 34px; border-radius: var(--p-icon-radius); background: color-mix(in srgb, var(--hc) 22%, transparent); color: var(--hc); display: grid; place-items: center; }
+.habit .ic svg { width: 18px; height: 18px; }
+.habit .nm { display: flex; flex-direction: column; min-width: 0; }
+.habit .nm b { font-weight: 600; font-size: 13.5px; }
+.habit .nm small { font-size: 11.5px; color: var(--p-muted); }
+.chk { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; justify-self: end; }
+.chk.done { background: var(--hc); color: var(--p-bg); }
+.chk.todo { border: 2px solid var(--p-line); }
+.chk svg { width: 15px; height: 15px; }
+.chk.qty { position: relative; }
+.chk.qty svg.ring { width: 30px; height: 30px; position: absolute; inset: 0; }
+.chk.qty span { font-size: 15px; font-weight: 700; color: var(--hc); line-height: 1; }
+
+.focus { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.focus .t b { display: block; font-weight: 600; font-size: 13.5px; }
+.focus .t small { font-size: 11.5px; color: var(--p-muted); }
+.ghost { font: inherit; font-size: 12.5px; font-weight: 600; background: var(--p-surface2); color: var(--p-ink); border: 0; border-radius: var(--p-btn-radius); padding: 7px 12px; white-space: nowrap; }
+
+.tabs { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--p-line); background: var(--p-surface); padding: 8px 4px 12px; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10.5px; color: var(--p-muted); }
+.tab svg { width: 20px; height: 20px; }
+.tab.on { color: var(--p-primary); font-weight: 700; }
+.tab.on .pill { background: color-mix(in srgb, var(--p-primary) 16%, transparent); }
+.tab .pill { border-radius: 999px; padding: 2px 14px; display: grid; place-items: center; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .orbit-dot { transform-origin: 42px 42px; animation: spin 18s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+}
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header class="page">
+    <div class="eyebrow">همة · المرحلة 2 · جولة الاستكشاف الثانية · الشاشة 1 من 6</div>
+    <h1>شاشة «اليوم» بالاتجاهات الأربعة المختارة</h1>
+    <p>نفس المحتوى والترتيب في كل الاتجاهات: جلسة اليوم، ثم خطة الأسبوع، ثم عادات اليوم حسب أقسام اليوم، ثم اختصار التركيز. الاختلاف في الألوان والخط والأشكال والعنصر المميز فقط.</p>
+    <div class="notice"><strong>مرجع استكشافي، لا شيء معتمد.</strong> الألوان مبدئية ولم تُفحص بمعيار التباين بعد. الأيقونات مؤقتة للتوضيح.</div>
+    <nav class="jump" aria-label="الاتجاهات">
+      <a href="#orbit">Orbit Calm المطوّر</a><a href="#hybrid">Hybrid المطوّر</a><a href="#nahar">نهار</a><a href="#hudoo">هدوء</a>
+    </nav>
+  </header>
+  <div id="bands"></div>
+</div>
+
+<script>
+const CHECK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>';
+const ICON = {
+  settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
+  water: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.5c3 4 6 7.2 6 10.5a6 6 0 0 1-12 0c0-3.3 3-6.5 6-10.5z"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M4 5.5c3-1 5.5-1 8 .8 2.5-1.8 5-1.8 8-.8V19c-3-1-5.5-1-8 .8-2.5-1.8-5-1.8-8-.8z"/><path d="M12 6.3V19.8"/></svg>',
+  walk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M10 21l2-6 3 3v3M12 15l1-5 3 3h3M13 10l-4 1-2 3"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/></svg>',
+  today: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2" stroke-linecap="round"/></svg>',
+  programs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>',
+  habits: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg>',
+  focus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M10 3h4"/></svg>',
+  progress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 19V13M10 19V8M15 19v-5M20 19V5"/></svg>'
+};
+
+const DIRS = [
+  {
+    id: 'orbit', name: 'Orbit Calm المطوّر', latin: 'ORBIT CALM+', font: "'IBM Plex Sans Arabic', sans-serif", head: "'IBM Plex Sans Arabic', sans-serif",
+    radius: '18px', btn: '999px', iconR: '50%', track: true,
+    light: { bg:'#F3F6FA', surface:'#FFFFFF', surface2:'#E9EEF6', ink:'#14213D', muted:'#5A6785', line:'#DCE3EE', primary:'#3D4FA3', accent:'#E8913F', done:'#2E9C82', onDone:'#FFFFFF', sBg:'#14213D', sInk:'#EEF3FF', cta:'#F2A65A', ctaInk:'#1B1406', frame:'#D5DCE8', h:['#3E8FD6','#2E9C82','#6A5FD0','#3D4FA3'], ring:'#2B3A66', arc:'#7FD8BE' },
+    dark:  { bg:'#0B1222', surface:'#141E36', surface2:'#1C2844', ink:'#E8EEFB', muted:'#93A0BE', line:'#24314F', primary:'#8C9BF2', accent:'#F2A65A', done:'#7FD8BE', onDone:'#0B1222', sBg:'#1B2B55', sInk:'#EEF3FF', cta:'#F2A65A', ctaInk:'#1B1406', frame:'#2A3550', h:['#6CB4E8','#7FD8BE','#A99BF5','#8C9BF2'], ring:'#2E3F70', arc:'#7FD8BE' },
+    art: t => `<svg class="art" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="32" fill="none" stroke="${t.ring}" stroke-width="5"/><path d="M42 10 A32 32 0 0 1 69.7 58" fill="none" stroke="${t.arc}" stroke-width="5" stroke-linecap="round"/><g class="orbit-dot"><circle cx="42" cy="10" r="6" fill="${t.cta}"/></g><text x="42" y="47" text-anchor="middle" font-size="15" font-weight="700" fill="${t.sInk}" font-family="IBM Plex Sans Arabic">1/3</text></svg>`,
+    notes: {
+      idea: 'الحلقة في بطاقة الجلسة هي خطة الأسبوع (1 من 3)، والنقطة الدافئة تدور ببطء على المدار. خط الأسبوع تحتها مسار يمر بالأيام.',
+      look: ['هل الكحلي العميق في بطاقة الجلسة يعطي حضورًا كافيًا للميزة الأساسية؟', 'هل اللمسة البرتقالية تكفي لدفء الاسم؟', 'الوضع الغامق هو الأقرب لروح الاتجاه.']
+    }
+  },
+  {
+    id: 'hybrid', name: 'Hybrid المطوّر', latin: 'CALM ORBIT + SOFT MOTION', font: "'Rubik', sans-serif", head: "'Rubik', sans-serif",
+    radius: '22px', btn: '999px', iconR: '12px', track: false,
+    light: { bg:'#F2F7F6', surface:'#FFFFFF', surface2:'#E3EFED', ink:'#12324A', muted:'#557080', line:'#D6E5E3', primary:'#1F8A8A', accent:'#F07F67', done:'#1F8A8A', onDone:'#FFFFFF', sBg:'#D9EFEC', sInk:'#12324A', cta:'#F07F67', ctaInk:'#2A0D06', frame:'#CFE0DD', h:['#2A93B8','#1F8A8A','#E0705A','#5C6FC0'], wave:'#8FD6D0', wave2:'#1F8A8A' },
+    dark:  { bg:'#0C1D28', surface:'#132A37', surface2:'#1A3644', ink:'#E4F2F1', muted:'#8DAAB3', line:'#22404E', primary:'#5CC4C0', accent:'#F48E78', done:'#5CC4C0', onDone:'#06201F', sBg:'#15394A', sInk:'#E4F2F1', cta:'#F48E78', ctaInk:'#2A0D06', frame:'#22404E', h:['#6CC3E6','#5CC4C0','#F48E78','#9AA9F0'], wave:'#1F5E66', wave2:'#5CC4C0' },
+    art: t => `<svg class="art" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="30" fill="none" stroke="${t.wave}" stroke-width="4"/><path d="M6 50 C 18 32, 28 32, 38 46 S 58 62, 68 42 S 80 32, 84 36" fill="none" stroke="${t.wave2}" stroke-width="4.5" stroke-linecap="round"/><circle cx="68" cy="42" r="5.5" fill="${t.cta}"/></svg>`,
+    bgArt: t => `<svg class="bg-art" viewBox="0 0 320 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C 60 20, 110 60, 170 38 S 270 18, 320 34 V60 H0 Z" fill="${t.wave}" opacity=".35"/></svg>`,
+    notes: {
+      idea: 'الموجة لغة الحركة: تعبر الحلقة في بطاقة الجلسة، وتملأ أسفل البطاقة بنعومة. زر البدء مرجاني دافئ.',
+      look: ['هل الموجة تضيف حركة أم تبدو زخرفة عامة؟', 'هل المرجاني مع التركواز متوازن أم يقترب من الطابع الرياضي؟', 'زوايا أكبر وأيقونات مربعة مستديرة بدل الدوائر.']
+    }
+  },
+  {
+    id: 'nahar', name: 'نهار', latin: 'NAHAR', font: "'Alexandria', sans-serif", head: "'Alexandria', sans-serif",
+    radius: '24px', btn: '14px', iconR: '12px', track: false,
+    light: { bg:'#F5F8FC', surface:'#FFFFFF', surface2:'#EEF3FA', ink:'#23303D', muted:'#66727F', line:'#E1E7EF', primary:'#2F7FD0', accent:'#E3A91C', done:'#3FA872', onDone:'#FFFFFF', sBg:'#FFF4D2', sInk:'#3A2E0C', cta:'#2F7FD0', ctaInk:'#FFFFFF', frame:'#DCE4EE', h:['#4E9BE6','#3FA872','#E9846B','#8E7FE0'], sun:'#F6C445', sun2:'#F4A28C' },
+    dark:  { bg:'#12171E', surface:'#1B222C', surface2:'#232C38', ink:'#EAF0F6', muted:'#9AA6B3', line:'#2A3441', primary:'#6AAEF0', accent:'#F6C445', done:'#6BCB98', onDone:'#0E1A14', sBg:'#2B2717', sInk:'#F7EFD6', cta:'#6AAEF0', ctaInk:'#0B1622', frame:'#2A3441', h:['#6AAEF0','#6BCB98','#F4A28C','#B0A4F2'], sun:'#F6C445', sun2:'#E9846B' },
+    art: t => `<svg class="art" viewBox="0 0 84 84" aria-hidden="true"><g stroke="${t.sun}" stroke-width="4" stroke-linecap="round"><path d="M42 14v-8M18 24l-5-5M66 24l5-5M8 46H2M76 46h6"/></g><path d="M12 56 A30 30 0 0 1 72 56 Z" fill="${t.sun}"/><rect x="8" y="62" width="68" height="10" rx="5" fill="${t.sun2}" opacity=".7"/></svg>`,
+    notes: {
+      idea: 'بطاقة الجلسة شمس صباحية دافئة، والألوان تميّز العادات بوضوح. الأيقونات بزوايا مستديرة، والخط أعرض وأكثر ودًّا.',
+      look: ['هل يناسب جمهور المبرمجين والمهندسين أم يبدو خفيفًا عليهم؟', 'هل الوضع الغامق يحتفظ بدفء النهار؟', 'هل تعدد الألوان مريح أم مزدحم؟']
+    }
+  },
+  {
+    id: 'hudoo', name: 'هدوء', latin: 'HUDOO', font: "'IBM Plex Sans Arabic', sans-serif", head: "'Noto Naskh Arabic', serif",
+    radius: '20px', btn: '999px', iconR: '50%', track: false,
+    light: { bg:'#F1ECE4', surface:'#FBF8F3', surface2:'#EAE2D6', ink:'#2F241C', muted:'#7A6A5C', line:'#E0D6C8', primary:'#6B4F3A', accent:'#A9784F', done:'#6F8A6A', onDone:'#FFFFFF', sBg:'#E3D7C6', sInk:'#2F241C', cta:'#6B4F3A', ctaInk:'#FBF7F1', frame:'#DCD1C1', h:['#6E8FA6','#6F8A6A','#A9784F','#8C7A9E'], rip:'#8FA58A', cup:'#6B4F3A', cup2:'#C8A98A' },
+    dark:  { bg:'#1A1410', surface:'#241C17', surface2:'#2E241D', ink:'#F1E8DD', muted:'#B3A391', line:'#3A2E25', primary:'#D2B394', accent:'#D2B394', done:'#A7BCA2', onDone:'#1A1410', sBg:'#2E241D', sInk:'#F1E8DD', cta:'#D2B394', ctaInk:'#241A12', frame:'#3A2E25', h:['#9DB6C7','#A7BCA2','#D2A57E','#B7A6C8'], rip:'#A7BCA2', cup:'#D2B394', cup2:'#7A5A42' },
+    art: t => `<svg class="art" viewBox="0 0 84 84" aria-hidden="true"><g fill="none" stroke="${t.rip}" stroke-width="2.5"><circle cx="42" cy="48" r="32" opacity=".3"/><circle cx="42" cy="48" r="22" opacity=".55"/></g><circle cx="42" cy="48" r="13" fill="${t.cup}"/><circle cx="42" cy="48" r="8.5" fill="${t.cup2}"/><g fill="none" stroke="${t.cup}" stroke-width="2.4" stroke-linecap="round"><path d="M36 26c-4-5 4-8 0-14"/><path d="M48 26c-4-5 4-8 0-14"/></g></svg>`,
+    notes: {
+      idea: 'ألوان ترابية ودوائر تتّسع مثل سطح فنجان، وعناوين بخط نسخ ناعم. الإيقاع أبطأ والمساحات أرحب.',
+      look: ['هل ما زال يعبّر عن المبادرة في «هِمّة»، أم يصير أبرد من الاسم؟', 'هل البنّي مع الأخضر الهادئ واضح كفاية لحالات «أُنجزت»؟', 'قد يصلح لقسم التركيز وحده إن لم يناسب الهوية كلها.']
+    }
+  }
+];
+
+const DAYS = [['س','done'],['ح','rest'],['ن','rest'],['ث','today'],['ر','rest'],['خ','plan'],['ج','rest']];
+
+function ring(p, color, track) {
+  const c = 2 * Math.PI * 13;
+  return `<svg class="ring" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="${track}" stroke-width="2.5"/><circle cx="15" cy="15" r="13" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="${c * p} ${c}" transform="rotate(-90 15 15)"/></svg>`;
+}
+
+function phone(d, mode) {
+  const t = d[mode];
+  const vars = `--p-bg:${t.bg};--p-surface:${t.surface};--p-surface2:${t.surface2};--p-ink:${t.ink};--p-muted:${t.muted};--p-line:${t.line};--p-primary:${t.primary};--p-accent:${t.accent};--p-done:${t.done};--p-on-done:${t.onDone};--p-s-bg:${t.sBg};--p-s-ink:${t.sInk};--p-cta:${t.cta};--p-cta-ink:${t.ctaInk};--p-frame:${t.frame};--p-font:${d.font};--p-head:${d.head};--p-radius:${d.radius};--p-btn-radius:${d.btn};--p-icon-radius:${d.iconR}`;
+  const habit = (icon, name, meta, color, state) => {
+    let chk;
+    if (state === 'done') chk = `<span class="chk done" style="--hc:${color}">${CHECK}</span>`;
+    else if (state === 'qty') chk = `<span class="chk qty" style="--hc:${color}">${ring(3/8, color, t.line)}<span>+</span></span>`;
+    else chk = `<span class="chk todo"></span>`;
+    return `<div class="habit" style="--hc:${color}"><span class="ic">${ICON[icon]}</span><span class="nm"><b>${name}</b><small>${meta}</small></span>${chk}</div>`;
+  };
+  const tabs = [['today','اليوم'],['programs','البرامج'],['habits','العادات'],['focus','التركيز'],['progress','التقدّم']]
+    .map(([k, l], i) => `<span class="tab${i === 0 ? ' on' : ''}"><span class="pill">${ICON[k]}</span>${l}</span>`).join('');
+  const week = DAYS.map(([l, s]) => `<span class="day ${s}"><span>${l}</span><span class="mk">${s === 'done' ? CHECK : ''}</span></span>`).join('');
+  return `<div class="phone" style="${vars}" aria-label="شاشة اليوم، ${d.name}، الوضع ${mode === 'light' ? 'الفاتح' : 'الغامق'}">
+    <div class="status"><span>9:41</span><i><b></b><b></b></i></div>
+    <div class="body">
+      <div class="top"><div><div class="date">الثلاثاء، 20 أكتوبر</div><h3>اليوم</h3></div><button class="icon-btn" type="button" aria-label="الإعدادات">${ICON.settings}</button></div>
+      <section class="session">
+        ${d.bgArt ? d.bgArt(t) : ''}
+        <div class="txt"><span class="lbl">جلسة اليوم</span><span class="ttl">تمدّد ومرونة</span><span class="meta">المستوى 2 · 20 دقيقة · 6 تمارين</span><button class="cta" type="button">ابدأ الجلسة</button></div>
+        ${d.art(t)}
+      </section>
+      <section class="card">
+        <div class="row-head"><h4>خطة الأسبوع</h4><span>1 من 3 جلسات</span></div>
+        <div class="week${d.track ? ' track' : ''}">${week}</div>
+      </section>
+      <section class="card">
+        <div class="row-head"><h4>عادات اليوم</h4><span>2 من 4</span></div>
+        <div class="sec">صباح</div>
+        ${habit('water', 'شرب الماء', '3 من 8 كاسات', t.h[0], 'qty')}
+        ${habit('book', 'القراءة', '10 صفحات', t.h[3], 'done')}
+        <div class="sec">ظهر</div>
+        ${habit('walk', 'مشي قصير', '15 دقيقة', t.h[1], 'done')}
+        <div class="sec">مساء</div>
+        ${habit('moon', 'النوم قبل 11', 'يوم 4 من 21', t.h[2], 'todo')}
+      </section>
+      <section class="card focus">
+        <div class="t"><b>التركيز</b><small>جولات اليوم: 2 · 50 دقيقة</small></div>
+        <button class="ghost" type="button">استراحة تمدّد الآن</button>
+      </section>
+    </div>
+    <nav class="tabs" aria-label="الأقسام">${tabs}</nav>
+  </div>`;
+}
+
+document.getElementById('bands').outerHTML = DIRS.map(d => `
+  <section class="band" id="${d.id}">
+    <div class="phones">
+      <div class="ph-wrap"><span class="ph-label">فاتح</span>${phone(d, 'light')}</div>
+      <div class="ph-wrap"><span class="ph-label">غامق</span>${phone(d, 'dark')}</div>
+    </div>
+    <div class="notes">
+      <h2>${d.name}<span>${d.latin}</span></h2>
+      <p>${d.notes.idea}</p>
+      <div class="k">للمقارنة</div>
+      <ul>${d.notes.look.map(x => `<li>${x}</li>`).join('')}</ul>
+    </div>
+  </section>`).join('');
+</script>
