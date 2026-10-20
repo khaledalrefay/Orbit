@@ -7,13 +7,13 @@
 /* Layout: intro, a category filter, then a 2-column grid of ten concept cards. Each card: app icon (dark + light tile), monochrome, small sizes, wordmark lockup, and the rationale. Brand colors are the approved palette. */
 :root {
   --bg: #F3F6FA; --surface: #FFFFFF; --fg: #14213D; --muted: #5A6785; --line: #DCE3EE; --chip: #E9EEF6; --focus: #3D4FA3;
-  --navy: #14213D; --indigo: #3D4FA3; --sky: #6CB4E8; --mint: #7FD8BE; --warm: #F2A65A;
+  --g1: #3D4FA3; --g2: #2A8CA6; --navy: #14213D; --indigo: #3D4FA3; --sky: #6CB4E8; --mint: #7FD8BE; --warm: #F2A65A;
   --f: "Rubik", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; color-scheme: dark; }
+  :root:not([data-theme="light"]) { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; color-scheme: dark; }
 }
-:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; color-scheme: dark; }
+:root[data-theme="dark"] { --bg: #0B1222; --surface: #141E36; --fg: #E8EEFB; --muted: #93A0BE; --line: #24314F; --chip: #1C2844; --focus: #8C9BF2; --g1: #6CB4E8; --g2: #7FD8BE; color-scheme: dark; }
 
 body { background: var(--bg); color: var(--fg); font-family: var(--f); font-size: 15px; line-height: 1.7;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
@@ -39,6 +39,7 @@ header p { margin: 0; color: var(--muted); }
 .tag { font-size: 12.5px; border-radius: 999px; padding: 2px 12px; white-space: nowrap; font-weight: 500; }
 .tag.aligned { background: color-mix(in srgb, #3D4FA3 16%, transparent); }
 .tag.bold { background: color-mix(in srgb, #F2A65A 26%, transparent); }
+.tag.letter { background: color-mix(in srgb, #6CB4E8 26%, transparent); }
 .tag.neutral { background: color-mix(in srgb, #7FD8BE 26%, transparent); }
 
 .show { display: grid; grid-template-columns: auto auto 1fr; gap: 14px; align-items: center; }
@@ -71,8 +72,8 @@ dd { margin: 0; min-width: 0; }
 <div class="wrap" dir="rtl" lang="ar">
   <header>
     <div class="eyebrow">همة · المرحلة 2 · القرار 4 من 6 · جولة أولى</div>
-    <h1>10 أفكار للرمز والأيقونة</h1>
-    <p>أفكار متنوعة عمدًا: بعضها من لغة المدار المعتمدة، وبعضها جريء وخارج المألوف، وبعضها حيادي يصلح لأي اتجاه. لكل فكرة: أيقونة التطبيق على خلفية غامقة وفاتحة، ونسخة بلون واحد، والمقاسات الصغيرة، والرمز مع الاسم بخط Rubik.</p>
+    <h1>19 فكرة للرمز والأيقونة</h1>
+    <p>أفكار متنوعة عمدًا: بعضها من لغة المدار المعتمدة، وبعضها جريء وخارج المألوف، وبعضها حيادي يصلح لأي اتجاه، وبعضها مبني على حرف الهاء أو H. الأفكار 11 إلى 19 جديدة في هذه الجولة. لكل فكرة: أيقونة التطبيق على خلفية غامقة وفاتحة، ونسخة بلون واحد، والمقاسات الصغيرة، والرمز مع الاسم بخط Rubik.</p>
     <div class="notice"><strong>رسومات أولية للمقارنة، لا شيء معتمد.</strong> الفكرة المختارة تُرسم بعناية بعد الاختيار: النسب، وكلمة «هِمّة» المرسومة، وأيقونات Android و iOS بكل المقاسات.</div>
   </header>
 
@@ -81,6 +82,7 @@ dd { margin: 0; min-width: 0; }
     <button type="button" id="c-aligned" data-c="aligned" aria-pressed="false">موافقة للتوجّه</button>
     <button type="button" id="c-bold" data-c="bold" aria-pressed="false">جريئة</button>
     <button type="button" id="c-neutral" data-c="neutral" aria-pressed="false">حيادية</button>
+    <button type="button" id="c-letter" data-c="letter" aria-pressed="false">بالحرف</button>
   </div>
 
   <div class="grid" id="grid"></div>
@@ -109,6 +111,21 @@ const SYM = {
   mono: c => `<path d="M26 20 V 80 M74 20 V 80" stroke="${c.fg}" stroke-width="9" stroke-linecap="round"/><circle cx="50" cy="50" r="17" fill="none" stroke="${c.fg}" stroke-width="9"/><circle cx="50" cy="50" r="5.5" fill="${c.ac}"/>`
 };
 
+// Gradient helper: unique id per drawing, colors from c.g1/c.g2
+let GN = 0;
+const grad = c => { const id = 'lg' + (++GN); return [id, `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:${c.g1}"/><stop offset="1" style="stop-color:${c.g2}"/></linearGradient></defs>`]; };
+Object.assign(SYM, {
+  gradArc: c => { const [id, d] = grad(c); return `${d}<path d="M50 22 A28 28 0 1 1 22 50" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round"/><circle cx="22" cy="50" r="12" fill="${c.bg}"/><circle cx="22" cy="50" r="8.5" fill="${c.ac}"/>`; },
+  stations: c => { const [id, d] = grad(c); return `${d}<circle cx="50" cy="50" r="28" fill="none" stroke="${c.fg}" stroke-width="3" opacity="${c.mono ? .5 : .3}"/><path d="M50 22 A28 28 0 1 1 25.8 64" fill="none" stroke="url(#${id})" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="22" r="6" fill="${c.g2}" stroke="${c.bg}" stroke-width="2.5"/><circle cx="74.2" cy="64" r="6" fill="${c.g2}" stroke="${c.bg}" stroke-width="2.5"/><circle cx="25.8" cy="64" r="11" fill="${c.bg}"/><circle cx="25.8" cy="64" r="8" fill="${c.ac}"/>`; },
+  segs: c => { const [id, d] = grad(c); const C = 2 * Math.PI * 28, seg = C / 7 - 5; const on = Array(4).fill(`${seg.toFixed(2)} 5`).join(' ') + ` 0 ${C.toFixed(2)}`; return `${d}<circle cx="50" cy="50" r="28" fill="none" stroke="${c.fg}" stroke-width="9" stroke-dasharray="${seg.toFixed(2)} 5" opacity="${c.mono ? .35 : .22}" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="28" fill="none" stroke="url(#${id})" stroke-width="9" stroke-dasharray="${on}" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="8" fill="${c.ac}"/>`; },
+  twoOrbits: c => { const [id, d] = grad(c); return `${d}<circle cx="50" cy="50" r="36" fill="none" stroke="${c.fg}" stroke-width="3" stroke-dasharray="0.1 7.4" stroke-linecap="round"/><circle cx="50" cy="50" r="22" fill="none" stroke="${c.fg}" stroke-width="3" opacity="${c.mono ? .5 : .3}"/><path d="M50 28 A22 22 0 1 1 37.1 67.8" fill="none" stroke="url(#${id})" stroke-width="8" stroke-linecap="round"/><circle cx="75.5" cy="24.5" r="10.5" fill="${c.bg}"/><circle cx="75.5" cy="24.5" r="7.5" fill="${c.ac}"/>`; },
+  taa: c => `<circle cx="50" cy="62" r="21" fill="none" stroke="${c.fg}" stroke-width="9"/><circle cx="61" cy="24" r="7" fill="${c.ac}"/><circle cx="39" cy="24" r="7" fill="${c.fg}"/>`,
+  hArc: c => `<path d="M28 20 V 80 M72 20 V 80" stroke="${c.fg}" stroke-width="9" stroke-linecap="round"/><path d="M28 60 Q 50 30, 72 60" fill="none" stroke="${c.fg}" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="45" r="7.5" fill="${c.ac}" stroke="${c.bg}" stroke-width="2.5"/>`,
+  hDot: c => `<rect x="23" y="20" width="15" height="60" rx="7.5" fill="${c.fg}"/><rect x="62" y="20" width="15" height="60" rx="7.5" fill="${c.fg}"/><circle cx="50" cy="50" r="8.5" fill="${c.ac}"/>`,
+  haaGlyph: c => `<text x="54" y="50" text-anchor="middle" dominant-baseline="central" font-family="Rubik, sans-serif" font-weight="700" font-size="78" fill="${c.fg}">هـ</text><circle cx="24" cy="26" r="7.5" fill="${c.ac}"/>`,
+  hOrbit: c => `<path d="M30 16 V 82 M30 54 A20 20 0 0 1 70 54 V 82" fill="none" stroke="${c.fg}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="34" r="11" fill="${c.bg}"/><circle cx="50" cy="34" r="7.5" fill="${c.ac}"/>`
+});
+
 const CONCEPTS = [
   { k: 'orbit', cat: 'aligned', name: 'نقطة على المدار', en: 'Orbit dot', idea: 'حلقة واحدة ونقطة دافئة تقطعها. الترجمة المباشرة للغة الشكل المعتمدة في التطبيق.', why: 'متّسق تمامًا مع الواجهة، وبسيط جدًا في المقاسات الصغيرة.', risk: 'الحلقة مع نقطة شائعة في تطبيقات النشاط والساعات، فالتميّز محدود.' },
   { k: 'haa', cat: 'aligned', name: 'هاء مدارية', en: 'Orbital Haa', idea: 'حرف «ه» العربي مرسومًا كحلقتين متداخلتين: مدار كبير وحلقة داخلية، ونقطة دافئة.', why: 'يجمع الحرف الأول من الاسم مع لغة المدار، وعربي بوضوح.', risk: 'قد لا يُقرأ كحرف عند غير العرب، ويحتاج ضبطًا دقيقًا حتى لا يشبه رمزًا عامًا.' },
@@ -119,27 +136,36 @@ const CONCEPTS = [
   { k: 'chain', cat: 'neutral', name: 'سلسلة الأيام', en: 'Streak', idea: 'نقاط تكبر وترتفع يومًا بعد يوم، وآخرها النقطة الدافئة: الاستمرار مرئيًا.', why: 'يعبّر عن العادات والاستمرارية، وناعم وهادئ.', risk: 'قد يُقرأ كفقاعات أو مؤشر تحميل إن لم تُضبط المسافات.' },
   { k: 'kufi', cat: 'bold', name: 'هاء كوفية', en: 'Square Kufi Haa', idea: 'حرف «ه» بالخط الكوفي المربع: مربع مفرّغ ومربع دافئ في قلبه، وامتداد صغير كالكشيدة.', why: 'هوية عربية قوية ومختلفة عن كل المنافسين، وهندسية بما يناسب الجمهور التقني.', risk: 'الحواف المربعة تخالف استدارة الواجهة، وقد يُقرأ كرمز تقني عام.' },
   { k: 'pebble', cat: 'neutral', name: 'حصاة', en: 'Pebble', idea: 'شكل عضوي ناعم كحصاة ملساء، وفيه نقطة دافئة. هدوء وراحة بلا رموز.', why: 'ودود ومريح، ويصلح لأي اتجاه مستقبلي.', risk: 'بلا معنى محدد، فيعتمد على اللون والاسم للتمييز.' },
-  { k: 'mono', cat: 'bold', name: 'مونوغرام ثنائي', en: 'Haa + H', idea: 'حرف H اللاتيني تصير عارضته حلقة «ه» العربية، وفي قلبها النقطة الدافئة. حرفان في رمز واحد.', why: 'يحمل اللغتين معًا، ويُقرأ كحرف في الثقافتين.', risk: 'المونوغرامات المركّبة قد تبدو مزدحمة في مقاس 20 بكسل.' }
+  { k: 'mono', cat: 'letter', name: 'مونوغرام ثنائي', en: 'Haa + H', idea: 'حرف H اللاتيني تصير عارضته حلقة «ه» العربية، وفي قلبها النقطة الدافئة. حرفان في رمز واحد.', why: 'يحمل اللغتين معًا، ويُقرأ كحرف في الثقافتين.', risk: 'المونوغرامات المركّبة قد تبدو مزدحمة في مقاس 20 بكسل.' },
+  { k: 'gradArc', cat: 'aligned', name: 'قوس التقدّم', en: 'Progress arc', idea: 'قوس المدار المتدرّج نفسه من الواجهة، مفتوح عند النقطة الدافئة: التقدّم لم يكتمل بعد، والبداية مستمرة.', why: 'الأقرب حرفيًا للتطبيق: يرى المستخدم الرمز نفسه في كل مؤشر تقدّم.', risk: 'التدرّج اللوني يضعف في المقاسات الصغيرة وفي النسخة أحادية اللون.' },
+  { k: 'stations', cat: 'aligned', name: 'محطات المدار', en: 'Stations', idea: 'مدار عليه محطتان أُنجزتا، والنقطة الدافئة عند المحطة الحالية: خطة الأسبوع في رمز.', why: 'يحمل فكرة الاستمرار خطوة بخطوة، ويربط البرامج والعادات معًا.', risk: 'تفاصيل أكثر من غيره، فيحتاج تبسيطًا عند 20 بكسل.' },
+  { k: 'segs', cat: 'aligned', name: 'أسبوع مقسّم', en: 'Week ring', idea: 'حلقة من 7 أقسام لأيام الأسبوع، 4 منها ممتلئة، وفي القلب النقطة الدافئة.', why: 'مأخوذ من حلقة العادات الكمّية، ويُقرأ كـ«تقدّم يومي» بسهولة.', risk: 'الحلقات المقسّمة مستعملة في تطبيقات عادات أخرى.' },
+  { k: 'twoOrbits', cat: 'aligned', name: 'مداران', en: 'Two orbits', idea: 'مدار داخلي يمتلئ بالتدرّج، ومدار خارجي منقّط تسير عليه النقطة الدافئة. كمؤقت التركيز تمامًا.', why: 'الأكثر «فضاءً» بين الأفكار، بهدوء ومن دون مبالغة.', risk: 'المدار المنقّط يختفي في المقاسات الصغيرة، فيُستبدل بخط رفيع.' },
+  { k: 'taa', cat: 'letter', name: 'تاء مربوطة', en: 'Taa Marbuta', idea: 'آخر حرف في «همة»: حلقة ونقطتان فوقها، والنقطة الأولى (من اليمين) دافئة: البداية.', why: 'حرف عربي واضح ومألوف، والنقطتان تحكيان «ابدأ، واستمر».', risk: 'قد يُقرأ كحرف ة وحده بلا ربط بالاسم عند البعض.' },
+  { k: 'haaGlyph', cat: 'letter', name: 'هاء Rubik', en: 'Haa glyph', idea: 'حرف «هـ» في أول الكلمة كما يُكتب بخط Rubik المعتمد، بحلقتيه، مع النقطة الدافئة. بلا رسم إضافي.', why: 'متّسق تمامًا مع خط التطبيق، وبسيط وواضح الهوية العربية.', risk: 'يعتمد على شكل الخط، فيحتاج تعديلًا يدويًا ليصير رمزًا خاصًا لا حرفًا عاديًا.' },
+  { k: 'hArc', cat: 'letter', name: 'H بمسار', en: 'H with arc', idea: 'حرف H عارضته قوس مسار، وفي قمّته النقطة الدافئة: قفزة من عمود لعمود.', why: 'يُقرأ H بوضوح عالميًا، والقوس يضيف حركة.', risk: 'لاتيني فقط، فيضعف الطابع العربي.' },
+  { k: 'hDot', cat: 'letter', name: 'H بنقطة', en: 'H with dot', idea: 'عمودان مستديران والنقطة الدافئة مكان العارضة. أبسط شكل ممكن للحرف.', why: 'نظيف جدًا، ويعمل ممتازًا في كل المقاسات وبلون واحد.', risk: 'يشبه رمز الإيقاف المؤقت، وقد يُقرأ «إيقاف» لا «H».' },
+  { k: 'hOrbit', cat: 'letter', name: 'h مدارية', en: 'Lowercase h', idea: 'حرف h صغير قوسه جزء من مدار، والنقطة الدافئة في قمّة القوس.', why: 'يجمع الحرف اللاتيني مع لغة المدار، وناعم بزوايا مستديرة كخط Rubik.', risk: 'لاتيني، والحرف الصغير قد يبدو أقل رسمية.' }
 ];
-const CAT = { aligned: 'موافقة للتوجّه', bold: 'جريئة', neutral: 'حيادية' };
+const CAT = { aligned: 'موافقة للتوجّه', bold: 'جريئة', neutral: 'حيادية', letter: 'بالحرف' };
 
 const svg = (k, c, extra = '') => `<svg viewBox="0 0 100 100" aria-hidden="true" ${extra}>${SYM[k](c)}</svg>`;
 // App icon: symbol scaled into the ~66% safe zone of an adaptive icon
 const icon = (k, c) => `<svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" fill="${c.bg}"/><g transform="translate(18 18) scale(.64)">${SYM[k](c)}</g></svg>`;
-const DARK = { fg: '#EEF3FF', ac: '#F2A65A', bg: '#14213D' };
-const LIGHT = { fg: '#14213D', ac: '#F2A65A', bg: '#FFFFFF' };
-const DARK_ALT = { fg: '#7FD8BE', ac: '#F2A65A', bg: '#14213D' };
+const DARK = { fg: '#EEF3FF', ac: '#F2A65A', bg: '#14213D', g1: '#6CB4E8', g2: '#7FD8BE' };
+const LIGHT = { fg: '#14213D', ac: '#F2A65A', bg: '#FFFFFF', g1: '#3D4FA3', g2: '#2A8CA6' };
+const DARK_ALT = { fg: '#7FD8BE', ac: '#F2A65A', bg: '#14213D', g1: '#6CB4E8', g2: '#7FD8BE' };
 
 function card(x, i) {
   const darkC = ['orbit', 'haa', 'chain'].includes(x.k) ? DARK_ALT : DARK;
-  const monoC = { fg: 'currentColor', ac: 'currentColor', bg: 'var(--surface)', mono: true };
+  const monoC = { fg: 'currentColor', ac: 'currentColor', bg: 'var(--surface)', g1: 'currentColor', g2: 'currentColor', mono: true };
   const small = [48, 32, 20].map(sz => `<span class="s"><span class="t" style="width:${sz}px;height:${sz}px;border-radius:${sz * .23}px">${icon(x.k, darkC)}</span>${sz}</span>`).join('');
   return `<article class="card" data-cat="${x.cat}">
     <div class="head"><h2>${i + 1}. ${x.name}<small><bdi>${x.en}</bdi></small></h2><span class="tag ${x.cat}">${CAT[x.cat]}</span></div>
     <div class="show">
       <span class="tile dark">${icon(x.k, darkC)}</span>
       <span class="tile light">${icon(x.k, LIGHT)}</span>
-      <span class="lock">${svg(x.k, { fg: 'currentColor', ac: '#F2A65A', bg: 'var(--surface)' })}<span class="words"><span class="ar">هِمّة</span><span class="en">HIMMA</span></span></span>
+      <span class="lock">${svg(x.k, { fg: 'currentColor', ac: '#F2A65A', bg: 'var(--surface)', g1: 'var(--g1)', g2: 'var(--g2)' })}<span class="words"><span class="ar">هِمّة</span><span class="en">HIMMA</span></span></span>
     </div>
     <div class="small">${small}<span class="s mono">${svg(x.k, monoC)}بلون واحد</span></div>
     <dl><dt>الفكرة</dt><dd>${x.idea}</dd><dt>لماذا</dt><dd>${x.why}</dd><dt>المخاطرة</dt><dd>${x.risk}</dd></dl>
